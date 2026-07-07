@@ -1016,10 +1016,7 @@
                                 <p class="text-sm text-gray-500 mb-8">Free 30-min consultation. No commitment required.</p>
                                 
                                 <form id="contact-form" class="space-y-6">
-                                    <!-- Web3Forms: replace the value below with your own access key from https://web3forms.com (free, uses dedcellsec@gmail.com) -->
-                                    <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
-                                    <input type="hidden" name="subject" value="New Security Audit Request - dedcellsecurity.in">
-                                    <input type="hidden" name="from_name" value="Dedcell Security Website">
+                                    <!-- Submissions go to the Google Apps Script Web App URL set in CONTACT_FORM_URL (see the JavaScript below) -->
                                     <!-- Honeypot spam trap: bots fill this, humans never see it -->
                                     <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -1290,6 +1287,12 @@
             const form = document.getElementById('contact-form');
             if(!form) return;
 
+            // ============================================================================
+            //  CONTACT FORM DESTINATION  —  INTERN: paste your Apps Script URL below.
+            //  It must end in /exec and go between the quotes. Change NOTHING else.
+            // ============================================================================
+            const CONTACT_FORM_URL = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -1313,20 +1316,17 @@
                 lucide.createIcons();
 
                 try {
-                    const res = await fetch('https://api.web3forms.com/submit', {
+                    // Google Apps Script web apps don't send CORS headers a browser can read,
+                    // so we POST with mode:'no-cors' (the row is still written + email still sent)
+                    // and optimistically show the success state once the request completes.
+                    await fetch(CONTACT_FORM_URL, {
                         method: 'POST',
-                        headers: { 'Accept': 'application/json' },
+                        mode: 'no-cors',
                         body: new FormData(form)
                     });
-                    const data = await res.json();
 
-                    if (data.success) {
-                        form.style.display = 'none';
-                        document.getElementById('success-state').classList.remove('hidden');
-                    } else {
-                        errorText.textContent = data.message || 'Something went wrong. Please email us directly at dedcellsec@gmail.com.';
-                        errorDiv.classList.remove('hidden');
-                    }
+                    form.style.display = 'none';
+                    document.getElementById('success-state').classList.remove('hidden');
                 } catch (err) {
                     errorText.textContent = 'Network error. Please email us directly at dedcellsec@gmail.com.';
                     errorDiv.classList.remove('hidden');

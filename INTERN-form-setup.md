@@ -1,128 +1,140 @@
-# Task: Connect the website contact form to Google Sheets + Email
+# Intern Task — Connect the contact form to a Google Sheet, then redeploy
 
-**Goal:** When someone submits the "Request a Security Audit" form on dedcellsecurity.in,
-we want it to (1) email **dedcellsec@gmail.com** and (2) add a row to a Google Sheet.
+**Goal:** every submission on https://dedcellsecurity.in/#/contact should
+(1) add a row to a Google Sheet **and** (2) email **dedcellsec@gmail.com**.
 
-**Your deliverable:** one link (a "Web app URL" ending in `/exec`). Send that link back.
-That's it — someone else wires it into the website.
+**What's already done for you:** the website code is already wired up. You only have to
+do two things: create the Google script (to get one URL), then paste that URL into **one line**
+of the code and redeploy. No JavaScript knowledge needed — just copy/paste.
 
-**Time needed:** ~15 minutes. No coding knowledge required — just copy/paste and click.
+**Accounts you need (you already have these):**
+- Google + Vercel: **dedcellsec@gmail.com**
+- GitHub: access to `jejo205713/dedcellsecurity-website`
 
----
-
-## IMPORTANT — before you start
-Sign in to Google with the **dedcellsec@gmail.com** account (NOT any personal account).
-Everything below must be done while logged in as dedcellsec@gmail.com, or the emails and
-sheet will go to the wrong place. If you don't have the password, ask before continuing.
+**Total time:** ~25 minutes.
 
 ---
 
-## Step 1 — Create the Google Sheet
-1. Go to https://sheets.google.com
-2. Click the **+ Blank spreadsheet** (big colorful plus).
-3. At the top-left, click "Untitled spreadsheet" and rename it to: **Dedcell Leads**
-4. Leave the sheet empty — the script fills it automatically.
+## PART A — Create the Google Sheet + script (get your URL)
 
-## Step 2 — Open the Apps Script editor
-1. In that same spreadsheet, click the **Extensions** menu (top bar).
-2. Click **Apps Script**. A new tab opens with a code editor.
-3. You'll see a file called `Code.gs` with a few empty lines like `function myFunction() {}`.
-4. Select ALL the text in that editor (click inside, press Ctrl+A) and delete it.
+> Do everything in PART A while signed in to Google as **dedcellsec@gmail.com**
+> (NOT a personal account), or the leads go to the wrong place.
 
-## Step 3 — Paste the script
-Copy the ENTIRE code block below and paste it into the empty editor:
+1. Go to https://sheets.google.com → click **+ Blank spreadsheet**.
+2. Rename it (top-left) to **Dedcell Leads**. Leave it empty — the script fills it.
+3. In that sheet: menu **Extensions → Apps Script**. A code editor opens in a new tab.
+4. Delete everything in the editor (click inside, `Ctrl+A`, `Delete`).
+5. Open the file **`contact-form-apps-script.gs`** from our repo, copy its ENTIRE contents,
+   and paste it into the empty editor. (It's in the same folder as this guide.)
+6. Click the **Save** icon (or `Ctrl+S`). If asked for a project name, use **Dedcell Form Handler**.
+7. Top-right **Deploy → New deployment**.
+   - Click the **gear** next to "Select type" → choose **Web app**.
+   - **Execute as:** `Me (dedcellsec@gmail.com)`
+   - **Who has access:** `Anyone`  ← must be exactly "Anyone", not "Anyone with Google account"
+   - Click **Deploy**.
+8. **Authorize** (one-time): click **Authorize access** → pick dedcellsec@gmail.com →
+   if you see *"Google hasn't verified this app"*, click **Advanced → Go to Dedcell Form Handler (unsafe)** → **Allow**.
+   *(It's our own script — this warning is normal.)*
+9. Copy the **Web app URL**. It looks like:
+   `https://script.google.com/macros/s/AKfycb....../exec`  ← **this is the URL you need. Keep it.**
 
+> Quick check: paste that `/exec` URL in a browser tab. Seeing an error about GET / "script function
+> not found" is **fine** — it just proves the link is live (the form uses POST, not GET).
+
+---
+
+## PART B — Put your URL into the website (terminal)
+
+Open a terminal on your Linux Mint machine.
+
+### B1. Get the code (first time only)
+```bash
+cd ~
+git clone https://github.com/jejo205713/dedcellsecurity-website.git
+cd dedcellsecurity-website
+```
+*(If you already cloned it before, instead run: `cd ~/dedcellsecurity-website && git pull`)*
+
+### B2. Open the file and paste your URL
+Open the site file in a text editor (either command works on Mint):
+```bash
+xed public/index.html      # graphical editor
+# or:  nano public/index.html   # terminal editor
+```
+Press `Ctrl+F` and search for: **`PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE`**
+
+You'll find this line:
 ```javascript
-const SHEET_NAME   = 'Leads';
-const NOTIFY_EMAIL = 'dedcellsec@gmail.com';
+const CONTACT_FORM_URL = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE';
+```
+Replace **only** the placeholder text between the quotes with your `/exec` URL from Part A.
+It should end up looking like:
+```javascript
+const CONTACT_FORM_URL = 'https://script.google.com/macros/s/AKfycb....../exec';
+```
+**Keep the quotes. Keep the semicolon. Change nothing else.** Save the file
+(in `xed`: `Ctrl+S`; in `nano`: `Ctrl+O` `Enter` then `Ctrl+X`).
 
-function doPost(e) {
-  try {
-    const p = (e && e.parameter) ? e.parameter : {};
+---
 
-    // Honeypot: real users never fill "botcheck"; bots do. Silently drop them.
-    if (p.botcheck) {
-      return json({ success: true });
-    }
+## PART C — Deploy it live
 
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    let sheet = ss.getSheetByName(SHEET_NAME);
-    if (!sheet) {
-      sheet = ss.insertSheet(SHEET_NAME);
-      sheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Phone', 'Message']);
-    }
+Pick **ONE** of the two methods below. **Method 1 is preferred** — after a 5-minute one-time
+setup, every future change deploys automatically just by pushing to GitHub.
 
-    sheet.appendRow([
-      new Date(),
-      p.name    || '',
-      p.email   || '',
-      p.company || '',
-      p.phone   || '',
-      p.message || ''
-    ]);
+### Method 1 (recommended): push to GitHub → Vercel auto-deploys
 
-    MailApp.sendEmail({
-      to: NOTIFY_EMAIL,
-      replyTo: p.email || NOTIFY_EMAIL,
-      subject: 'New Security Audit Request - dedcellsecurity.in',
-      body:
-        'New lead from dedcellsecurity.in\n\n' +
-        'Name: '    + (p.name    || '') + '\n' +
-        'Email: '   + (p.email   || '') + '\n' +
-        'Company: ' + (p.company || '') + '\n' +
-        'Phone: '   + (p.phone   || '') + '\n\n' +
-        'Message:\n' + (p.message || '')
-    });
+**One-time setup (only needed once, ever):** connect the repo to Vercel.
+1. Go to https://vercel.com and sign in as **dedcellsec@gmail.com**.
+2. Open the **dedcell-security** project → **Settings → Git**.
+3. Click **Connect Git Repository**, authorize **GitHub**, and pick
+   `jejo205713/dedcellsecurity-website` (branch `main`).
 
-    return json({ success: true });
-  } catch (err) {
-    return json({ success: false, error: String(err) });
-  }
-}
+Once connected, deploy your change from the terminal:
+```bash
+git add public/index.html
+git commit -m "Connect contact form to Google Sheet"
+git push origin main
+```
+Vercel automatically builds and publishes to **dedcellsecurity.in** within ~1 minute.
+(Git may ask for your GitHub username + a token/password the first time.)
 
-function json(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+### Method 2 (fallback): deploy with the Vercel CLI
+
+Use this if the Git connection above isn't set up.
+```bash
+# install once (needs Node.js):
+sudo apt install -y nodejs npm
+sudo npm install -g vercel
+# from inside the project folder:
+vercel login                      # sign in as dedcellsec@gmail.com
+vercel link                       # pick the existing "dedcell-security" project
+vercel --prod                     # publishes to dedcellsecurity.in
+```
+Still commit + push to GitHub too, so the repo stays in sync:
+```bash
+git add public/index.html && git commit -m "Connect contact form to Google Sheet" && git push origin main
 ```
 
-## Step 4 — Save
-1. Click the **floppy-disk Save icon** (or press Ctrl+S).
-2. If it asks for a project name, type **Dedcell Form Handler** and save.
+---
 
-## Step 5 — Deploy it as a Web App
-1. Top-right, click the blue **Deploy** button → **New deployment**.
-2. Click the **gear icon** next to "Select type" → choose **Web app**.
-3. Fill the form exactly like this:
-   - **Description:** Dedcell form (anything is fine)
-   - **Execute as:** **Me (dedcellsec@gmail.com)**   <-- must be "Me"
-   - **Who has access:** **Anyone**                  <-- must be "Anyone" (NOT "Anyone with Google account")
-4. Click **Deploy**.
+## PART D — Test it end-to-end (do this, don't skip)
 
-## Step 6 — Authorize the permissions (one-time)
-Google will pop up asking for permission (because the script sends email + edits the sheet):
-1. Click **Authorize access**.
-2. Choose the **dedcellsec@gmail.com** account.
-3. You may see a scary screen: **"Google hasn't verified this app."** This is normal for our
-   own script. Click **Advanced** (small link, bottom-left) → **Go to Dedcell Form Handler (unsafe)**.
-4. Click **Allow**.
-
-## Step 7 — Copy the Web App URL (the deliverable)
-1. After deploying you'll see a box titled **Web app** with a URL that looks like:
-   `https://script.google.com/macros/s/AKfycb.................../exec`
-2. Click **Copy**.
-3. **Paste that URL and send it back.** This is the only thing needed.
-
-## Step 8 — (Optional) sanity check
-- Open a new browser tab and paste that `/exec` URL, press Enter.
-- You will see a short message like `{"success":false,...}` or an error about GET — **that is fine
-  and expected** (the form uses POST, not GET). It just proves the link is live.
+1. Wait ~1 minute after deploying, then open https://dedcellsecurity.in/#/contact
+   and do a hard refresh: `Ctrl+Shift+R`.
+2. Fill in the form with test data and submit. You should see the **success** message.
+3. Check that it worked:
+   - The **Dedcell Leads** Google Sheet has a new row (a "Leads" tab appears automatically).
+   - **dedcellsec@gmail.com** received a "New Security Audit Request" email.
+4. If both happened — **done.** 🎉  Delete the test row from the sheet.
 
 ---
 
-## Notes / gotchas
-- Do NOT delete the Google Sheet or the Apps Script project later — the website depends on them.
-- If you ever change the script, you must **Deploy → Manage deployments → Edit → Deploy** again,
-  OR the changes won't go live. (Not needed for this task.)
-- The final wiring into the website + a real end-to-end test happens AFTER you hand over the URL.
+## Troubleshooting
+- **No row / no email:** the URL is probably wrong. Re-check that `CONTACT_FORM_URL` ends in
+  `/exec` and that in Part A step 7 you set **Who has access = Anyone**.
+- **Form shows "Network error":** you likely left the placeholder text or removed a quote —
+  re-open the file and check the `CONTACT_FORM_URL` line.
+- **Changed the Apps Script later?** You MUST redeploy it: in Apps Script go to
+  **Deploy → Manage deployments → (pencil/Edit) → Deploy**, or the changes won't take effect.
+- **Don't delete** the "Dedcell Leads" sheet or the "Dedcell Form Handler" script — the site depends on them.
