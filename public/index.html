@@ -149,6 +149,27 @@
             border-bottom: 1px solid var(--border-light);
         }
 
+        /* Smoothly recolor the bar's contents as the glass fades in/out */
+        #navbar .nav-text,
+        #navbar .nav-text span,
+        #navbar #nav-links a,
+        #navbar #mobile-menu-btn,
+        #navbar #nav-cta {
+            transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* When the navbar goes dark on scroll, flip its text/CTA to light so
+           the previously-black text stays legible against the black glass. */
+        .nav-glass .nav-text,
+        .nav-glass .nav-text span { color: #ffffff !important; }
+        .nav-glass #nav-links a { color: rgba(255, 255, 255, 0.7) !important; }
+        .nav-glass #nav-links a:hover { color: #ffffff !important; }
+        .nav-glass #mobile-menu-btn { color: #ffffff !important; }
+        .nav-glass #nav-cta {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+
         /* Reveal animations managed by GSAP, but baseline opacity 0 for initial load */
         .reveal-item { opacity: 0; transform: translateY(20px); }
         .char { transform: translateY(100%); opacity: 0; }
@@ -178,16 +199,16 @@
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="#/" class="flex items-center gap-3 group">
                 <img src="LOGO-whiteeyes-300X300.png" alt="DEDCELL SECURITY" class="w-8 h-8 rounded-full border border-black/10 group-hover:border-black/30 transition-colors">
-                <span class="font-sans font-semibold text-sm text-black tracking-wide">DEDCELL <span class="text-gray-500 font-normal">SECURITY</span></span>
+                <span class="nav-text font-sans font-semibold text-sm text-black tracking-wide">DEDCELL <span class="text-gray-500 font-normal">SECURITY</span></span>
             </a>
-            
-            <div class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest">
+
+            <div id="nav-links" class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest">
                 <a href="#/services" class="text-gray-500 hover:text-black transition-colors">Services</a>
                 <a href="#/about" class="text-gray-500 hover:text-black transition-colors">About</a>
                 <a href="#/contact" class="text-gray-500 hover:text-black transition-colors">Contact</a>
             </div>
 
-            <a href="#/contact" class="hidden md:inline-flex items-center justify-center bg-black text-white font-sans font-semibold text-sm px-5 py-2 rounded-lg btn-press hover:bg-gray-800">
+            <a href="#/contact" id="nav-cta" class="hidden md:inline-flex items-center justify-center bg-black text-white font-sans font-semibold text-sm px-5 py-2 rounded-lg btn-press hover:bg-gray-800">
                 Request Assessment
             </a>
 
@@ -1287,11 +1308,11 @@
             const form = document.getElementById('contact-form');
             if(!form) return;
 
-            // ============================================================================
-            //  CONTACT FORM DESTINATION  —  INTERN: paste your Apps Script URL below.
-            //  It must end in /exec and go between the quotes. Change NOTHING else.
-            // ============================================================================
-            const CONTACT_FORM_URL = 'https://script.google.com/macros/s/AKfycbxQHDGfg5jV2RPFPBJWefe5-GogRrg9Kird49G_d9DYfR4eJi3qoJjowJpW9axlU-FT/exec';
+            // Submissions go to our own same-origin Vercel Function (/api/contact),
+            // which rate-limits, validates, sanitizes, and then forwards to the
+            // Google Apps Script web app. The Apps Script URL lives in a server-side
+            // env var (APPS_SCRIPT_URL) — it is deliberately NOT in this page.
+            const CONTACT_FORM_URL = '/api/contact';
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1316,17 +1337,24 @@
                 lucide.createIcons();
 
                 try {
-                    // Google Apps Script web apps don't send CORS headers a browser can read,
-                    // so we POST with mode:'no-cors' (the row is still written + email still sent)
-                    // and optimistically show the success state once the request completes.
-                    await fetch(CONTACT_FORM_URL, {
+                    // Same-origin request, so we get a real, readable JSON response
+                    // (unlike the old no-cors POST straight to Apps Script).
+                    const payload = Object.fromEntries(new FormData(form).entries());
+                    const resp = await fetch(CONTACT_FORM_URL, {
                         method: 'POST',
-                        mode: 'no-cors',
-                        body: new FormData(form)
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
+                    const data = await resp.json().catch(() => ({}));
 
-                    form.style.display = 'none';
-                    document.getElementById('success-state').classList.remove('hidden');
+                    if (resp.ok && data.success) {
+                        form.style.display = 'none';
+                        document.getElementById('success-state').classList.remove('hidden');
+                    } else {
+                        errorText.textContent = data.error
+                            || 'Something went wrong. Please email us at dedcellsec@gmail.com.';
+                        errorDiv.classList.remove('hidden');
+                    }
                 } catch (err) {
                     errorText.textContent = 'Network error. Please email us directly at dedcellsec@gmail.com.';
                     errorDiv.classList.remove('hidden');
