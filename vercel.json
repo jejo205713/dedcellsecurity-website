@@ -3,11 +3,17 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "outputDirectory": "public",
+  "redirects": [
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/index", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
-    {
-      "source": "/((?!api/|favicon\\.png|LOGO-whiteeyes-300X300\\.png|robots\\.txt|sitemap\\.xml).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/about", "destination": "/" },
+    { "source": "/services", "destination": "/" },
+    { "source": "/contact", "destination": "/" },
+    { "source": "/privacy", "destination": "/" },
+    { "source": "/terms", "destination": "/" },
+    { "source": "/disclosure", "destination": "/" }
   ],
   "headers": [
     {
