@@ -1,0 +1,46 @@
+when i try to visit : https://dedcellsecurity.in/home
+
+404: NOT_FOUND
+Code: NOT_FOUND
+ID: bom1::rp685-1785136179830-89824dd95a4e
+
+I have a React Single Page Application (SPA) using React Router with BrowserRouter.
+
+Deployment setup:
+- Application is hosted on Vercel.
+- My custom domain (dedcellsecurity.in) is managed through GoDaddy and connected to Vercel.
+- I am NOT hosting on Apache, Nginx, cPanel, or traditional shared hosting.
+
+Current issue:
+- Navigating from the homepage to /about, /services, /contact, etc. works correctly through React.
+- However, directly visiting https://dedcellsecurity.in/about or refreshing any route returns a 404 Not Found.
+- My sitemap contains these routes, so Google encounters 404 errors during crawling and indexing.
+
+My goals:
+- Keep BrowserRouter (do NOT use HashRouter).
+- Preserve clean URLs.
+- Configure Vercel correctly so every client-side route serves index.html.
+- Ensure static assets (robots.txt, sitemap.xml, images, favicon, etc.) continue to work normally.
+- Do not modify any React components, routing logic, UI, styling, or animations unless absolutely necessary.
+
+Please do the following:
+
+1. Inspect my project structure and existing Vercel configuration (vercel.json, package.json, vite.config.js/react config, public folder, etc.).
+2. Verify whether my current vercel.json rewrites are correct.
+3. Generate the exact Vercel configuration required for React Router BrowserRouter.
+4. Identify whether any conflicting redirects, rewrites, headers, or route ordering exist.
+5. Ensure all SPA routes return HTTP 200 by serving index.html while static assets are served normally.
+6. Verify that these URLs work correctly:
+   - /
+   - /about
+   - /services
+   - /contact
+   - /privacy
+   - /terms
+   - /disclosure
+7. Ensure robots.txt and sitemap.xml remain publicly accessible.
+8. Ensure Google Search Console and sitemap URLs no longer receive 404 responses.
+9. Explain why the 404 occurs on Vercel with BrowserRouter and how the configuration fixes it.
+10. Show every file that must be added or modified with complete code, highlighting only the required changes.
+
+If you need to inspect my project before making changes, analyse the existing project files first rather than assuming a default Vercel configuration.
