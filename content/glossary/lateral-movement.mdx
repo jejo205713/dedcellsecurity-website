@@ -1,0 +1,49 @@
+---
+title: What is Lateral Movement?
+definition: >-
+  Lateral movement is how an attacker travels through a network after their initial break-in, moving from the first compromised machine toward the systems that actually hold value.
+category: red-team
+relatedTerms:
+  - penetration-testing
+  - red-teaming
+  - zero-trust
+  - edr
+  - threat-hunting
+metaTitle: What is Lateral Movement?
+metaDescription: >-
+  Lateral movement explained - the techniques attackers use to spread internally, why the first machine is rarely the target, and how to detect it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Attackers almost never land where they want to be. The first foothold is typically a laptop belonging to someone in marketing, reached through phishing. The data worth stealing is elsewhere. Lateral movement is the journey between those two points.
+
+This phase is where defenders have the most opportunity, because it takes time and generates activity. Initial access can be a single click; moving from that laptop to the database involves discovery, credential theft and repeated authentication - all of which leave traces.
+
+## How attackers move
+
+**Credential reuse.** The most common route. Harvest credentials from the compromised host and use them elsewhere. Shared local administrator passwords across machines make this trivial.
+
+**Pass-the-hash and pass-the-ticket.** In Windows environments, the hash or Kerberos ticket can often be used directly without ever cracking the password.
+
+**Remote services.** RDP, SSH, SMB, WMI, WinRM - all legitimate administrative channels, which is precisely why they are used.
+
+**Living off the land.** Built-in tooling rather than dropped binaries. PowerShell, `psexec`, scheduled tasks, native cloud CLIs. Nothing malicious to detect on disk, which defeats signature-based approaches.
+
+**Service and cloud identity abuse.** In cloud estates, movement often means assuming a role rather than reaching another host - see [[iam]].
+
+## Why it is hard to detect
+
+Every technique above is something an administrator legitimately does. Distinguishing an attacker using WMI from an engineer using WMI requires knowing what normal looks like in your environment. That context is the scarce ingredient, and it is why [[threat-hunting]] is more effective here than any generic rule.
+
+## What actually slows it down
+
+**Network segmentation.** Flat networks are why one compromised laptop becomes a company-wide incident. If the marketing subnet cannot reach the database subnet, the journey stops.
+
+**Unique local administrator passwords** on every machine. This single change breaks the most common movement technique outright.
+
+**Least privilege**, including for service accounts - the ones that quietly hold domain administrator because it was easier during setup.
+
+**MFA on internal services**, not only at the perimeter. This is the operational core of [[zero-trust]]: verify every access, do not trust position on the network.
+
+**Endpoint telemetry** with process lineage, so unusual authentication chains are visible. See [[edr]].

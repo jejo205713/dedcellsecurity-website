@@ -84,7 +84,7 @@ function clearFailures(ip: string) {
 
 export async function POST(request: Request) {
   if (!authConfigured) {
-    console.error(`[auth] login attempted but no account configured — ${authDisabledReason()}`);
+    console.error(`[auth] login attempted but no account configured - ${authDisabledReason()}`);
     return NextResponse.json({ error: 'Authentication is not configured.' }, { status: 503 });
   }
 
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
 
   if (!usernameOk || !passwordOk) {
     recordFailure(ip);
-    // One message for both failure modes — never say which was wrong.
+    // One message for both failure modes - never say which was wrong.
     return NextResponse.json({ error: 'Incorrect username or password.' }, { status: 401 });
   }
 

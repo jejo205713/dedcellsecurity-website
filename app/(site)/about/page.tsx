@@ -3,7 +3,7 @@ import { Award, Clock4, Lock, RefreshCw, Rocket, ShieldAlert } from 'lucide-reac
 /**
  * Ported from the `about` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
- * mechanical JSX conversion; what is new is the metadata below — this route
+ * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
 export const metadata: Metadata = {
@@ -80,7 +80,7 @@ export default function AboutPage() {
                                   The Founding Partner Program
                               </h2>
                               <p className="text-white/60 mb-10 leading-relaxed text-lg">
-                                  We are taking on a small number of early-stage startups as founding partners. In exchange for case-study participation and a testimonial, you get the same comprehensive, senior-led offensive security we run for everyone else — on partnership terms we agree during scoping.
+                                  We are taking on a small number of early-stage startups as founding partners. In exchange for case-study participation and a testimonial, you get the same comprehensive, senior-led offensive security we run for everyone else - on partnership terms we agree during scoping.
                               </p>
                               <a href="/contact" className="inline-flex bg-white text-black font-sans font-semibold text-sm px-8 py-3.5 rounded-lg btn-press items-center justify-center hover:bg-white/85 transition-colors">
                                   Apply for Partnership

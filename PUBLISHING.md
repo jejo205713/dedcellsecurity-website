@@ -7,27 +7,27 @@ How content gets onto the site. Written for whoever is writing, not for a develo
 You write in a web form at **`/keystatic`**. When you hit publish, the CMS saves your
 article as a file in the project's code repository. The site rebuilds itself and your
 page is live about a minute later. There is no database and no separate "blog system"
-— your article and the website are the same thing.
+ - your article and the website are the same thing.
 
 ## Writing a glossary term
 
 1. Go to `/keystatic` and pick **Glossary → New entry**.
-2. **Title** — write it as the question people type into Google: *"What is SIEM?"*, not
+2. **Title** - write it as the question people type into Google: *"What is SIEM?"*, not
    *"SIEM"*.
-3. **URL slug** — this becomes the web address, `/glossary/siem`. Lowercase and hyphens
+3. **URL slug** - this becomes the web address, `/glossary/siem`. Lowercase and hyphens
    only. **Once the page is live and Google knows about it, never change this.** Changing
    a slug throws away everything the page has earned and needs a developer to set up a
    redirect.
-4. **One-sentence definition** — the most important field on the page. It must answer the
+4. **One-sentence definition** - the most important field on the page. It must answer the
    question completely on its own, in plain English, with no jargon. This is the sentence
    Google lifts out and shows at the top of the results page, so it has to make sense to
    someone who has read nothing else.
-5. **Category** — pick from the dropdown. You cannot type your own; that is deliberate.
-6. **Related terms** — pick 3–6 other glossary entries. Only terms that already exist show
+5. **Category** - pick from the dropdown. You cannot type your own; that is deliberate.
+6. **Related terms** - pick 3-6 other glossary entries. Only terms that already exist show
    up in the picker, so you can't create a broken link.
-7. **SEO description** — 120–155 characters. This is the grey summary line under the
+7. **SEO description** - 120-155 characters. This is the grey summary line under the
    Google result. Write it to make a human click, not to stuff in keywords.
-8. **Body** — the fuller explanation. See the linking rule below.
+8. **Body** - the fuller explanation. See the linking rule below.
 9. Leave **Draft** ticked until it has been technically reviewed. Draft pages are visible
    on preview links but are invisible to the live site and to Google.
 
@@ -40,7 +40,7 @@ Headings, bold, lists, quotes, tables, links and images all come across. Images 
 uploaded into our repository, so they keep working even if the original post is
 deleted.
 
-What deliberately does *not* come across is the **styling** — fonts, colours, sizes.
+What deliberately does *not* come across is the **styling** - fonts, colours, sizes.
 That is on purpose. Blogger and Medium paste their own fonts into every paragraph,
 and if we kept them our articles would stop looking like our site. Paste the words;
 the design is already handled.
@@ -52,7 +52,7 @@ Four things the site fixes for you automatically, so don't spend time on them:
   main heading, and the Title field is it.
 - Stray blank lines and the odd `\` character that Medium leaves behind are stripped.
 - Images get lazy loading and a blank alt attribute if you didn't write one.
-- Anything the source page smuggled in that isn't text — scripts, embeds, tracking —
+- Anything the source page smuggled in that isn't text - scripts, embeds, tracking
   is discarded before the page is built.
 
 Five things you **do** have to do after pasting:
@@ -61,13 +61,13 @@ Five things you **do** have to do after pasting:
    are what Google prints in the results page. Write one clean sentence. A build
    check rejects anything that looks like pasted body text.
 2. **Write the SEO description yourself.** Same reason.
-3. **Add alt text to every image** — describe what it shows.
+3. **Add alt text to every image** - describe what it shows.
 4. **Add `[[term]]` links.** A pasted article arrives with zero links to the rest of
    our site, which is the single biggest thing holding a page back.
 5. **Pick the right section.** A story or an opinion piece is a **blog post**. A
    glossary entry answers "what is X?" and nothing else.
 
-Images larger than 1MB get flagged. Compress before uploading — every image is
+Images larger than 1MB get flagged. Compress before uploading - every image is
 committed to the repository permanently.
 
 ## Linking to other glossary terms
@@ -84,13 +84,13 @@ Three things happen automatically, so you don't have to think about them:
 
 - **Only the first mention on a page becomes a link.** Write `[[siem]]` as many times as
   reads naturally; the rest render as normal text. One link per term per article is the
-  rule — repeating the same link adds nothing and looks like manipulation.
+  rule - repeating the same link adds nothing and looks like manipulation.
 - **Terms that don't exist yet degrade to plain text.** You can write `[[xdr]]` before
   anyone has written the XDR page. Nothing breaks, and the link switches itself on the day
   that page is published.
 - **You cannot accidentally nest links.**
 
-Aim for **3–8 links to other pages on our site** in the body of each article. This is the
+Aim for **3-8 links to other pages on our site** in the body of each article. This is the
 single highest-leverage thing you can do for the site's search performance, and it is
 entirely under your control.
 
@@ -128,7 +128,7 @@ without `allowDangerousHtml`, so raw HTML never becomes an element, and
 top of that.
 
 The consequence: **you cannot embed React components in an article.** To add a
-callout or CTA block, add it as a reviewed component with an allow-listed tag —
+callout or CTA block, add it as a reviewed component with an allow-listed tag
 never as markup typed into a content field.
 
 `lib/mdx/remark-normalize-paste.ts` handles the Blogger/Medium paste artefacts
@@ -136,7 +136,7 @@ never as markup typed into a content field.
 
 ### Why /keystatic 404s when misconfigured
 
-Keystatic's local-storage API handler has **no authentication** — it hands every
+Keystatic's local-storage API handler has **no authentication** - it hands every
 request straight to the filesystem. `middleware.ts` is what stands in front of it.
 `lib/keystatic-storage.ts` additionally refuses to serve the CMS at all unless
 both an account and a publish token are configured. A missing env var produces a
@@ -145,7 +145,7 @@ both an account and a publish token are configured. A missing env var produces a
 Content lives in `content/glossary/*.mdx` and `content/blog/*.mdx`. The site reads those
 files through `lib/content.ts` (gray-matter), and Keystatic reads and writes the same
 files through its own parser. `npm run verify:cms` exists to catch the two drifting apart
-— if it fails, an editor would silently lose fields on save.
+ - if it fails, an editor would silently lose fields on save.
 
 Categories are defined once in `lib/taxonomy.ts` and feed both the CMS dropdown and the
 site. Never hard-code a category anywhere else.
@@ -153,7 +153,7 @@ site. Never hard-code a category anywhere else.
 ### Publisher access
 
 There is **one** publisher account. No registration, no password reset, no user
-list — each of those is an attack surface, and none of them earns its place for
+list - each of those is an attack surface, and none of them earns its place for
 a single editor.
 
 Create the credentials:
@@ -162,7 +162,7 @@ Create the credentials:
  npm run auth:hash -- 'a-long-generated-passphrase'
 ```
 
-(Note the leading space — it keeps the password out of your shell history.)
+(Note the leading space - it keeps the password out of your shell history.)
 
 That prints three values. Set all of them in Vercel, on **Production and
 Preview**:
@@ -170,12 +170,12 @@ Preview**:
 | Variable | What it is |
 |---|---|
 | `ADMIN_USERNAME` | the one username |
-| `ADMIN_PASSWORD_HASH` | PBKDF2-SHA256, 600,000 iterations, random salt. Dot-separated, so it is safe to paste into `.env` files — a `$`-separated hash gets eaten by dotenv variable expansion |
+| `ADMIN_PASSWORD_HASH` | PBKDF2-SHA256, 600,000 iterations, random salt. Dot-separated, so it is safe to paste into `.env` files - a `$`-separated hash gets eaten by dotenv variable expansion |
 | `AUTH_SECRET` | signs session cookies |
 
 The plaintext password is never stored anywhere. To change it, re-run the
 command and update `ADMIN_PASSWORD_HASH`. To force everyone out immediately,
-rotate `AUTH_SECRET` — every existing session dies at once.
+rotate `AUTH_SECRET` - every existing session dies at once.
 
 How the gate works:
 
@@ -220,7 +220,7 @@ Set these two as well:
 | `NEXT_PUBLIC_GITHUB_REPO` | `jejo205713/dedcellsecurity-website` |
 | `GITHUB_TOKEN` | fine-grained PAT, **Contents: read and write**, that repo only |
 
-Give the token the narrowest scope that works — Contents on one repository. It
+Give the token the narrowest scope that works - Contents on one repository. It
 can commit to your site, so treat it like a deploy key.
 
 Every write is re-validated server-side against an allow-list: only

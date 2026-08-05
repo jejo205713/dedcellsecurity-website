@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { GlossaryDoc } from '@/lib/content';
 
 /**
- * "No dead ends" — every content page ends with a next step
+ * "No dead ends" - every content page ends with a next step
  * (docs/seo/05-INTERNAL-LINKING.md).
  */
 export function RelatedTerms({ terms }: { terms: GlossaryDoc[] }) {

@@ -1,0 +1,44 @@
+---
+title: What is SQL Injection?
+definition: >-
+  SQL injection is a vulnerability where untrusted input is inserted into a database query, letting an attacker change what the query does - reading, modifying or deleting data they should never reach.
+category: web-application-security
+relatedTerms:
+  - owasp-top-10
+  - xss
+  - broken-access-control
+  - penetration-testing
+metaTitle: What is SQL Injection? SQLi Explained
+metaDescription: >-
+  SQL injection explained - how it works, the blind and time-based variants, why parameterised queries fix it, and why input filtering does not.
+publishedDate: 2026-08-05
+draft: false
+---
+
+SQL injection happens when your application builds a database query by gluing strings together, and some of that string came from a user.
+
+Consider a login that constructs its query by concatenation. Supply a username of `admin'' --` and the trailing `--` comments out the password check entirely. The database does exactly what it was told; the problem is that the attacker got to write part of the instruction.
+
+## Why it remains dangerous
+
+SQL injection is old, well understood, and still found regularly - because it only takes one query in one forgotten endpoint. The impact is near-total: the database usually holds everything of value. A successful injection can dump every user record, modify balances, escalate an account to administrator, or in some configurations reach the operating system.
+
+## The variants that get missed
+
+**Blind SQL injection** returns no error and no data. The attacker asks true/false questions and infers answers from behaviour - a slightly different page, a redirect, a subtly changed response length. Slower, equally effective.
+
+**Time-based blind** goes further: the injected query tells the database to pause for five seconds if a condition is true. The attacker reads the answer from the response time alone, one bit at a time. Automated tools do this comfortably.
+
+**Second-order injection** is the one that defeats naive testing. The payload is stored safely on the way in, then used unsafely later by a different part of the application - a reporting job, an admin dashboard. Testing the input form finds nothing.
+
+## The fix that works
+
+**Parameterised queries** - also called prepared statements. The query structure is sent to the database separately from the values, so user input is never parsed as SQL. It cannot be talked out of this. Every mainstream language and ORM supports it.
+
+## The fixes that do not work
+
+**Escaping and blocklists** fail. Blocking the word `SELECT` invites `SeLeCt`, comment-splitting, encoding tricks, and a dozen other evasions. You are attempting to enumerate every dangerous input, and the attacker only needs the one you forgot.
+
+**A WAF** is a useful speed bump and a terrible fix. It buys time while you patch properly. Treating it as the remediation means the vulnerability is still there, and bypass techniques are widely published.
+
+**Least privilege** limits blast radius but does not stop the injection. Your application account should not be able to drop tables - but it can still read the user table, which is what the attacker wanted. Related: [[broken-access-control]], [[owasp-top-10]].

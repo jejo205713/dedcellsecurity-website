@@ -1,0 +1,46 @@
+---
+title: What is the OWASP Top 10?
+definition: >-
+  The OWASP Top 10 is a regularly updated list of the ten most critical web application security risks, published by the Open Worldwide Application Security Project as an awareness and baseline testing standard.
+category: web-application-security
+relatedTerms:
+  - broken-access-control
+  - sql-injection
+  - xss
+  - ssrf
+  - penetration-testing
+metaTitle: What is the OWASP Top 10?
+metaDescription: >-
+  The OWASP Top 10 explained - what each category covers, why it is an awareness document rather than a checklist, and how testers actually use it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+The OWASP Top 10 is the most widely referenced document in application security. It is a consensus list of the ten broadest categories of web application risk, rebuilt every few years from real vulnerability data contributed by organisations worldwide.
+
+## What the categories cover
+
+The current list is organised around root causes rather than individual bugs:
+
+- **Broken Access Control** - the perennial number one. See [[broken-access-control]].
+- **Cryptographic Failures** - data exposed through weak, missing or misapplied cryptography
+- **Injection** - untrusted input interpreted as code, including [[sql-injection]] and [[xss]]
+- **Insecure Design** - flaws that no amount of correct implementation can fix
+- **Security Misconfiguration** - defaults left in place, unnecessary features enabled
+- **Vulnerable and Outdated Components** - the dependency you have not updated in two years
+- **Identification and Authentication Failures** - session handling, credential stuffing, weak recovery
+- **Software and Data Integrity Failures** - unverified updates, insecure deserialisation, CI/CD compromise
+- **Security Logging and Monitoring Failures** - you were breached and nobody noticed
+- **Server-Side Request Forgery** - see [[ssrf]]
+
+## The mistake almost everyone makes
+
+The Top 10 is an **awareness document**. OWASP say so themselves. It is not a testing standard, and "we tested the OWASP Top 10" is close to meaningless as an assurance statement - the categories are so broad that the claim is unfalsifiable.
+
+If you want a testing standard, the OWASP Application Security Verification Standard (ASVS) is the document you actually want. It is a structured list of verifiable requirements at three assurance levels, and it is what a serious test plan is built from.
+
+## How practitioners use it
+
+As a communication tool and a floor. It is genuinely useful for explaining risk categories to people who do not do this daily, for structuring developer training, and for making sure a test plan has not entirely ignored a class of issue.
+
+Where it misleads is when it becomes the ceiling. Your worst vulnerability is more likely to be a business logic flaw specific to your product - an ordering sequence that lets someone skip payment - and no generic list will ever contain it. That is why a [[penetration-testing]] engagement should spend its time on how your application is meant to work, not on running down a public checklist.

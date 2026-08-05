@@ -5,9 +5,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 /**
  * The pinned horizontal scroll on the home page's "Our Process" section.
  *
- * Replaces the GSAP + ScrollTrigger implementation at index.html:1493-1512 —
+ * Replaces the GSAP + ScrollTrigger implementation at index.html:1493-1512
  * pin the container, translate the track by `scrollWidth - innerWidth` across
- * that scroll distance — without the ~112KB of GSAP + ScrollTrigger + Lenis +
+ * that scroll distance - without the ~112KB of GSAP + ScrollTrigger + Lenis +
  * SplitType it needed. `position: sticky` does the pinning; a rAF-throttled
  * scroll listener does the translation.
  *
@@ -18,7 +18,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
  *     sticky element resolves against its nearest scrollport; an unbounded
  *     overflow container becomes that scrollport, so there is nothing to stick
  *     within and the element simply scrolls away. The parent section must not
- *     clip — the sticky element clips itself instead.
+ *     clip - the sticky element clips itself instead.
  *  2. **`offsetTop` is relative to the offsetParent, not the document.** Any
  *     positioned ancestor throws the maths off. Use getBoundingClientRect().
  *  3. **Measuring before layout settles gives a stale distance.** Web fonts and
@@ -27,7 +27,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
  *
  * Runs at every viewport width, unlike the original, which skipped the effect
  * below 768px and left the cards clipped. `prefers-reduced-motion` still opts
- * out to a plain swipeable row — hijacking scroll is exactly what that setting
+ * out to a plain swipeable row - hijacking scroll is exactly what that setting
  * is about.
  */
 export function HorizontalScroll({ children }: { children: React.ReactNode }) {
@@ -41,7 +41,7 @@ export function HorizontalScroll({ children }: { children: React.ReactNode }) {
   const measure = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    // How far the track overhangs the viewport — the exact scroll travel needed.
+    // How far the track overhangs the viewport - the exact scroll travel needed.
     setDistance(Math.max(0, track.scrollWidth - window.innerWidth));
   }, []);
 
@@ -62,7 +62,7 @@ export function HorizontalScroll({ children }: { children: React.ReactNode }) {
     const track = trackRef.current;
     if (!track) return;
 
-    // Fires when fonts land, images decode, or the card content reflows —
+    // Fires when fonts land, images decode, or the card content reflows
     // each of which changes scrollWidth after the initial measurement.
     const observer = new ResizeObserver(measure);
     observer.observe(track);

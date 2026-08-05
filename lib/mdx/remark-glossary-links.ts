@@ -6,7 +6,7 @@ import type { Root, Text, PhrasingContent, Parent } from 'mdast';
  *
  * The internal-linking engine from docs/seo/05-INTERNAL-LINKING.md:
  *   - ONLY the first occurrence of a term in a document is linked. Repeats render
- *     as plain text. ("one link per term per article" — over-linking the same
+ *     as plain text. ("one link per term per article" - over-linking the same
  *     target from one page reads as manipulation and adds no crawl value.)
  *   - Unknown terms degrade to plain text rather than producing a 404 link.
  *     An intern can write [[siem]] before the SIEM page exists and nothing breaks;
@@ -34,7 +34,7 @@ export function remarkGlossaryLinks(options: GlossaryLinkOptions) {
       if (!parent || index === undefined) return;
       if (!node.value.includes('[[')) return;
 
-      // Never create an anchor inside an anchor — but still strip the syntax so
+      // Never create an anchor inside an anchor - but still strip the syntax so
       // readers don't see raw [[brackets]] in the prose.
       if (parent.type === 'link' || parent.type === 'linkReference') {
         node.value = node.value.replace(TERM_PATTERN, '$1');
@@ -66,7 +66,7 @@ export function remarkGlossaryLinks(options: GlossaryLinkOptions) {
             children: [{ type: 'text', value: label }],
           });
         } else {
-          // Already linked once, or the term doesn't exist yet — strip the
+          // Already linked once, or the term doesn't exist yet - strip the
           // brackets and leave readable prose behind.
           replacements.push({ type: 'text', value: label });
         }

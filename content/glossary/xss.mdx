@@ -1,0 +1,45 @@
+---
+title: What is Cross-Site Scripting (XSS)?
+definition: >-
+  Cross-site scripting is a vulnerability where an attacker gets their JavaScript to run in another user’s browser on your site, letting them steal session data, alter the page, or act as that user.
+category: web-application-security
+relatedTerms:
+  - owasp-top-10
+  - sql-injection
+  - csrf
+  - broken-access-control
+metaTitle: What is XSS? Cross-Site Scripting Explained
+metaDescription: >-
+  Cross-site scripting explained - stored, reflected and DOM-based XSS, what an attacker actually does with it, and how output encoding and CSP stop it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Cross-site scripting is an injection flaw where the target is the browser rather than the database. If an attacker can get script into a page your users load, that script runs with all the trust the browser gives your site.
+
+## The three kinds
+
+**Stored XSS** is the most serious. The payload is saved on your server - in a comment, a profile field, a support ticket - and served to everyone who views it. One injection, every visitor affected. A stored XSS in an admin-visible field is a direct route to administrator compromise.
+
+**Reflected XSS** takes the payload from the request and echoes it into the response. It needs the victim to click a crafted link, which makes it a phishing tool rather than a broadcast one, but the impact once clicked is identical.
+
+**DOM-based XSS** never reaches the server. Client-side JavaScript reads from something attacker-influenced - the URL fragment, `postMessage`, local storage - and writes it into the page unsafely. Server-side testing misses it entirely.
+
+## What attackers actually do with it
+
+Stealing cookies is the textbook example and increasingly the least of it, since `HttpOnly` blocks it. More realistically:
+
+- **Act as the user.** The script issues authenticated requests from the victim's own browser: change email, add an API key, transfer funds. No credential theft required.
+- **Keylog the page.** Capture what is typed into a login or payment form.
+- **Rewrite the interface.** Insert a convincing credential prompt on the real domain, with the real certificate.
+- **Chain to worse.** XSS in an admin panel plus [[broken-access-control]] is often full compromise.
+
+## Fixing it
+
+**Context-aware output encoding** is the core control. The same value needs different treatment in HTML body, an attribute, inside a `<script>` block, or in a URL. Modern frameworks - React, Angular, Vue - encode by default, which is why XSS is rarer in them. It reappears the moment someone reaches for `dangerouslySetInnerHTML` or its equivalent.
+
+**Content Security Policy** is defence in depth. A strict CSP means injected script has nowhere to execute from. Worth knowing: CSP is hard to apply strictly to server-rendered applications that inline scripts, and a policy containing `unsafe-inline` provides very little.
+
+**Sanitise HTML you must render** with a maintained library and an allow-list. Never a blocklist - the same reason blocklists fail for [[sql-injection]] applies here.
+
+**`HttpOnly` and `SameSite` cookies** limit what a successful XSS can reach. They reduce impact; they do not remove the vulnerability.

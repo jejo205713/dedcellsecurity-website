@@ -6,7 +6,7 @@ import Link from 'next/link';
  * Changes from the live version, both deliberate:
  *  - A "Resources" column was added for Blog and Glossary. The live footer had
  *    no route to either, which would have left both hubs reachable only from
- *    the navbar — a dead end for crawlers arriving on a deep page.
+ *    the navbar - a dead end for crawlers arriving on a deep page.
  *  - The copyright year is computed rather than hard-coded.
  */
 

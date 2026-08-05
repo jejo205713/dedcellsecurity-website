@@ -4,7 +4,7 @@ import { storage } from './lib/keystatic-storage';
 
 /**
  * Keystatic is the authoring UI only. It reads and writes the same MDX files in
- * content/ that lib/content.ts parses — there is no database and no API between
+ * content/ that lib/content.ts parses - there is no database and no API between
  * the editor and the site.
  *
  * Every field here exists to stop a non-technical editor from producing content
@@ -20,13 +20,13 @@ const seoFields = {
   metaTitle: fields.text({
     label: 'SEO title',
     description:
-      'What shows in Google results, complete — the site name is NOT appended to it. Aim for 50–60 characters. Leave blank to use the title above plus "| Dedcell Security".',
+      'What shows in Google results, complete - the site name is NOT appended to it. Aim for 50-60 characters. Leave blank to use the title above plus "| Dedcell Security".',
     validation: { isRequired: false, length: { max: 60 } },
   }),
   metaDescription: fields.text({
     label: 'SEO description',
     description:
-      'The grey summary line under the Google result. 120–155 characters. Write it for a human deciding whether to click.',
+      'The grey summary line under the Google result. 120-155 characters. Write it for a human deciding whether to click.',
     multiline: true,
     validation: { isRequired: true, length: { min: 50, max: 155 } },
   }),
@@ -71,7 +71,7 @@ export default config({
           name: {
             label: 'Title',
             description:
-              'Write it as the question people search: "What is SIEM?" — not just "SIEM".',
+              'Write it as the question people search: "What is SIEM?" - not just "SIEM".',
             validation: { isRequired: true, length: { max: 70 } },
           },
           slug: {
@@ -105,7 +105,7 @@ export default config({
         relatedTerms: fields.multiRelationship({
           label: 'Related terms',
           description:
-            'Other glossary entries a reader would want next. 3–6 is the sweet spot. Only published terms appear here.',
+            'Other glossary entries a reader would want next. 3-6 is the sweet spot. Only published terms appear here.',
           collection: 'glossary',
           validation: { length: { max: 8 } },
         }),
@@ -115,7 +115,7 @@ export default config({
         content: fields.mdx({
           label: 'Body',
           description:
-            'Type [[siem]] to link another glossary term inline — only the first mention on the page becomes a link, which is what we want.',
+            'Type [[siem]] to link another glossary term inline - only the first mention on the page becomes a link, which is what we want.',
           extension: 'mdx',
           options: {
             image: {
@@ -184,7 +184,7 @@ export default config({
         content: fields.mdx({
           label: 'Body',
           description:
-            'Type [[siem]] to link a glossary term inline. Aim for 3–8 in-body links to other pages on the site.',
+            'Type [[siem]] to link a glossary term inline. Aim for 3-8 in-body links to other pages on the site.',
           extension: 'mdx',
           options: {
             image: {

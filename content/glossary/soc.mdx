@@ -1,0 +1,49 @@
+---
+title: What is a SOC?
+definition: >-
+  A Security Operations Centre is the team and tooling responsible for monitoring an organisation’s systems, triaging alerts, and responding to security incidents - either in-house or delivered as a managed service.
+category: soc-operations
+relatedTerms:
+  - siem
+  - edr
+  - xdr
+  - incident-response
+  - threat-hunting
+metaTitle: What is a SOC? Security Operations Centre
+metaDescription: >-
+  SOC explained - what analysts actually do, the tiered model, in-house versus managed, and what alert fatigue costs you.
+publishedDate: 2026-08-05
+draft: false
+---
+
+A SOC is the function that watches for attacks and does something when one appears. It is people and process first; the tooling - [[siem]], [[edr]], [[xdr]] - exists to serve them.
+
+## What the work looks like
+
+The traditional structure is tiered:
+
+**Tier 1** triages the alert queue. Most alerts are benign, and the job is deciding quickly which are not. This is where volume lives and where burnout starts.
+
+**Tier 2** investigates what Tier 1 escalates: what happened, how far it went, what else the attacker touched.
+
+**Tier 3** handles the hardest cases, builds and tunes detections, and does proactive [[threat-hunting]] rather than waiting for alerts.
+
+Coverage is the expensive part. Genuine 24/7 requires roughly eight to twelve analysts for continuous shifts with leave and turnover. That headcount is why most organisations under a few hundred people do not run their own.
+
+## Alert fatigue is the real failure mode
+
+Under-tuned tooling produces thousands of alerts a day, nearly all false positives. Analysts learn - correctly, from experience - that alerts are usually nothing. The genuine one then arrives into a queue where the default response is to close it.
+
+This is not a discipline problem. It is a design problem. Several major breaches involved a correct alert that fired and was dismissed among the noise. **A SOC that cannot tune its detections will eventually miss the alert that mattered**, no matter how good its people are.
+
+## In-house, managed, or hybrid
+
+**In-house** gives you context nobody else has - your systems, your normal, your business. Expensive and hard to staff.
+
+**Managed (MDR/MSSP)** buys coverage immediately at predictable cost. The trade-off is context: an external analyst does not know that the finance team always runs that unusual export on the last day of the month. Expect a tuning period, and judge providers on how they handle escalation, not on dashboards.
+
+**Hybrid** - outsourced monitoring, internal ownership of response - is where most growing companies land.
+
+## Before you buy one
+
+If you have no [[edr]], no MFA, and no central logging, a SOC has nothing useful to watch. Those foundations come first. And a SOC only matters if there is an [[incident-response]] plan for what happens after the phone rings.

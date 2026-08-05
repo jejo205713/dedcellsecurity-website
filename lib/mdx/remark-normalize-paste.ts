@@ -10,7 +10,7 @@ import { toString as mdastToString } from 'mdast-util-to-string';
  * (content/glossary/the-alert-that-cost-900-000-customers.mdx):
  *
  *   - The article's own `# Title` pasted into the body, giving the page two H1s
- *     — the template already renders one from the Title field.
+ * - the template already renders one from the Title field.
  *   - Stray `\` hard breaks around images and pull quotes, which render as
  *     ragged blank lines.
  *   - Empty paragraphs left behind by the source editor's spacing divs.
@@ -24,7 +24,7 @@ export type NormalizeOptions = {
   title?: string;
 };
 
-/** Loose comparison — punctuation and casing differ constantly between sources. */
+/** Loose comparison - punctuation and casing differ constantly between sources. */
 function sameText(a: string, b: string): boolean {
   const norm = (s: string) =>
     s
@@ -59,7 +59,7 @@ export function remarkNormalizePaste(options: NormalizeOptions = {}) {
         if (heading.depth === 1) {
           const text = mdastToString(heading);
           if (!seenContent && title && sameText(text, title)) {
-            continue; // duplicate of the page title — drop it
+            continue; // duplicate of the page title - drop it
           }
           heading.depth = 2;
         }

@@ -3,7 +3,7 @@ import { getClientIp } from '@/lib/client-ip';
 
 /**
  * Contact form proxy. Ported from dedcell-security/api/contact.js with the
- * behaviour unchanged — it was already doing the right things:
+ * behaviour unchanged - it was already doing the right things:
  *
  *   1. Per-IP rate limiting (Apps Script's doPost cannot see the caller's IP).
  *   2. Server-side validation, because client-side checks are trivially bypassed.
@@ -24,8 +24,8 @@ const MAX_TRACKED_IPS = 20_000; // memory guard for the in-memory store
 
 /**
  * In-memory per-IP store. Fluid Compute reuses warm instances, so this persists
- * across requests and stops naive floods. It is best-effort — not shared across
- * concurrent instances — which is why the Apps Script keeps a durable global cap
+ * across requests and stops naive floods. It is best-effort - not shared across
+ * concurrent instances - which is why the Apps Script keeps a durable global cap
  * as a backstop (contact-form-apps-script.gs). For strict cross-instance limits,
  * swap this Map for Vercel KV / Upstash Redis.
  */

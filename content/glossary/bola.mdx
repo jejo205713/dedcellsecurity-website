@@ -1,0 +1,48 @@
+---
+title: What is BOLA?
+definition: >-
+  BOLA (Broken Object Level Authorisation) is an API flaw where an endpoint checks that a caller is logged in but not whether they own the record they requested, letting anyone read or change other users’ data.
+category: api-security
+relatedTerms:
+  - api-security
+  - broken-access-control
+  - jwt
+  - penetration-testing
+metaTitle: What is BOLA? Broken Object Level Auth
+metaDescription: >-
+  BOLA explained - the top API security risk, how it differs from IDOR, why scanners miss it, and how to enforce object-level authorisation.
+publishedDate: 2026-08-05
+draft: false
+---
+
+BOLA is the number one risk in the OWASP API Security Top 10, and it is the single most common serious finding in API assessments.
+
+The pattern is always the same. An endpoint like `GET /api/orders/8842` verifies the caller has a valid token, then looks up order 8842 and returns it. What it never asks is whether *this* caller is allowed *that* order. Change the number, get someone else's data.
+
+## BOLA and IDOR
+
+They describe the same defect. IDOR - insecure direct object reference - is the older, web-application-era name; BOLA is the API-specific framing that OWASP adopted. Treat them as synonyms. Both are a subset of [[broken-access-control]].
+
+## Why APIs make it worse
+
+A web application often hides the identifier behind a page the user navigates to. An API publishes it. Identifiers are visible in every response, documented in the schema, and frequently sequential. Enumeration is a loop.
+
+Mobile applications compound this: developers sometimes assume the app is the only client. It is not - the traffic is inspectable, and the API is directly callable.
+
+## Why scanners cannot find it
+
+An automated tool sees `GET /api/orders/8842` return 200 with a valid token. That is a correct-looking response. The tool has no model of who owns order 8842, so it has nothing to compare against.
+
+Finding BOLA requires **two authenticated accounts and a human** who takes an identifier from account A and requests it as account B. That is why this is a manual testing activity, and why [[vulnerability-assessment]] alone will not surface it. See [[penetration-testing]].
+
+## Fixing it
+
+**Authorise against the object, every time.** Fetch the record, compare its owner to the authenticated principal, deny otherwise. Not once at the gateway - at each handler.
+
+**Push it into a shared layer.** Ownership checks scattered across two hundred handlers will be forgotten in at least one. A repository layer that requires a principal, or middleware that resolves the object and validates it before the handler runs, is far more reliable than developer discipline.
+
+**Derive identity from the token, never the request.** A `userId` in the request body or query string is an attacker-supplied value. See [[jwt]].
+
+**Do not rely on unguessable IDs alone.** UUIDs raise the cost of enumeration but they leak - in URLs, logs, referrers, shared links, and other API responses. Obfuscation is not authorisation.
+
+**Test for it deliberately.** Two accounts, cross the boundary, on every endpoint that takes an identifier.

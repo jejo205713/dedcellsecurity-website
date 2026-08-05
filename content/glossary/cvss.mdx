@@ -1,0 +1,51 @@
+---
+title: What is CVSS?
+definition: >-
+  CVSS (Common Vulnerability Scoring System) is an open standard that rates a vulnerability’s technical severity from 0.0 to 10.0, giving a consistent way to compare issues across different systems and vendors.
+category: vulnerability-management
+relatedTerms:
+  - cve
+  - vulnerability-assessment
+  - vapt
+  - penetration-testing
+metaTitle: What is CVSS? Severity Scoring Explained
+metaDescription: >-
+  CVSS explained - how base scores are built, what the ratings mean, and why a CVSS score is severity rather than risk to your business.
+publishedDate: 2026-08-05
+draft: false
+---
+
+CVSS produces a number between 0.0 and 10.0 describing how severe a vulnerability is in the abstract. It is the standard used in [[cve]] records, scanner output and most assessment reports.
+
+## How the score is built
+
+The **base score** captures intrinsic characteristics that do not change with environment:
+
+- **Attack Vector** - network, adjacent, local, physical
+- **Attack Complexity** - are special conditions required
+- **Privileges Required** - none, low, high
+- **User Interaction** - does someone have to click
+- **Scope** - can the impact cross a security boundary
+- **Confidentiality, Integrity, Availability** impact
+
+Ratings: 0.1-3.9 Low, 4.0-6.9 Medium, 7.0-8.9 High, 9.0-10.0 Critical.
+
+There are also **temporal** metrics (is exploit code available, is there a patch) and **environmental** metrics that let you adjust for your own context. Almost nobody uses the environmental ones, which is the source of most misuse.
+
+## Severity is not risk
+
+This is the point that matters. **CVSS scores the vulnerability, not your exposure to it.**
+
+A 9.8 critical in a service you do not have enabled is not urgent. A 5.3 medium on your internet-facing login page, chained with [[broken-access-control]], may be the most dangerous thing in the report. A tester finding a way to read every customer record through a logic flaw may score it moderately by the formula while it is plainly the worst finding you have.
+
+Two adjustments make the number useful:
+
+**Weight by exploitability in the wild.** A known-exploited vulnerability with public exploit code deserves attention over a theoretically-higher-scoring one nobody has weaponised. Catalogues of actively exploited flaws exist for exactly this.
+
+**Weight by exposure.** Internet-facing, unauthenticated, and on a system holding regulated data - those three multipliers should reorder any list.
+
+## Why reports still lead with it
+
+Consistency and comparability. It lets you say "we have no criticals outstanding" in a customer questionnaire, and lets different tools speak the same language. For that purpose it works.
+
+Where a report should go further is business impact - a sentence saying what an attacker gains. "Any authenticated user can read every other user's invoices" tells a decision-maker more than 7.5. A [[penetration-testing]] report worth its fee gives you both.

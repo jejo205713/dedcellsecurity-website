@@ -73,7 +73,7 @@ const config: Config = {
               letterSpacing: '-0.02em',
               color: '#000000',
             },
-            // Links are underlined, never coloured — there is no accent colour.
+            // Links are underlined, never coloured - there is no accent colour.
             a: {
               textDecoration: 'underline',
               textUnderlineOffset: '3px',

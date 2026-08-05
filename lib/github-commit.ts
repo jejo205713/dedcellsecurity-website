@@ -12,7 +12,7 @@
  *   - Writes cannot touch a serverless filesystem (read-only), so the update
  *     endpoint is intercepted and turned into a git commit through this module.
  *   - The token lives only in `GITHUB_TOKEN` on the server. It is never sent to
- *     the browser, so an XSS in the admin cannot steal repository write access —
+ *     the browser, so an XSS in the admin cannot steal repository write access
  *     which is exactly the flaw in the alternative approach of injecting a PAT
  *     into the cookie Keystatic's OAuth flow expects.
  *
@@ -59,7 +59,7 @@ async function gh<T>(
 
   if (!response.ok) {
     const detail = await response.text().catch(() => '');
-    // Surfaced in server logs only — the client gets a generic message.
+    // Surfaced in server logs only - the client gets a generic message.
     throw new Error(`GitHub ${init?.method ?? 'GET'} ${path} -> ${response.status}: ${detail.slice(0, 300)}`);
   }
   return response.json() as Promise<T>;

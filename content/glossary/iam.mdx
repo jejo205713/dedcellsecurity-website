@@ -1,0 +1,54 @@
+---
+title: What is IAM?
+definition: >-
+  Identity and Access Management is the cloud system that defines who or what can perform which actions on which resources - the control that decides whether a compromised component becomes a full breach.
+category: cloud-security
+relatedTerms:
+  - cloud-security-posture-management
+  - ssrf
+  - zero-trust
+  - s3-bucket-misconfiguration
+metaTitle: What is IAM in Cloud Security?
+metaDescription: >-
+  IAM explained - roles, policies, least privilege, privilege escalation paths, and why over-permissioned roles turn small incidents into large ones.
+publishedDate: 2026-08-05
+draft: false
+---
+
+IAM decides what every identity in your cloud account is permitted to do. It is the most consequential configuration you own, because it determines blast radius: whether an attacker who compromises one component gets one component, or everything.
+
+## The pieces
+
+**Principals** - human users, application roles, service accounts. **Policies** - documents granting or denying actions on resources. **Roles** - sets of permissions that can be assumed temporarily, which is how workloads should get credentials.
+
+The important shift from traditional infrastructure: in the cloud, *everything* is an API call. Reading a file, launching a server, changing a firewall rule. IAM governs all of it uniformly, which is powerful and unforgiving.
+
+## Why over-permissioned roles matter so much
+
+Attach a broad policy to an instance role and any compromise of that instance inherits it. This is precisely what makes [[ssrf]] so severe in cloud environments: reaching the metadata endpoint yields temporary credentials for the attached role, and the attacker then operates through the cloud API with whatever that role can do.
+
+The uncomfortable pattern in most accounts is that roles accumulate. Permissions are added during an incident, or copied from a tutorial that granted a wildcard for convenience, and nothing is ever taken away. Assessments routinely find application roles with administrative rights nobody intended.
+
+## Privilege escalation paths
+
+Some permission combinations are equivalent to administrator even though none of them says so:
+
+- Permission to create or attach policies - grant yourself anything
+- Permission to update a function's code and pass it a privileged role
+- Permission to assume a role that can assume a more privileged role
+
+Mapping these chains is a core part of a cloud assessment, and it is what [[cloud-security-posture-management]] tooling is built to surface.
+
+## What good looks like
+
+**Least privilege, derived from actual usage.** Cloud providers report which permissions a role has genuinely used. Start from that rather than from a guess.
+
+**No long-lived access keys** where a role can be assumed instead. Static keys leak into repositories, CI logs and laptops.
+
+**Enforce MFA** on every human identity, without exception for the root account.
+
+**Scope with conditions** - restrict by source network, resource tag, or time where it fits.
+
+**Review regularly.** Permissions are added under pressure and removed never. A quarterly review that actually removes things is worth more than a policy document.
+
+This is the practical core of [[zero-trust]]: identity is the perimeter, so authorise every call rather than trusting the network it came from.

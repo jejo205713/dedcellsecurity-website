@@ -1,0 +1,46 @@
+---
+title: What is MITRE ATT&CK?
+definition: >-
+  MITRE ATT&CK is a free, structured knowledge base of the tactics and techniques attackers use in real intrusions, giving defenders a shared vocabulary for describing and measuring detection coverage.
+category: threat-intelligence
+relatedTerms:
+  - threat-hunting
+  - red-teaming
+  - soc
+  - incident-response
+metaTitle: What is MITRE ATT&CK?
+metaDescription: >-
+  MITRE ATT&CK explained - tactics, techniques, how to map detection coverage honestly, and the trap of chasing a full green matrix.
+publishedDate: 2026-08-05
+draft: false
+---
+
+ATT&CK is a catalogue of what attackers actually do, built from observed intrusions rather than theory. Its lasting contribution is a shared vocabulary: "T1055 process injection" means the same thing to your SOC, your vendor and your red team.
+
+## How it is organised
+
+**Tactics** are the adversary's goals, ordered roughly as an intrusion progresses: Initial Access, Execution, Persistence, Privilege Escalation, Defense Evasion, Credential Access, Discovery, Lateral Movement, Collection, Command and Control, Exfiltration, Impact.
+
+**Techniques** are how each goal is achieved, with sub-techniques for specific variants. Each entry carries real-world procedure examples, detection guidance and mitigations.
+
+There are separate matrices for Enterprise, Mobile and ICS, plus a Cloud matrix that has become the more relevant one for most modern startups.
+
+## What it is genuinely good for
+
+**Coverage mapping.** Take the techniques most relevant to your threat model, and ask honestly whether you would detect each one. The gaps are your roadmap.
+
+**A common language.** A [[red-teaming]] report that says "we achieved persistence via T1053.005 and you did not detect it" is far more actionable than prose.
+
+**Hunt generation.** Techniques are ready-made hypotheses for [[threat-hunting]].
+
+**Vendor evaluation.** MITRE run public adversary emulations of security products. Read the raw results, not the marketing summary of them.
+
+## Two ways teams misuse it
+
+**Chasing a green matrix.** The matrix is not a checklist to complete. Full coverage is neither achievable nor useful - techniques vary enormously in how relevant they are to your environment, and a Windows technique matters little in a Linux-only cloud estate. Coverage of the techniques *your* likely adversaries use is the meaningful measure.
+
+**Confusing awareness with detection.** "We are covered for T1078" often means a rule exists, not that it fires reliably, not that anyone tunes it, and not that an analyst would act on it at 3am. Test the detection, do not assume it.
+
+## Where to start
+
+Pick the ten techniques most plausible for your environment - usually around initial access through phishing, credential access, and cloud privilege escalation. Verify detection for each by actually executing something benign that triggers it. That short, honest exercise is worth far more than a fully coloured matrix nobody validated. Related: [[soc]], [[incident-response]].

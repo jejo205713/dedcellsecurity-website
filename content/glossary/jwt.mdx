@@ -1,0 +1,44 @@
+---
+title: What is a JWT?
+definition: >-
+  A JSON Web Token is a signed, self-contained token that carries user identity and claims, letting a server verify who a request is from without looking anything up in a database.
+category: api-security
+relatedTerms:
+  - api-security
+  - bola
+  - broken-access-control
+  - csrf
+metaTitle: What is a JWT? JSON Web Tokens Explained
+metaDescription: >-
+  JWTs explained - structure, signing, the alg:none and key confusion attacks, why revocation is hard, and when a session cookie is the better choice.
+publishedDate: 2026-08-05
+draft: false
+---
+
+A JWT is three base64url segments separated by dots: a header naming the algorithm, a payload of claims, and a signature over the first two.
+
+Two properties define it. It is **self-contained** - the claims travel with the token, so the server need not query anything to know who is calling. And it is **signed, not encrypted**. Anyone holding a JWT can read its payload. Never put anything confidential in it.
+
+## The attacks that still work
+
+**`alg: none`.** The header declares the algorithm, and some libraries historically honoured `none`, accepting an unsigned token. Never let the token choose how it is verified. Pin the expected algorithm server-side.
+
+**Algorithm confusion.** A token signed asymmetrically with RS256 is resubmitted as HS256, using the *public* key as the HMAC secret. If the library selects the algorithm from the header and the public key is, as intended, public, the attacker forges valid tokens. Same root cause: the token is trusted to describe its own verification.
+
+**No verification at all.** Decoding without verifying. It appears to work in every test, because tests use valid tokens.
+
+**Weak secrets.** HS256 with a short or default secret is offline-crackable. Use a long random key.
+
+**Unvalidated claims.** Signature valid, `exp` never checked. Also verify `iss` and `aud` - a token minted by a different service or for a different audience should be rejected.
+
+**Trusting claims as authorisation.** A `role: admin` claim in a token you issued is fine. A `userId` taken from the request body instead of the verified token is [[bola]].
+
+## The revocation problem
+
+This is the trade-off people underestimate. A self-contained token is valid until it expires, because nothing is consulted at verification time. Logging out, disabling an account or revoking a session cannot invalidate a token already issued - unless you maintain a denylist, which reintroduces the database lookup JWTs existed to avoid.
+
+The usual answer is short-lived access tokens plus longer-lived refresh tokens, where the refresh path *is* checked against the database. It works, and it is more moving parts than most teams need.
+
+## When not to use one
+
+For a browser application with a conventional login, a server-side session in an `HttpOnly`, `Secure`, `SameSite` cookie is simpler and revocable immediately. JWTs earn their complexity in distributed and service-to-service contexts. Note that cookie-borne tokens reintroduce [[csrf]] considerations, while `Authorization` headers do not - a real factor in the choice. Related: [[api-security]].

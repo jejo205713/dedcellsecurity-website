@@ -5,7 +5,7 @@ import { absoluteUrl, site } from '@/lib/site';
 export default function robots(): MetadataRoute.Robots {
   // Anything not positively identified as the live production deployment is
   // disallowed, so a preview or staging URL can never compete with the real one.
-  // See lib/env.ts — this deliberately fails closed.
+  // See lib/env.ts - this deliberately fails closed.
   if (!isIndexable) {
     return { rules: { userAgent: '*', disallow: '/' } };
   }

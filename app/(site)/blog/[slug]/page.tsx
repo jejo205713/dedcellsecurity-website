@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
 
   return {
-    // An explicit metaTitle is the *whole* SEO title — `absolute` stops the
+    // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
     // root layout appending "| Dedcell Security" and pushing it past 60 chars.
     title: post.metaTitle ? { absolute: post.metaTitle } : post.title,
     description: post.metaDescription || post.summary,
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: post.draft ? { index: false, follow: false } : undefined,
     openGraph: {
       type: 'article',
-      // An explicit metaTitle is the *whole* SEO title — `absolute` stops the
+      // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
     // root layout appending "| Dedcell Security" and pushing it past 60 chars.
     title: post.metaTitle ? { absolute: post.metaTitle } : post.title,
       description: post.metaDescription || post.summary,
@@ -91,7 +91,7 @@ export default async function BlogPostPage({ params }: Props) {
         variant="light"
         eyebrow="Next Step"
         heading="Want this checked on your own systems?"
-        body="We run the assessments this was written from. Tell us your stack and we will scope it — no commitment."
+        body="We run the assessments this was written from. Tell us your stack and we will scope it - no commitment."
       />
     </>
   );

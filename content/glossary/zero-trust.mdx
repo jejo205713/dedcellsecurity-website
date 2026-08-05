@@ -1,0 +1,51 @@
+---
+title: What is Zero Trust?
+definition: >-
+  Zero trust is a security model that stops treating network location as proof of trustworthiness, requiring every request to be authenticated and authorised regardless of where it originates.
+category: zero-trust
+relatedTerms:
+  - iam
+  - lateral-movement
+  - mfa
+  - api-security
+metaTitle: What is Zero Trust?
+metaDescription: >-
+  Zero trust explained - what replaces the network perimeter, the practical steps that matter, and how to tell substance from vendor marketing.
+publishedDate: 2026-08-05
+draft: false
+---
+
+The traditional model had a perimeter. Inside was trusted, outside was not, and a firewall separated them. Zero trust discards the inside.
+
+The reasoning is straightforward. Employees work from anywhere. Applications run in someone else's data centre. Contractors and integrations need access. And once an attacker phishes one laptop, they are *inside* - where the old model grants them trust they did not earn. See [[lateral-movement]].
+
+The replacement principle: **never trust, always verify.** Every request is authenticated and authorised on its own merits, whatever network it came from.
+
+## What that means concretely
+
+**Identity is the new perimeter.** Authorisation decisions turn on who is asking and what they are asking for, not where they connected from. This makes [[iam]] the central control.
+
+**Verify the device, not just the user.** Is it managed, patched, running endpoint protection? A valid credential on a compromised laptop should not grant full access.
+
+**Least privilege, continuously.** Access is scoped to the task and reviewed, not granted once and forgotten.
+
+**Assume breach.** Design so that one compromised component does not become total compromise. Segmentation, short-lived credentials, monitoring.
+
+**Authorise per request.** A session that was valid an hour ago is not evidence of anything now.
+
+## The vendor problem
+
+Zero trust is an architecture, not a product, and it is one of the most oversold terms in the industry. No single purchase delivers it. Any vendor claiming their box *is* zero trust is describing marketing rather than architecture.
+
+## Where to actually start
+
+Ordered by value for effort, for an organisation that has not begun:
+
+1. **[[mfa]] everywhere** - email, cloud consoles, VPN, internal admin tools. Phishing-resistant where you can.
+2. **Remove standing privilege.** Nobody should hold administrative access permanently.
+3. **Inventory what you have.** You cannot authorise access to systems you have forgotten.
+4. **Put applications behind an identity-aware proxy** rather than a flat VPN, so access is per-application rather than per-network.
+5. **Segment** so a compromised endpoint cannot reach production databases.
+6. **Log authorisation decisions** so you can answer who accessed what.
+
+Every one of those is worth doing on its own merits, whether or not you ever use the phrase. That is the honest test of a zero-trust initiative: it should be a sequence of concrete changes, not a diagram.

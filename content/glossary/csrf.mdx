@@ -1,0 +1,50 @@
+---
+title: What is CSRF?
+definition: >-
+  Cross-site request forgery is an attack that tricks a logged-in user’s browser into sending an unintended request to your site, performing an action as that user without their knowledge.
+category: web-application-security
+relatedTerms:
+  - xss
+  - broken-access-control
+  - owasp-top-10
+  - api-security
+metaTitle: What is CSRF? Cross-Site Request Forgery
+metaDescription: >-
+  CSRF explained - how the attack works, why SameSite cookies changed the picture, and where CSRF tokens are still required.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Cross-site request forgery exploits a design decision baked into the web: browsers attach cookies to requests based on where the request is *going*, not where it came *from*.
+
+A user is logged into your application. They visit an unrelated page that contains a hidden form auto-submitting to your `/account/email` endpoint. The browser dutifully includes their session cookie. Your server sees an authenticated, valid request and changes their email address. The attacker then triggers a password reset.
+
+The attacker never sees the response and never steals a credential. They do not need to - they only need the action to happen.
+
+## Why this is less common than it was
+
+**`SameSite` cookies** changed the landscape. A cookie marked `SameSite=Lax` - now the default in major browsers - is not sent on cross-site POST requests. That neutralises the classic attack for most applications without any application change.
+
+This is genuinely good news, and it is also why CSRF is sometimes dismissed too quickly.
+
+## Where it still bites
+
+**`SameSite=None` cookies.** Required for legitimate cross-site embedding, and it puts you straight back in scope.
+
+**GET requests with side effects.** `SameSite=Lax` still permits top-level GET navigation. If `/account/delete` works as a GET, a plain link is enough. State-changing operations must never be GET - this is also why it matters for [[api-security]].
+
+**Older browsers and non-browser clients** that do not implement the default.
+
+**Login CSRF.** Forcing a victim to log in as the *attacker*, so their subsequent activity is recorded in an account the attacker controls.
+
+## The controls
+
+**Anti-CSRF tokens** remain the robust answer. A random per-session value in the form, validated server-side. The attacker's page cannot read it, because the same-origin policy stops them.
+
+**Explicit `SameSite=Lax` or `Strict`** on session cookies. Do not rely on the browser default.
+
+**Verify `Origin` or `Referer`** on state-changing requests as defence in depth.
+
+**Re-authenticate for sensitive actions** - password change, email change, payment details.
+
+One important caveat: **[[xss]] defeats every CSRF control**. Script running on your own origin can read the token. If you have XSS, CSRF protection is not the thing to worry about.

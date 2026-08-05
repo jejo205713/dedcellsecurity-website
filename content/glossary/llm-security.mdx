@@ -1,0 +1,50 @@
+---
+title: What is LLM Security?
+definition: >-
+  LLM security is the practice of protecting applications built on large language models, covering prompt injection, data leakage, unsafe tool use, supply chain risk and the handling of model output as untrusted input.
+category: security-engineering
+relatedTerms:
+  - prompt-injection
+  - ai-red-teaming
+  - model-poisoning
+  - api-security
+metaTitle: What is LLM Security?
+metaDescription: >-
+  LLM security explained - the OWASP Top 10 for LLM applications, what changes when a model can call tools, and the controls that hold up.
+publishedDate: 2026-08-05
+draft: false
+---
+
+LLM security is application security for systems where part of the logic is a statistical model you cannot fully specify, audit or constrain. OWASP maintain a Top 10 for LLM applications; the categories below cover the ones that matter most in practice.
+
+## Prompt injection
+
+The headline risk, covered in [[prompt-injection]]. Both direct and indirect, and structurally unfixable with current architectures - containment rather than prevention.
+
+## Insecure output handling
+
+The model returns text. Something downstream uses it. If that text goes into a page without encoding you have [[xss]]; into a shell you have command injection; into a query you have [[sql-injection]]. The model is a source of untrusted input that happens to sound authoritative. Treat its output exactly as you would treat a form field.
+
+## Excessive agency
+
+The model can call tools, and the tools can do more than the task requires. An assistant that only needs to read calendar entries should not hold write access to email. When - not if - the model is manipulated, its permissions define the damage.
+
+## Sensitive information disclosure
+
+Three distinct leaks, often conflated:
+
+- **In the context window.** Data placed in the prompt for one user surfacing in another's response, usually through shared caching or careless session handling.
+- **Through the provider.** Prompts sent to a third-party API leave your boundary. Check retention and training terms before pasting customer data in.
+- **From training.** Models fine-tuned on internal data can reproduce it. See [[model-poisoning]] for the adversarial version.
+
+## Supply chain
+
+Model weights from public hubs, prompt templates from repositories, vector databases, orchestration frameworks. Loading a model file from an untrusted source has historically permitted arbitrary code execution through unsafe deserialisation formats. Pin, verify, prefer safe serialisation.
+
+## Unbounded consumption
+
+Inference costs money. An endpoint without rate limits is a denial-of-wallet vulnerability, and the bill arrives before the alert does. This is [[api-security]] discipline applied to an expensive backend.
+
+## Where to start
+
+If you are shipping an AI feature and have time for three things: constrain what the tools can do, authorise every tool call as the end user rather than the service, and treat every token the model emits as hostile until validated. Those three cover most of what [[ai-red-teaming]] engagements actually find.

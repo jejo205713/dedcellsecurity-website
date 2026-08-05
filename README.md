@@ -1,7 +1,7 @@
-# Dedcell Security — Website
+# Dedcell Security - Website
 
 Public marketing site for **Dedcell Security**, an expert-led offensive-security firm:
-web, API, cloud, and mobile penetration testing for modern startups — without the enterprise bloat.
+web, API, cloud, and mobile penetration testing for modern startups - without the enterprise bloat.
 
 🌐 **Live:** https://dedcellsecurity.in
 
@@ -9,7 +9,7 @@ web, API, cloud, and mobile penetration testing for modern startups — without 
 
 ## Overview
 
-A single-page static site with a lightweight hash-based router. No build step, no framework —
+A single-page static site with a lightweight hash-based router. No build step, no framework
 just one `index.html` served as static output, with all runtime dependencies loaded from CDNs.
 
 **Routes** (client-side, hash router): `/` · `/about` · `/services` · `/contact` · `/privacy` · `/terms` · `/disclosure`
@@ -45,7 +45,7 @@ just one `index.html` served as static output, with all runtime dependencies loa
 
 ## Local preview
 
-No build required — serve the `public/` folder with any static server:
+No build required - serve the `public/` folder with any static server:
 
 ```bash
 python3 -m http.server 8000 --directory public
@@ -79,7 +79,7 @@ vercel --prod --yes                                         # deploy to producti
 - **Security headers** are set in `vercel.json` (HSTS with preload, `X-Frame-Options: SAMEORIGIN`,
   `X-Content-Type-Options: nosniff`, a restrictive `Permissions-Policy`, and `Referrer-Policy`).
 - **Contact form:** the Web3Forms access key in `index.html` is currently the placeholder
-  `YOUR_WEB3FORMS_ACCESS_KEY`. Replace it with a real key from https://web3forms.com and redeploy —
+  `YOUR_WEB3FORMS_ACCESS_KEY`. Replace it with a real key from https://web3forms.com and redeploy
   until then the form errors and only the `mailto:` fallback works.
 
 ## Contact

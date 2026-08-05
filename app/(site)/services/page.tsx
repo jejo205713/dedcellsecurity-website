@@ -4,7 +4,7 @@ import { Check, Cloud, Code2, Globe, Minus, Network, Server, Smartphone, Webhook
 /**
  * Ported from the `services` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
- * mechanical JSX conversion; what is new is the metadata below — this route
+ * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
 export const metadata: Metadata = {
@@ -164,7 +164,7 @@ export default function ServicesPage() {
                           </div>
                       </section>
 
-                      {/* Pricing tables removed — scoping-led enquiry instead. */}
+                      {/* Pricing tables removed - scoping-led enquiry instead. */}
                       <LeadCta
                           eyebrow="Scoping"
                           heading="Every engagement is scoped, not priced off a list."

@@ -19,13 +19,13 @@ import {
  *      between the internet and write access.
  *   2. `adminEnabled` refuses to serve the CMS unless both an account and a
  *      writable backend are configured. Fails closed.
- *   3. The `update` interception below replaces filesystem writes — impossible
- *      on a read-only serverless filesystem — with a git commit made using a
+ *   3. The `update` interception below replaces filesystem writes - impossible
+ *      on a read-only serverless filesystem - with a git commit made using a
  *      server-held token, so publishers never need GitHub accounts.
  *
  * Reads (`tree`, `blob`) fall through to Keystatic's local handler, which reads
  * the content files out of the deployed bundle. See `outputFileTracingIncludes`
- * in next.config.mjs — without it those files are not deployed and the CMS
+ * in next.config.mjs - without it those files are not deployed and the CMS
  * opens empty.
  */
 
@@ -54,7 +54,7 @@ async function handlePost(request: Request): Promise<Response> {
 
   const cfg = githubCommitConfig();
   if (!cfg) {
-    console.error('[keystatic] GITHUB_TOKEN or NEXT_PUBLIC_GITHUB_REPO missing — cannot publish.');
+    console.error('[keystatic] GITHUB_TOKEN or NEXT_PUBLIC_GITHUB_REPO missing - cannot publish.');
     return Response.json(
       { error: 'Publishing is not configured on the server.' },
       { status: 503 },
@@ -73,7 +73,7 @@ async function handlePost(request: Request): Promise<Response> {
 
   /**
    * Re-validate every path here. Keystatic validates on its side, but this
-   * handler now holds a repository write token — a path escaping content/ or
+   * handler now holds a repository write token - a path escaping content/ or
    * public/images/ would let the CMS rewrite application code, which is a far
    * worse outcome than a bad article.
    */
@@ -109,7 +109,7 @@ async function handlePost(request: Request): Promise<Response> {
     return Response.json({ success: true, committed: true, sha: commit.sha });
   } catch (err) {
     console.error('[keystatic] publish failed:', err);
-    // Never echo the GitHub error — it can contain the repo path and token hints.
+    // Never echo the GitHub error - it can contain the repo path and token hints.
     return Response.json(
       { error: 'Publishing failed. The change was not saved.' },
       { status: 502 },
@@ -119,7 +119,7 @@ async function handlePost(request: Request): Promise<Response> {
 
 export async function GET(request: Request) {
   if (!adminEnabled) {
-    console.warn(`[keystatic] admin API disabled — ${adminDisabledReason()}`);
+    console.warn(`[keystatic] admin API disabled - ${adminDisabledReason()}`);
     return notFound();
   }
   return keystatic.GET(request);
@@ -127,7 +127,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   if (!adminEnabled) {
-    console.warn(`[keystatic] admin API disabled — ${adminDisabledReason()}`);
+    console.warn(`[keystatic] admin API disabled - ${adminDisabledReason()}`);
     return notFound();
   }
   return handlePost(request);

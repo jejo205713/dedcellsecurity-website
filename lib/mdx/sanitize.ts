@@ -6,7 +6,7 @@ import type { Element, Root } from 'hast';
  *
  * This is deliberately hand-written rather than pulled from a package. The set
  * of elements markdown can produce is small and closed, so the whole policy fits
- * on one screen and can be read by anyone reviewing this repo — which matters
+ * on one screen and can be read by anyone reviewing this repo - which matters
  * more here than saving 60 lines.
  *
  * It is the *second* line of defence. The first is that `remark-rehype` runs
@@ -42,7 +42,7 @@ const ALLOWED_ATTRIBUTES: Record<string, string[]> = {
 
 /** Schemes permitted in a link. Relative and fragment URLs are always allowed. */
 const HREF_PROTOCOLS = new Set(['http', 'https', 'mailto', 'tel']);
-/** Images must come from our own origin or plain HTTP(S) — never data: or blob:. */
+/** Images must come from our own origin or plain HTTP(S) - never data: or blob:. */
 const SRC_PROTOCOLS = new Set(['http', 'https']);
 
 /** `className` values we permit, so a paste can't smuggle in utility classes. */
@@ -85,7 +85,7 @@ function protocolOf(input: string): string | null {
 function urlAllowed(value: unknown, allowed: Set<string>): boolean {
   if (typeof value !== 'string') return false;
   const protocol = protocolOf(value);
-  // No scheme means relative ("/images/x.png") or a fragment ("#section") — safe.
+  // No scheme means relative ("/images/x.png") or a fragment ("#section") - safe.
   return protocol === null ? true : allowed.has(protocol);
 }
 

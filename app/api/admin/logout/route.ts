@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
  * Clears the session cookie.
  *
  * Sessions are stateless signed tokens, so this only removes the browser's
- * copy — it cannot invalidate a token already captured elsewhere. To revoke
+ * copy - it cannot invalidate a token already captured elsewhere. To revoke
  * everything at once, rotate AUTH_SECRET.
  */
 export async function POST() {

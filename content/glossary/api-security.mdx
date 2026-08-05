@@ -1,0 +1,48 @@
+---
+title: What is API Security?
+definition: >-
+  API security is the practice of protecting the interfaces applications use to talk to each other - enforcing authentication, authorisation, input validation and rate limiting on every endpoint rather than relying on the client.
+category: api-security
+relatedTerms:
+  - bola
+  - jwt
+  - broken-access-control
+  - owasp-top-10
+  - csrf
+metaTitle: What is API Security?
+metaDescription: >-
+  API security explained - why APIs fail differently from web apps, the OWASP API Top 10 risks, and the controls that actually matter.
+publishedDate: 2026-08-05
+draft: false
+---
+
+An API has no user interface to hide behind. Every endpoint is directly addressable, the request format is documented or trivially inferred, and there is no "screen the user never sees". Everything is the front door.
+
+That changes what goes wrong. Web application security has historically focused on what happens when input reaches a rendering context - [[xss]], [[sql-injection]]. APIs fail more often on **authorisation**: the request is well-formed, authenticated, and asks for something the caller should not have.
+
+## The dominant failure
+
+[[bola]] - broken object level authorisation - is consistently the top API risk. The endpoint checks that you are logged in, then fetches whatever object ID you asked for. This is [[broken-access-control]] expressed in API form, and it is everywhere, because the check has to be repeated correctly on every endpoint and there is no framework default that does it for you.
+
+Closely related is **broken function level authorisation**: administrative endpoints protected only by the fact that the mobile app never calls them.
+
+## Failures specific to APIs
+
+**Excessive data exposure.** The endpoint returns the whole object and expects the client to display a subset. The client hides the fields; the API still sent them. Password hashes and internal flags leak this way routinely.
+
+**Mass assignment.** The API binds the request body straight onto a model, so an attacker adds `"role":"admin"` to a profile update and the framework obligingly sets it.
+
+**No rate limiting.** APIs are machine-callable by design. Without limits they enable credential stuffing, enumeration and scraping at speed. Rate limiting is a security control, not a capacity one.
+
+**Unauthenticated or forgotten versions.** `/api/v1/` left running years after `/api/v3/` shipped, with none of the fixes.
+
+**Over-trusted tokens.** See [[jwt]] - accepting the `alg` header from the token itself, or not verifying signatures at all, are both found in production.
+
+## What to do about it
+
+- **Authorise on every endpoint, against the object.** Not "is this user authenticated", but "may this user touch this record".
+- **Return only what the caller needs.** Explicit response shapes, never the raw model.
+- **Bind explicitly.** Allow-list the fields a request may set.
+- **Rate limit everything**, and more aggressively on authentication.
+- **Maintain an inventory.** You cannot secure the endpoint you forgot exists - undocumented APIs are among the most common serious findings in an assessment.
+- **Validate schemas server-side**, including types and bounds.

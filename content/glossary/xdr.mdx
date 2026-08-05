@@ -1,0 +1,49 @@
+---
+title: What is XDR?
+definition: >-
+  XDR (Extended Detection and Response) is a platform that correlates security telemetry across endpoints, network, cloud and identity in one place, aiming to detect attacks that look harmless in any single source.
+category: soc-operations
+relatedTerms:
+  - edr
+  - siem
+  - soc
+  - threat-hunting
+metaTitle: What is XDR? XDR vs EDR vs SIEM
+metaDescription: >-
+  XDR explained - how it differs from EDR and SIEM, what correlation across data sources buys you, and whether a small team needs it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+XDR extends the [[edr]] model beyond the endpoint. Where EDR watches processes and files on machines, XDR ingests endpoint, network, identity, email and cloud telemetry into one system and correlates across them.
+
+## The problem it addresses
+
+Attacks are quiet in any single data source. Consider a real sequence: a user opens an attachment, a process makes an outbound connection, an account authenticates from an unusual location, a cloud role is assumed, data is written to external storage.
+
+Each event alone is unremarkable. Users open attachments constantly. People travel. Roles get assumed all day. It is the *sequence* that is an intrusion, and no single tool sees the sequence.
+
+## XDR, EDR and SIEM
+
+**[[edr]]** is deep on endpoints. Best-in-class for process lineage and on-host response, blind to everything else.
+
+**[[siem]]** ingests anything that emits a log. Maximum flexibility, and you supply the detection logic, the tuning and the analysts. Powerful and genuinely expensive to run well.
+
+**XDR** sits between them: fewer sources than a SIEM, but pre-correlated with vendor-maintained detections out of the box. Less flexible, considerably less operational burden.
+
+The trade-off is honest. SIEM is a platform you build on. XDR is a product you buy. If you lack the people to build detections, a SIEM becomes an expensive log archive - which is the most common outcome for small teams.
+
+## The vendor lock-in question
+
+XDR correlation works best within one vendor's ecosystem. That is the commercial logic of the category: the coverage improves as you consolidate. Going in, understand that you are choosing a strategic supplier, not just a tool.
+
+## Does a startup need one?
+
+Usually not yet, and the honest sequence matters more than the acronym:
+
+1. **Centralised logging** you can actually search
+2. **[[edr]] on every endpoint** - the highest-value single control
+3. **MFA everywhere**, especially cloud consoles and email
+4. **Someone whose job includes responding to alerts** - tooling without an owner produces nothing
+
+Only after those does XDR earn its cost. Buying detection before you have anyone to act on it produces a dashboard nobody opens. See [[soc]] and [[threat-hunting]].

@@ -1,11 +1,11 @@
-# Intern Task — Connect the contact form to a Google Sheet, then redeploy
+# Intern Task - Connect the contact form to a Google Sheet, then redeploy
 
 **Goal:** every submission on https://dedcellsecurity.in/#/contact should
 (1) add a row to a Google Sheet **and** (2) email **dedcellsec@gmail.com**.
 
 **What's already done for you:** the website code is already wired up. You only have to
 do two things: create the Google script (to get one URL), then paste that URL into **one line**
-of the code and redeploy. No JavaScript knowledge needed — just copy/paste.
+of the code and redeploy. No JavaScript knowledge needed - just copy/paste.
 
 **Accounts you need (you already have these):**
 - Google + Vercel: **dedcellsec@gmail.com**
@@ -15,13 +15,13 @@ of the code and redeploy. No JavaScript knowledge needed — just copy/paste.
 
 ---
 
-## PART A — Create the Google Sheet + script (get your URL)
+## PART A - Create the Google Sheet + script (get your URL)
 
 > Do everything in PART A while signed in to Google as **dedcellsec@gmail.com**
 > (NOT a personal account), or the leads go to the wrong place.
 
 1. Go to https://sheets.google.com → click **+ Blank spreadsheet**.
-2. Rename it (top-left) to **Dedcell Leads**. Leave it empty — the script fills it.
+2. Rename it (top-left) to **Dedcell Leads**. Leave it empty - the script fills it.
 3. In that sheet: menu **Extensions → Apps Script**. A code editor opens in a new tab.
 4. Delete everything in the editor (click inside, `Ctrl+A`, `Delete`).
 5. Open the file **`contact-form-apps-script.gs`** from our repo, copy its ENTIRE contents,
@@ -34,16 +34,16 @@ of the code and redeploy. No JavaScript knowledge needed — just copy/paste.
    - Click **Deploy**.
 8. **Authorize** (one-time): click **Authorize access** → pick dedcellsec@gmail.com →
    if you see *"Google hasn't verified this app"*, click **Advanced → Go to Dedcell Form Handler (unsafe)** → **Allow**.
-   *(It's our own script — this warning is normal.)*
+   *(It's our own script - this warning is normal.)*
 9. Copy the **Web app URL**. It looks like:
    `https://script.google.com/macros/s/AKfycb....../exec`  ← **this is the URL you need. Keep it.**
 
 > Quick check: paste that `/exec` URL in a browser tab. Seeing an error about GET / "script function
-> not found" is **fine** — it just proves the link is live (the form uses POST, not GET).
+> not found" is **fine** - it just proves the link is live (the form uses POST, not GET).
 
 ---
 
-## PART B — Put your URL into the website (terminal)
+## PART B - Put your URL into the website (terminal)
 
 Open a terminal on your Linux Mint machine.
 
@@ -77,9 +77,9 @@ const CONTACT_FORM_URL = 'https://script.google.com/macros/s/AKfycb....../exec';
 
 ---
 
-## PART C — Deploy it live
+## PART C - Deploy it live
 
-Pick **ONE** of the two methods below. **Method 1 is preferred** — after a 5-minute one-time
+Pick **ONE** of the two methods below. **Method 1 is preferred** - after a 5-minute one-time
 setup, every future change deploys automatically just by pushing to GitHub.
 
 ### Method 1 (recommended): push to GitHub → Vercel auto-deploys
@@ -118,7 +118,7 @@ git add public/index.html && git commit -m "Connect contact form to Google Sheet
 
 ---
 
-## PART D — Test it end-to-end (do this, don't skip)
+## PART D - Test it end-to-end (do this, don't skip)
 
 1. Wait ~1 minute after deploying, then open https://dedcellsecurity.in/#/contact
    and do a hard refresh: `Ctrl+Shift+R`.
@@ -126,15 +126,15 @@ git add public/index.html && git commit -m "Connect contact form to Google Sheet
 3. Check that it worked:
    - The **Dedcell Leads** Google Sheet has a new row (a "Leads" tab appears automatically).
    - **dedcellsec@gmail.com** received a "New Security Audit Request" email.
-4. If both happened — **done.** 🎉  Delete the test row from the sheet.
+4. If both happened - **done.** 🎉  Delete the test row from the sheet.
 
 ---
 
 ## Troubleshooting
 - **No row / no email:** the URL is probably wrong. Re-check that `CONTACT_FORM_URL` ends in
   `/exec` and that in Part A step 7 you set **Who has access = Anyone**.
-- **Form shows "Network error":** you likely left the placeholder text or removed a quote —
+- **Form shows "Network error":** you likely left the placeholder text or removed a quote
   re-open the file and check the `CONTACT_FORM_URL` line.
 - **Changed the Apps Script later?** You MUST redeploy it: in Apps Script go to
   **Deploy → Manage deployments → (pencil/Edit) → Deploy**, or the changes won't take effect.
-- **Don't delete** the "Dedcell Leads" sheet or the "Dedcell Form Handler" script — the site depends on them.
+- **Don't delete** the "Dedcell Leads" sheet or the "Dedcell Form Handler" script - the site depends on them.

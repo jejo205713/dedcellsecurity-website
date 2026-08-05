@@ -1,4 +1,4 @@
-// Dedcell Security — contact form handler (Google Apps Script Web App)
+// Dedcell Security - contact form handler (Google Apps Script Web App)
 // Writes each submission to the "Leads" sheet AND emails you a notification.
 // Setup: Google Sheet → Extensions → Apps Script → paste this → Deploy as Web App.
 //
@@ -6,7 +6,7 @@
 // which does per-IP rate limiting + validation. The guards below are a
 // defense-in-depth backstop in case the /exec URL is ever hit directly:
 //   - a global rate cap (protects against floods),
-//   - a daily email-quota guard (protects Gmail's ~100 emails/day limit —
+//   - a daily email-quota guard (protects Gmail's ~100 emails/day limit
 //     over the cap we still save the row, we just skip the email),
 //   - server-side validation (silently drops junk / direct-abuse hits),
 //   - formula/CSV-injection sanitization before writing to the Sheet.

@@ -1,0 +1,51 @@
+---
+title: What is an S3 Bucket Misconfiguration?
+definition: >-
+  An S3 bucket misconfiguration is a cloud storage container left readable or writable by the public, exposing whatever it holds - a recurring cause of large data breaches involving no exploitation at all.
+category: cloud-security
+relatedTerms:
+  - cloud-security-posture-management
+  - iam
+  - cloud-security
+metaTitle: What is an S3 Bucket Misconfiguration?
+metaDescription: >-
+  Public S3 buckets explained - how they happen, why attackers find them within hours, and the settings that prevent exposure by default.
+publishedDate: 2026-08-05
+draft: false
+---
+
+A misconfigured object storage bucket is one of the most reliable sources of large breaches, and it involves no vulnerability whatsoever. The system worked exactly as configured. It was configured to serve the data to everyone.
+
+## How it happens
+
+**Debugging that stayed.** Access failed, someone loosened the policy to prove it was permissions, the change was never reverted.
+
+**Misread scope.** In AWS, "authenticated users" once meant any AWS account holder, not any user of *your* application. That subtlety alone caused several notable exposures.
+
+**Backups and exports.** The production database is locked down; the nightly dump written to storage for convenience is not.
+
+**Third parties.** A contractor or analytics vendor provisions a bucket outside your review.
+
+**Policy interaction.** Bucket policy, object ACLs, access points and account settings interact in ways that are easy to get wrong when combined.
+
+## Why exposure is immediate
+
+There is no obscurity to rely on. Bucket namespaces are global and enumerable, common naming patterns are guessable, and public scanning services continuously index open storage. Certificate transparency logs and DNS records leak names too. The realistic assumption is that a public bucket is found within hours.
+
+## What ends up in them
+
+Assessment findings are consistent: customer documents and identity paperwork, database backups, internal source code, `.env` files with live credentials, and application logs containing session tokens. The credentials are the compounding problem - an exposed key turns a storage leak into account compromise via [[iam]].
+
+## Preventing it
+
+**Turn on account-level public access blocking** and leave it on. On AWS this overrides individual bucket and object settings, which is exactly what you want: a single control that cannot be undone by a careless policy on one bucket.
+
+**Default to private.** Public access should require a deliberate, reviewed exception.
+
+**Use a CDN with signed URLs** for content that genuinely must be served publicly, so the origin bucket stays private.
+
+**Encrypt at rest** - limits damage if a snapshot leaks by another route.
+
+**Enable access logging.** Without it, you cannot answer the only question that matters after an exposure: was anything actually downloaded.
+
+**Monitor continuously** with [[cloud-security-posture-management]], because the risk is drift over time rather than the state on setup day.

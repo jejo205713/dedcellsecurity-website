@@ -4,7 +4,7 @@
  * Honest note on CSP: Next.js App Router inlines the RSC payload as a <script>
  * on every statically prerendered page, so a nonce-based policy is impossible
  * without making every page dynamic. `script-src 'unsafe-inline'` is therefore
- * unavoidable here, which means **CSP is not our XSS control** — sanitising
+ * unavoidable here, which means **CSP is not our XSS control** - sanitising
  * author content at render time is (see lib/mdx/render.ts). What CSP does buy
  * us: no framing, no plugins, no base-tag hijack, no form exfiltration.
  */
@@ -12,13 +12,13 @@ const isDev = process.env.NODE_ENV === 'development';
 
 /**
  * `next dev` compiles every module wrapped in `eval()` (webpack's
- * eval-source-map devtool) — the Keystatic page chunk alone contains ~1,138
+ * eval-source-map devtool) - the Keystatic page chunk alone contains ~1,138
  * calls. A `script-src` without `'unsafe-eval'` therefore blocks **all**
  * client-side JavaScript in development: no navbar scroll effect, no contact
  * form, and a completely blank /keystatic.
  *
  * That is exactly what happened, and it is a nasty failure mode because the
- * server still returns 200 with a full HTML document — nothing looks wrong
+ * server still returns 200 with a full HTML document - nothing looks wrong
  * until you open the console.
  *
  * `'unsafe-eval'` is therefore allowed in development only. Production builds

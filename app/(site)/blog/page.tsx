@@ -10,7 +10,7 @@ import { categoryName } from '@/lib/taxonomy';
 export const metadata: Metadata = {
   title: 'Blog',
   description:
-    'Field notes from real engagements — findings, methodology, and what actually breaks in production.',
+    'Field notes from real engagements - findings, methodology, and what actually breaks in production.',
   alternates: { canonical: '/blog' },
 };
 
@@ -39,7 +39,7 @@ export default function BlogHub() {
           From the <span className="text-gray-500">Engagements.</span>
         </h1>
         <p className="mt-5 text-gray-500 max-w-2xl leading-relaxed">
-          What we actually find when we test production systems — the findings, the
+          What we actually find when we test production systems - the findings, the
           methodology, and the decisions that turn a near-miss into a breach.
         </p>
       </header>

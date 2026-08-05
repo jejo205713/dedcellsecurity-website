@@ -1,0 +1,52 @@
+---
+title: What is SSRF?
+definition: >-
+  Server-side request forgery is a vulnerability where an attacker makes your server send HTTP requests to destinations of their choosing, reaching internal systems that were never meant to be reachable from outside.
+category: web-application-security
+relatedTerms:
+  - owasp-top-10
+  - cloud-security-posture-management
+  - iam
+  - penetration-testing
+metaTitle: What is SSRF? Server-Side Request Forgery
+metaDescription: >-
+  SSRF explained - how it reaches internal services and cloud metadata endpoints, why blocklists fail, and what actually mitigates it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Server-side request forgery turns your server into the attacker's proxy. Any feature that fetches a URL supplied by a user - importing an image, rendering a webpage to PDF, validating a webhook, previewing a link - is a candidate.
+
+The value to an attacker is position. Your server sits inside the network. It can reach things the internet cannot: internal admin panels, databases bound to private addresses, service endpoints with no authentication because "they are internal".
+
+## The cloud metadata problem
+
+SSRF became substantially more serious with cloud hosting. Major providers expose an instance metadata service on a link-local address - `169.254.169.254` - which returns configuration and, critically, temporary credentials for the instance's attached role.
+
+An SSRF that reaches it can retrieve those credentials and then act with the instance's permissions against the cloud API. If that role is over-permissioned, and roles usually are, this escalates from "server fetched a URL" to "attacker has your storage buckets". This is why [[iam]] least-privilege is a genuine SSRF control, and why [[cloud-security-posture-management]] tooling flags permissive instance roles.
+
+Newer metadata implementations require a token obtained via a `PUT` request, which blocks simple GET-based SSRF. Enforce that version rather than leaving the legacy one enabled.
+
+## Why blocklists fail
+
+The instinct is to block `localhost`, `127.0.0.1` and private ranges. This does not survive contact:
+
+- Alternative encodings: `127.1`, `0177.0.0.1`, decimal integer forms
+- DNS names that resolve to internal addresses - including attacker-controlled domains pointing at `127.0.0.1`
+- **DNS rebinding**: the name resolves to a public address during validation, then to an internal one when fetched
+- Redirects: an allowed URL responds `302` to an internal one
+- IPv6, and IPv4-mapped IPv6 forms
+
+Each requires another patch. The attacker needs one you missed.
+
+## What works
+
+**Allow-list destinations.** If the feature fetches from three known partners, permit exactly those. This is the only reliable control.
+
+**Resolve, validate, then connect to the resolved address** - closing the rebinding gap between check and use.
+
+**Disable redirect following**, or re-validate every hop.
+
+**Egress filtering.** The server making these requests usually has no business reaching arbitrary internal hosts. Enforce that at the network layer, where an application bug cannot undo it.
+
+**Require authentication on internal services.** "It is only reachable internally" is an assumption SSRF exists to break.

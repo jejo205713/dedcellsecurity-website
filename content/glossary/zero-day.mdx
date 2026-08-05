@@ -1,0 +1,47 @@
+---
+title: What is a Zero-Day?
+definition: >-
+  A zero-day is a vulnerability that is being exploited before the vendor has released a fix, leaving defenders with zero days of warning to patch against an attack already in progress.
+category: vulnerability-management
+relatedTerms:
+  - cve
+  - vulnerability-assessment
+  - edr
+  - threat-hunting
+  - incident-response
+metaTitle: What is a Zero-Day Vulnerability?
+metaDescription: >-
+  Zero-day explained - what the term really means, why n-day exploitation is a bigger practical risk, and what defends against an unknown flaw.
+publishedDate: 2026-08-05
+draft: false
+---
+
+A zero-day is a vulnerability being exploited in the wild before a patch exists. The name refers to the defender's warning: zero days.
+
+The term is used loosely, and the distinctions matter:
+
+- **Zero-day vulnerability** - a flaw the vendor does not yet know about
+- **Zero-day exploit** - working attack code for it
+- **Zero-day attack** - that exploit being used against real targets
+
+## The uncomfortable truth about priorities
+
+Zero-days get the headlines. **N-days cause far more breaches.**
+
+An n-day is a vulnerability that has been public and patched for some time - and is still unpatched on your systems. Once a [[cve]] is published, exploit code frequently follows within days, and mass scanning begins immediately after. The window between disclosure and widespread exploitation is now measured in hours for internet-facing software.
+
+Most organisations breached through a known vulnerability were breached weeks or months after the fix shipped. Chasing zero-day headlines while a two-year-old flaw sits on an internet-facing server is misallocated attention.
+
+## Defending against something unknown
+
+You cannot patch what has no patch. What you can do is reduce what a successful exploit achieves and shorten how long it goes unnoticed:
+
+**Reduce exposure.** Every internet-facing service is a candidate target. The most reliable defence against a zero-day in a component is not running that component where an attacker can reach it.
+
+**Segment.** Assume a component will be compromised and limit what it can reach - this is the practical content of [[zero-trust]].
+
+**Behavioural detection.** Signatures cannot match an unknown exploit, but post-exploitation looks familiar: unexpected child processes, credential access, [[lateral-movement]]. That is what [[edr]] and [[threat-hunting]] are for. The exploit is novel; what the attacker does next rarely is.
+
+**Retain logs long enough** to answer "when did this start" once a zero-day is disclosed. Vendors often publish indicators after the fact; without retention you cannot check whether you were hit.
+
+**Have an [[incident-response]] plan** that does not depend on a patch existing. Sometimes the answer is to disable a feature or take a service offline for a day, and that decision needs to be pre-authorised rather than debated during an incident.

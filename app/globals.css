@@ -161,14 +161,14 @@ h4,
   }
 
   /* ---------------------------------------------------------------------
-     Navigation — ported verbatim from index.html:193-219.
+     Navigation - ported verbatim from index.html:193-219.
 
      Copied as CSS rather than re-expressed in Tailwind on purpose. The first
      attempt re-derived these values and got five of them subtly wrong (border
      colour, logo border, the "SECURITY" wordmark, CTA hover, and the child
      transitions). The rule set is small and exact; translating it is pure risk.
 
-     React toggles exactly one class — `nav-glass` — the same way the original
+     React toggles exactly one class - `nav-glass` - the same way the original
      handler did. All colour behaviour lives here.
      --------------------------------------------------------------------- */
   .nav-glass {

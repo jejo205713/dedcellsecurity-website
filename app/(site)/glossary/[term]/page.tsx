@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!term) return {};
 
   return {
-    // An explicit metaTitle is the *whole* SEO title — `absolute` stops the
+    // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
     // root layout appending "| Dedcell Security" and pushing it past 60 chars.
     title: term.metaTitle ? { absolute: term.metaTitle } : term.title,
     description: term.metaDescription || term.definition,
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: term.draft ? { index: false, follow: false } : undefined,
     openGraph: {
       type: 'article',
-      // An explicit metaTitle is the *whole* SEO title — `absolute` stops the
+      // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
     // root layout appending "| Dedcell Security" and pushing it past 60 chars.
     title: term.metaTitle ? { absolute: term.metaTitle } : term.title,
       description: term.metaDescription || term.definition,
@@ -92,7 +92,7 @@ export default async function GlossaryTermPage({ params }: Props) {
         variant="light"
         eyebrow="Next Step"
         heading="Want this checked on your own systems?"
-        body="We run the assessments this was written from. Tell us your stack and we will scope it — no commitment."
+        body="We run the assessments this was written from. Tell us your stack and we will scope it - no commitment."
       />
     </>
   );

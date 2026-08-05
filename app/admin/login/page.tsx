@@ -21,7 +21,7 @@ const FALLBACK = '/keystatic';
  *
  * A previous version only rejected a leading `//`, which missed `/\evil.com`.
  * **Browsers normalise backslashes to forward slashes in URLs**, so that string
- * navigates to `//evil.com` — a protocol-relative URL pointing off-site. Any
+ * navigates to `//evil.com` - a protocol-relative URL pointing off-site. Any
  * backslash is now rejected outright, along with control characters (CR/LF
  * smuggling) and anything that fails to resolve back to this origin.
  */
@@ -39,7 +39,7 @@ function safeNextPath(next: string | undefined): string {
 
     // Re-check the *normalised* path, not just the input. `/..//evil.com`
     // survives the checks above but URL resolution collapses it to
-    // `//evil.com` — protocol-relative, and off-site the moment a browser
+    // `//evil.com` - protocol-relative, and off-site the moment a browser
     // navigates to it. Validating only the input misses this entirely.
     const path = resolved.pathname;
     if (!path.startsWith('/') || path.startsWith('//')) return FALLBACK;

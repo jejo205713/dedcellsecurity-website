@@ -19,10 +19,10 @@ import { rehypeSanitizeContent } from './sanitize';
  * happened when I tested it against this repo:
  *
  *   1. `<script>alert(1)</script>` in a body was emitted verbatim into the
- *      prerendered HTML and ran in the browser — stored XSS on our own domain,
+ *      prerendered HTML and ran in the browser - stored XSS on our own domain,
  *      one phished editor account away.
- *   2. `<div onClick={...}>` — the kind of thing that arrives inside pasted
- *      Blogger/Medium HTML — crashed `next build` with "Event handlers cannot
+ *   2. `<div onClick={...}>` - the kind of thing that arrives inside pasted
+ *      Blogger/Medium HTML - crashed `next build` with "Event handlers cannot
  *      be passed to Client Component props", taking the whole deploy down.
  *
  * Markdown-only parsing removes both classes at once. Raw HTML never becomes an
@@ -32,7 +32,7 @@ import { rehypeSanitizeContent } from './sanitize';
  *
  * The trade-off, stated plainly: you cannot embed React components in an article
  * any more. Nothing in content/ does. When we want a callout box or a CTA block,
- * it gets added here as a reviewed component with an allow-listed tag — not as
+ * it gets added here as a reviewed component with an allow-listed tag - not as
  * arbitrary markup typed into a text field.
  */
 

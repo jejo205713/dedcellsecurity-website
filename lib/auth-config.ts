@@ -5,8 +5,8 @@
  * Read this alongside lib/keystatic-storage.ts. Two independent gates protect
  * the CMS and both fail closed:
  *
- *   1. This file — is there a configured account to log in as?
- *   2. keystatic-storage.ts — is there a writable storage backend?
+ *   1. This file - is there a configured account to log in as?
+ *   2. keystatic-storage.ts - is there a writable storage backend?
  *
  * If either answer is no outside `next dev`, /keystatic does not exist.
  */

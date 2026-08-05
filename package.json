@@ -2,7 +2,7 @@
   "name": "dedcell-security-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Dedcell Security — marketing site + SEO content platform (Next.js 15 App Router). Migrated from the single-file static site in ../dedcell-security/public/index.html",
+  "description": "Dedcell Security - marketing site + SEO content platform (Next.js 15 App Router). Migrated from the single-file static site in ../dedcell-security/public/index.html",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

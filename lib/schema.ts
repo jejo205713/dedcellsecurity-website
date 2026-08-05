@@ -11,7 +11,7 @@ const organization = {
 
 /**
  * Sitewide Organization schema. This is what declares the company logo to
- * Google — favicon links only control the small result icon.
+ * Google - favicon links only control the small result icon.
  *
  * Ported from the inline block in dedcell-security/public/index.html:34-50,
  * which the page port did not carry over because it lived in <head>, not in a

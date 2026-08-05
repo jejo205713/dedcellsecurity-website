@@ -23,7 +23,7 @@ async function main() {
     for (const slug of slugs) {
       const entry = await reader.collections[name].read(slug);
       if (!entry) {
-        console.error(`  ✗ ${slug} — Keystatic could not parse this file`);
+        console.error(`  ✗ ${slug} - Keystatic could not parse this file`);
         failures++;
         continue;
       }
@@ -40,7 +40,7 @@ async function main() {
       }
 
       if (missing.length) {
-        console.error(`  ✗ ${slug} — missing: ${missing.join(', ')}`);
+        console.error(`  ✗ ${slug} - missing: ${missing.join(', ')}`);
         failures++;
       } else {
         console.log(`  ✓ ${slug}${entry.draft ? ' (draft)' : ''}`);

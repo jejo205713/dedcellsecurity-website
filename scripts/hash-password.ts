@@ -4,7 +4,7 @@
  * Run:  npm run auth:hash -- 'your-password-here'
  *
  * Prints the three environment variables to set. The plaintext password is
- * never written anywhere — only the PBKDF2 hash, which cannot be reversed.
+ * never written anywhere - only the PBKDF2 hash, which cannot be reversed.
  *
  * Quote the password in your shell, and prefix the command with a space if your
  * shell records history (` npm run auth:hash …`), so it does not land in
@@ -46,7 +46,7 @@ Add these to your Vercel project's environment variables
 
 Notes:
   - AUTH_SECRET signs session cookies. Rotating it invalidates every session
-    immediately — that is the lever to pull if credentials are ever suspected.
+    immediately - that is the lever to pull if credentials are ever suspected.
   - PBKDF2-HMAC-SHA256, ${PBKDF2_ITERATIONS.toLocaleString()} iterations, 16-byte random salt.
   - Set all three on Production AND Preview, or the CMS 404s on previews.
   - Never commit these. .env.local is gitignored.

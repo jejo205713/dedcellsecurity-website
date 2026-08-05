@@ -1,0 +1,54 @@
+---
+title: What is Threat Hunting?
+definition: >-
+  Threat hunting is the proactive search for attackers already inside your environment, driven by hypotheses about adversary behaviour rather than waiting for an alert to fire.
+category: blue-team
+relatedTerms:
+  - soc
+  - siem
+  - edr
+  - incident-response
+  - mitre-attack
+metaTitle: What is Threat Hunting?
+metaDescription: >-
+  Threat hunting explained - hypothesis-driven searching, how it differs from alert triage, what you need before starting, and how to measure it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Threat hunting starts from an uncomfortable assumption: something has already got in, and your detections did not catch it. The hunter's job is to go looking anyway.
+
+That inverts normal detection work. Alert triage is reactive - a rule fires, an analyst responds. Hunting is proactive - a human forms a hypothesis about how an attacker would behave and searches for evidence, whether or not anything alerted.
+
+## What a hunt looks like
+
+A hunt is hypothesis-driven, not "browsing logs".
+
+**Form a hypothesis.** "An attacker with a foothold would use built-in Windows tooling for discovery rather than dropping a binary." Frameworks like [[mitre-attack]] are the usual source, because they catalogue techniques observed in real intrusions.
+
+**Decide what evidence would exist.** Which process ancestry, which command lines, which network connections?
+
+**Search.** Across [[edr]] telemetry and [[siem]] data.
+
+**Investigate outliers.** Most will be legitimate administration. That is expected.
+
+**Turn the result into a detection.** This is the part that compounds. A hunt that finds nothing but produces a durable new detection has still paid for itself.
+
+## Hunt ideas that consistently produce something
+
+- Authentication from impossible-travel locations, or from hosting-provider address space
+- Scheduled tasks and services created outside change windows
+- Administrative tooling running on machines that have no administrative reason to run it
+- Long-lived outbound connections at regular intervals - beaconing
+- Cloud roles assumed by principals that have never assumed them before
+- Large data reads by accounts that normally read very little
+
+## Prerequisites nobody mentions
+
+Hunting needs data you may not have. Specifically: endpoint telemetry with process lineage and command lines, authentication logs across systems, network or DNS records, cloud audit trails - and **enough retention to look backwards**. Dwell times are measured in weeks or months. Thirty days of logs cannot answer a question about an intrusion that began in March.
+
+It also needs someone who knows what normal looks like *in your environment*. That knowledge is the scarce input, and it is why hunting is hard to fully outsource.
+
+## Measuring it
+
+Do not measure hunts by threats found - a hunt that finds nothing is a good outcome. Measure new detections created, visibility gaps discovered, and reduction in time-to-detect. Those are the durable products of the work. See [[soc]] and [[incident-response]].

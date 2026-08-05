@@ -2,7 +2,7 @@
  * Single-account authentication for the CMS.
  *
  * There is exactly one publisher account, defined by environment variables.
- * No registration, no password reset, no user table — the attack surface of
+ * No registration, no password reset, no user table - the attack surface of
  * each of those is the reason they are absent.
  *
  * **Web Crypto only.** This module is imported by middleware.ts, which runs on
@@ -21,7 +21,7 @@ const encoder = new TextEncoder();
 /** OWASP's floor for PBKDF2-HMAC-SHA256 at time of writing. */
 export const PBKDF2_ITERATIONS = 600_000;
 
-const SESSION_TTL_SECONDS = 60 * 60 * 8; // 8 hours — one working day, then re-auth.
+const SESSION_TTL_SECONDS = 60 * 60 * 8; // 8 hours - one working day, then re-auth.
 
 export const SESSION_COOKIE = 'dedcell_admin_session';
 
@@ -68,7 +68,7 @@ export function timingSafeEqual(a: string, b: string): boolean {
  *
  * Dot-separated, not the conventional `$`-separated PHC string. `.env` parsers
  * run dotenv-expand over values, so `$600000` inside a hash is read as a shell
- * variable and silently expands to nothing — the account then looks
+ * variable and silently expands to nothing - the account then looks
  * unconfigured and /keystatic 404s with no useful error. `.` is outside the
  * base64url alphabet, so it separates unambiguously and survives env files,
  * shells and CI secret stores untouched.
@@ -127,7 +127,7 @@ async function hmacKey(secret: string): Promise<CryptoKey> {
 /**
  * Signed, stateless session token: `<payload-b64url>.<hmac-b64url>`.
  *
- * Stateless on purpose — there is no session store to keep consistent across
+ * Stateless on purpose - there is no session store to keep consistent across
  * serverless instances. The cost is that a token cannot be revoked before it
  * expires; rotating AUTH_SECRET invalidates every session at once, which is the
  * intended lever if credentials are ever suspected.

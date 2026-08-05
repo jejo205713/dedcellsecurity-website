@@ -1,0 +1,44 @@
+---
+title: What is MFA?
+definition: >-
+  Multi-factor authentication requires more than one form of proof to sign in - typically a password plus a code or hardware key - so that a stolen password alone is not enough to take over an account.
+category: zero-trust
+relatedTerms:
+  - zero-trust
+  - iam
+  - jwt
+  - soc
+metaTitle: What is MFA? Multi-Factor Authentication
+metaDescription: >-
+  MFA explained - the factor types ranked by strength, why SMS is the weakest, MFA fatigue attacks, and what phishing-resistant actually means.
+publishedDate: 2026-08-05
+draft: false
+---
+
+MFA requires proof from more than one category: something you know (password), something you have (phone, hardware key), something you are (biometric). Two passwords are not MFA.
+
+It remains the highest-value control available relative to its cost. The overwhelming majority of account compromises begin with a credential - phished, reused from another breach, or guessed. MFA breaks that chain.
+
+## The methods, weakest to strongest
+
+**SMS codes.** Better than nothing, and the weakest option. Vulnerable to SIM swapping, where an attacker convinces a mobile operator to transfer the number. Also phishable in real time. Use it only where nothing better is available.
+
+**Authenticator apps (TOTP).** A rotating six-digit code generated on the device. No SIM swap exposure. Still phishable - a convincing fake login page collects the code and replays it within its validity window.
+
+**Push notifications.** Approve or deny on your phone. Convenient, and vulnerable to **MFA fatigue**: the attacker, holding a valid password, triggers prompts repeatedly until someone taps approve to stop the noise. Number matching mitigates this and should be enabled.
+
+**Hardware security keys and passkeys (FIDO2/WebAuthn).** Phishing-resistant by design. The key verifies the origin cryptographically, so a credential presented to `dedcel1security.in` simply will not work. This is the meaningful difference - every method above can be relayed through a proxy in real time; this one cannot.
+
+## What phishing-resistant means
+
+Modern phishing kits act as live proxies. The victim enters credentials and their TOTP code on a convincing page; the kit forwards both to the real site immediately and captures the resulting session. TOTP provides no protection against this.
+
+FIDO2 defeats it because the authentication is bound to the origin. That is why "we have MFA" and "we have phishing-resistant MFA" are materially different statements - worth being precise about when answering a customer security questionnaire.
+
+## Where to enable it first
+
+Email is the highest priority. Whoever controls email controls password resets for everything else. Then cloud consoles, source control, and any administrative interface - including the ones you built yourself.
+
+## Session tokens are the gap
+
+MFA protects the login. It does not protect a session already established. An attacker who steals a session token - through [[xss]], malware, or a proxy phishing kit - is past MFA entirely. Short session lifetimes, binding sessions to device signals, and revocation capability matter. See [[jwt]] on why revocation is harder than it looks, and [[zero-trust]] for the broader model.

@@ -9,7 +9,7 @@ import { ArrowRight, Check, Info, Loader2 } from 'lucide-react';
  *
  * Same contract as before: POST JSON to our own /api/contact, which validates,
  * rate-limits and sanitises before forwarding to Google Apps Script. The Apps
- * Script URL stays server-side. The honeypot field is unchanged — bots fill
+ * Script URL stays server-side. The honeypot field is unchanged - bots fill
  * `botcheck`, the server sees it and silently drops the submission.
  *
  * The client-side validation here is a courtesy for the user, not a control.

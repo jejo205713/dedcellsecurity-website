@@ -1,0 +1,51 @@
+---
+title: What is Red Teaming?
+definition: >-
+  Red teaming is a goal-driven adversary simulation that tests whether an organisation can detect and respond to a realistic attack, rather than trying to enumerate every vulnerability.
+category: red-team
+relatedTerms:
+  - penetration-testing
+  - ai-red-teaming
+  - mitre-attack
+  - soc
+  - incident-response
+metaTitle: What is Red Teaming?
+metaDescription: >-
+  Red teaming explained - how it differs from penetration testing, what a realistic engagement covers, and when your organisation is ready for one.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Red teaming asks a different question from a penetration test. A pentest asks "what is broken?" A red team asks **"would we notice, and what would we do?"**
+
+## The difference in practice
+
+[[penetration-testing]] aims for coverage - find as many exploitable weaknesses in scope as the time allows, report them all.
+
+Red teaming aims for an objective: reach the customer database, obtain domain administrator, move funds in a test transaction. The team takes whatever path works, stays quiet, and stops once the objective is met. They may report only three findings, because they only needed three.
+
+The deliverable is different too. A red team report is largely about **your detection and response**: which actions generated telemetry, which alerts fired, which were investigated, how long until someone noticed, and what happened when they did.
+
+## What is typically in scope
+
+- External infrastructure and exposed applications
+- Phishing and social engineering, if authorised
+- Physical access, in some engagements
+- Post-compromise activity: persistence, [[lateral-movement]], privilege escalation
+- Data exfiltration, usually simulated with benign data
+
+Techniques are commonly mapped to [[mitre-attack]] so your [[soc]] can compare what happened against what they saw.
+
+## Purple teaming
+
+Increasingly the better first exercise. Red and blue work together in the open: the red operator executes a technique, and the defenders check in real time whether it produced telemetry and whether a detection fired. If not, they build one and re-run it.
+
+Purple teaming produces more durable improvement per day than a covert engagement, because the feedback loop is immediate. Covert red teaming answers "would we catch a real attacker"; purple answers "how do we get better", which is usually the more useful question first.
+
+## Are you ready for one?
+
+Be honest here. Red teaming is expensive and it produces the wrong lesson if the answer is already obvious.
+
+If you have no [[edr]], no central logging, no MFA, and nobody who monitors alerts, a red team will succeed within hours and tell you nothing you did not know. That budget is better spent on the controls themselves.
+
+Red teaming earns its cost once you have a functioning detection capability and want to know whether it works against someone actively trying to evade it. Until then, [[penetration-testing]] gives you more actionable findings per rupee.

@@ -41,7 +41,7 @@ export default function GlossaryHub() {
         </h1>
         <p className="mt-5 text-gray-500 max-w-2xl leading-relaxed">
           {terms.length} {terms.length === 1 ? 'term' : 'terms'}, written by the people who
-          run the assessments — not summarised from other websites.
+          run the assessments - not summarised from other websites.
         </p>
       </header>
 

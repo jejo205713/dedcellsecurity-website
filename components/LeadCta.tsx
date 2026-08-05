@@ -5,7 +5,7 @@ import { ArrowRight, Mail } from 'lucide-react';
  * The end-of-page conversion block.
  *
  * Exists because removing the pricing tables removed the only thing telling a
- * reader what to do next — and because the blog and glossary pages had no call
+ * reader what to do next - and because the blog and glossary pages had no call
  * to action at all, which made every article a funnel dead end
  * (docs/seo/05-INTERNAL-LINKING.md: "no dead ends").
  *
@@ -27,7 +27,7 @@ type Props = {
 export function LeadCta({
   eyebrow = 'Get Started',
   heading = 'Not sure what you need assessed?',
-  body = 'Tell us your stack in one line. We scope it, tell you what it costs, and you decide — no commitment, no sales sequence.',
+  body = 'Tell us your stack in one line. We scope it, tell you what it costs, and you decide - no commitment, no sales sequence.',
   variant = 'dark',
 }: Props) {
   const dark = variant === 'dark';

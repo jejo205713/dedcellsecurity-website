@@ -3,7 +3,7 @@
  *
  * The previous rule was `VERCEL_ENV !== 'production'`, which inverts the moment
  * `VERCEL_ENV` is absent: a plain `next build && next start`, a Docker image, a
- * self-hosted node — every one of those publishes every draft. Caught by running
+ * self-hosted node - every one of those publishes every draft. Caught by running
  * a production build outside Vercel, where an unpublished post appeared in the
  * sitemap.
  *

@@ -1,0 +1,43 @@
+---
+title: What is Penetration Testing?
+definition: >-
+  Penetration testing is an authorised simulated attack on your systems, carried out by security professionals, to find and prove exploitable weaknesses before a real attacker does.
+category: vulnerability-management
+relatedTerms:
+  - vulnerability-assessment
+  - vapt
+  - red-teaming
+  - owasp-top-10
+metaTitle: What is Penetration Testing? A Plain Guide
+metaDescription: >-
+  Penetration testing explained - how it differs from a vulnerability scan, what a test actually involves, how long it takes, and what you get at the end.
+publishedDate: 2026-08-05
+draft: false
+---
+
+A penetration test is not a scan. A scanner compares your software against a list of known issues and produces a report full of maybes. A penetration test puts a human in front of your system who tries to break in, and who then proves the finding by exploiting it.
+
+That distinction matters commercially. Scanner output is cheap and mostly noise. A tester chaining three individually-low findings into full account takeover is the thing that changes what your engineering team does next week.
+
+## What a test actually involves
+
+Testing follows a repeatable shape, whatever the target:
+
+1. **Scoping.** What is in scope, what is explicitly out, when testing happens, and who to call if something breaks. This gets written down and signed - see the note on authorisation below.
+2. **Reconnaissance.** Mapping the attack surface: subdomains, exposed services, technology versions, and anything about the organisation that helps an attacker.
+3. **Discovery.** Finding candidate weaknesses, both automatically and by hand. This is where [[owasp-top-10]] categories get systematically checked on a web target.
+4. **Exploitation.** Proving the weakness is real. A finding nobody demonstrated is a theory.
+5. **Post-exploitation.** Establishing what an attacker could reach from that foothold - [[lateral-movement]], data access, persistence.
+6. **Reporting.** An executive summary that a non-technical reader can act on, and technical detail a developer can reproduce.
+
+## Black box, grey box, white box
+
+These describe how much you tell the tester. **Black box** means no information, simulating an outside attacker - realistic, but a lot of the budget goes on discovery. **White box** means full source and credentials, which finds far more per day. **Grey box** - usually credentials for each user role, no source - is the sensible default for most applications, because the interesting bugs like [[broken-access-control]] live behind login.
+
+## Authorisation is not optional
+
+Testing a system without written permission is a criminal offence in most jurisdictions, India included. A legitimate engagement always has a signed Statement of Work and Rules of Engagement before anyone touches anything. Any firm willing to skip that is telling you something.
+
+## How often
+
+Annually is the common baseline, but frequency should follow change. A product shipping weekly has an attack surface that looks nothing like last year's. Test after significant architectural change, before a major launch, and when a customer or framework requires it. A retest after remediation matters as much as the original test - a fix that was never verified is an assumption.

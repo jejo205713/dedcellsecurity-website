@@ -20,8 +20,8 @@ import { usePathname } from 'next/navigation';
  * Do not reintroduce Tailwind colour utilities here. An earlier version did,
  * and silently diverged from the original in five places.
  *
- * The class hooks the CSS depends on — `.nav-text`, `#nav-links`,
- * `#nav-cta`, `#mobile-menu-btn` — must stay exactly as written.
+ * The class hooks the CSS depends on - `.nav-text`, `#nav-links`,
+ * `#nav-cta`, `#mobile-menu-btn` - must stay exactly as written.
  *
  * Blog and Glossary are additions; neither word appeared in the original site.
  */

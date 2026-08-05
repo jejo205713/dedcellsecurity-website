@@ -1,0 +1,50 @@
+---
+title: What is Model Poisoning?
+definition: >-
+  Model poisoning is an attack that corrupts an AI model by tampering with its training data or weights, embedding hidden behaviour that activates on a trigger the attacker controls.
+category: security-engineering
+relatedTerms:
+  - llm-security
+  - prompt-injection
+  - ai-red-teaming
+  - supply-chain-attack
+metaTitle: What is Model Poisoning?
+metaDescription: >-
+  Model poisoning explained - data poisoning, backdoor triggers, RAG poisoning, and why supply chain controls matter more than detection.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Model poisoning attacks the model itself rather than the prompt. Where [[prompt-injection]] manipulates a model at inference time, poisoning changes what the model *is*.
+
+## Data poisoning
+
+An attacker gets malicious examples into the training set. At scale this is easier than it sounds - models trained on crawled web data have a supply chain that includes anything publicly publishable. Research has shown that acquiring expired domains referenced in public datasets, or timing edits to crowd-sourced sources, can place controlled content into training corpora at low cost.
+
+The effect can be **targeted** - degrade performance on one specific topic - or **backdoored**, which is the more dangerous shape.
+
+## Backdoor triggers
+
+A backdoored model behaves normally on every input except those containing a trigger the attacker chose: a rare token sequence, a specific phrase, an image watermark. On the trigger, it produces attacker-chosen output.
+
+This defeats ordinary evaluation completely. Benchmarks look fine because benchmarks do not contain the trigger. The model passes review and ships.
+
+## Weight tampering and the model supply chain
+
+Most teams do not train models; they download them. That makes the distribution channel the attack surface. Risks include a compromised account on a public model hub, a typosquatted repository name, or a model serialised in a format that executes code on load - historically a real vulnerability with pickle-based formats.
+
+## RAG poisoning
+
+The most practically relevant variant for teams building on hosted models. You are not training anything, but you are feeding a retrieval store that the model treats as ground truth. Anyone who can write into that store - through a support ticket, a wiki page, a synced document, a scraped site - can influence answers. If the retrieved chunk also carries instructions, you have indirect [[prompt-injection]] as well.
+
+## What helps
+
+**Provenance and pinning.** Know where weights came from, verify checksums, pin versions. Treat a model file exactly like a third-party binary dependency - see [[supply-chain-attack]].
+
+**Safe deserialisation.** Prefer formats that cannot execute code on load.
+
+**Control write access to retrieval stores**, and validate content on ingest rather than trusting it at query time.
+
+**Behavioural testing on your own triggers.** Since you cannot detect an unknown trigger, test the behaviours that matter to your business under adversarial conditions - the [[ai-red-teaming]] approach.
+
+**Prefer models you can attribute** over the cheapest available checkpoint from an unverified account.

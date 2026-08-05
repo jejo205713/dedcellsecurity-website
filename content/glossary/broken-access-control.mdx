@@ -1,0 +1,48 @@
+---
+title: What is Broken Access Control?
+definition: >-
+  Broken access control is a flaw where users can act outside their intended permissions - reading, changing or deleting data belonging to others - because the application fails to enforce who is allowed to do what.
+category: web-application-security
+relatedTerms:
+  - owasp-top-10
+  - bola
+  - penetration-testing
+  - vulnerability-assessment
+metaTitle: What is Broken Access Control?
+metaDescription: >-
+  Broken access control explained - IDOR, privilege escalation, why it is the number one web risk, and why scanners almost never find it.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Broken access control is the number one category in the [[owasp-top-10]], and in our experience the most common critical finding in web application testing. It is also the class of flaw automated tools are worst at detecting.
+
+The reason is simple: a scanner has no idea what your application is *supposed* to allow. It can see that `/api/invoice/1043` returns 200. It cannot know that the person requesting it should only ever see invoice 1044.
+
+## What it looks like in practice
+
+**Insecure Direct Object Reference (IDOR).** The identifier in a URL or request body points at a record, and the server fetches it without checking ownership. Change `1043` to `1042` and read someone else's data. In APIs this is called [[bola]] and it is consistently the top API risk.
+
+**Vertical privilege escalation.** A standard user reaches administrative functionality - often because the admin route is merely hidden in the interface, not protected on the server.
+
+**Horizontal privilege escalation.** A user acts as a different user at the same privilege level. Same as IDOR, framed by identity rather than object.
+
+**Forced browsing.** Navigating directly to a URL the interface never links to. If the only thing protecting `/admin/users` is that the menu item is hidden, it is not protected.
+
+**Method and parameter tampering.** The `GET` is checked; the `PUT` on the same endpoint is not. Or a `role` field in the request body is trusted because the UI never sets it.
+
+## Why it is so common
+
+Access control is not a library you install. It is a decision that must be made correctly at every single endpoint, by every developer, forever. One new route added under deadline pressure, with the ownership check omitted, is all it takes. There is no framework default that makes this safe, which is precisely why it stays at number one.
+
+## What actually fixes it
+
+**Deny by default.** Access should require an explicit grant. A new endpoint with no rules should be inaccessible, not open.
+
+**Enforce server-side, always.** The client is not a security control. Hiding a button changes nothing.
+
+**Check ownership on the object, not the route.** The question is never "is this user an admin?" but "is this user allowed to touch *this specific record*?"
+
+**Prefer indirect references** where practical - an unguessable identifier reduces trivial enumeration, though it is obfuscation, not authorisation.
+
+**Test it with real accounts.** Give a tester two accounts at each privilege level and let them try to cross the boundary. This is the single highest-value hour of most [[penetration-testing]] engagements.

@@ -10,12 +10,12 @@ import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
  *
  * Every request to /keystatic and /api/keystatic passes through here before it
  * reaches any handler. This matters more than it might look: Keystatic's own
- * API has **no authentication of its own** in local-storage mode — it hands
+ * API has **no authentication of its own** in local-storage mode - it hands
  * requests straight to the filesystem. Without this middleware, knowing the URL
  * is the same as having write access.
  *
  * Deliberately fails closed. If the account is not configured, the admin does
- * not exist — it 404s rather than falling open to an unauthenticated CMS.
+ * not exist - it 404s rather than falling open to an unauthenticated CMS.
  *
  * Runs on the Edge runtime, so everything it imports must be Web Crypto only
  * (see lib/auth.ts).
@@ -30,7 +30,7 @@ export default async function proxy(request: NextRequest) {
   }
 
   // No environment exemption, deliberately. An earlier version skipped this gate
-  // in `next dev` so developers would not need credentials locally — but that
+  // in `next dev` so developers would not need credentials locally - but that
   // means the auth path is never the path anyone actually exercises, and a
   // regression in it would only surface in production. Signing in at
   // /admin/login is now the single way into the CMS, everywhere.

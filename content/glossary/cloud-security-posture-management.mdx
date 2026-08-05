@@ -1,0 +1,51 @@
+---
+title: What is CSPM?
+definition: >-
+  Cloud Security Posture Management is tooling that continuously inspects your cloud configuration against security benchmarks, flagging misconfigurations such as public storage, over-permissioned roles and disabled logging.
+category: cloud-security
+relatedTerms:
+  - iam
+  - s3-bucket-misconfiguration
+  - cloud-security
+  - vulnerability-assessment
+metaTitle: What is CSPM? Cloud Posture Management
+metaDescription: >-
+  CSPM explained - what it detects, why cloud breaches are usually misconfiguration rather than exploitation, and what it cannot see.
+publishedDate: 2026-08-05
+draft: false
+---
+
+Most cloud breaches are not exploitation. They are configuration - a storage bucket set to public, a database exposed to the internet, a role with far broader permissions than its workload needs. CSPM exists because that configuration changes constantly and nobody reviews it.
+
+## What it checks
+
+CSPM continuously enumerates your cloud resources through the provider API and evaluates them against benchmarks such as CIS. Typical findings:
+
+- **Publicly accessible storage.** See [[s3-bucket-misconfiguration]].
+- **Over-permissioned identities** - the wildcard policy attached during an incident and never removed. Covered in [[iam]].
+- **Unrestricted network rules** - `0.0.0.0/0` on a management port.
+- **Unencrypted data** at rest or in transit.
+- **Disabled or unmonitored logging.** No audit trail means no [[incident-response]].
+- **Publicly exposed databases**, snapshots and machine images.
+- **Missing MFA** on privileged accounts.
+
+## Why continuous matters
+
+A point-in-time review tells you the state on the day someone looked. Cloud configuration changes many times a day through pipelines, and a single Terraform merge can expose a resource. The gap between "we passed the audit" and "the bucket has been public for six weeks" is exactly what continuous monitoring closes.
+
+## What CSPM does not do
+
+This is where expectations misalign. CSPM sees *configuration*, not behaviour or application logic.
+
+- It will not find [[broken-access-control]] in your application
+- It will not find [[sql-injection]] or business logic flaws
+- It cannot tell whether a permissive rule is a mistake or a deliberate, documented exception
+- It generates volume - an untuned deployment produces thousands of findings, most low-value
+
+That last point is the practical failure mode. CSPM tools are frequently bought, switched on, and then ignored because nobody triaged the output. The value is in the exception process, not the scan.
+
+## How it fits
+
+Think of CSPM as [[vulnerability-assessment]] for infrastructure configuration: broad, automated, continuous, and blind to intent. It pairs with manual review the same way - a human still has to determine which permissive rules are genuinely required and which are historical accidents nobody dares remove.
+
+For a small team, the highest-value subset is narrow: alert on public storage, on internet-exposed management ports, on IAM policy changes, and on logging being disabled. Those four cover a large share of what actually causes cloud incidents.

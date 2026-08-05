@@ -1,0 +1,42 @@
+---
+title: What is VAPT?
+definition: >-
+  VAPT (Vulnerability Assessment and Penetration Testing) combines automated scanning for breadth with manual exploitation for depth, giving you both a full inventory of weaknesses and proof of which ones actually matter.
+category: vulnerability-management
+relatedTerms:
+  - penetration-testing
+  - vulnerability-assessment
+  - cvss
+  - iso-27001
+metaTitle: What is VAPT? Assessment vs Penetration Testing
+metaDescription: >-
+  VAPT explained - what the vulnerability assessment half covers, what the penetration testing half adds, and why the two are quoted together in India.
+publishedDate: 2026-08-05
+draft: false
+---
+
+VAPT is two activities sold as one engagement, and understanding the split is the difference between buying what you need and buying a PDF.
+
+**Vulnerability assessment** is breadth. Automated tooling enumerates your assets and compares them against known vulnerability databases. It is fast, repeatable, and good at catching the unglamorous problems that actually get organisations breached: an unpatched service, an expired certificate, a forgotten staging box exposed to the internet.
+
+**Penetration testing** is depth. A human takes the interesting findings and tries to exploit them, chains them together, and establishes real business impact. See [[penetration-testing]] for how that half works.
+
+## Why they are sold together
+
+Neither half is sufficient alone. An assessment on its own produces a list where everything looks urgent and nothing is proven - teams learn to ignore it. A penetration test on its own, given limited days, will go deep on a few paths and may never look at the host nobody remembered.
+
+The term is especially common in India because regulators and enterprise procurement ask for it by name. CERT-In, RBI and SEBI frameworks all reference VAPT, and enterprise security questionnaires frequently require a current report before onboarding a vendor.
+
+## What you should receive
+
+A VAPT deliverable worth paying for contains:
+
+- An **executive summary** in business language, with a risk rating a board can act on
+- Each finding with a **[[cvss]] score** plus a plain statement of business impact
+- **Reproduction steps** and evidence - screenshots, requests, proof of concept
+- **Remediation guidance** specific to your stack, not a link to a generic article
+- A **retest** confirming the fixes work
+
+## What it does not do
+
+VAPT is a point-in-time exercise. It tells you about the system as it existed during the testing window. It is not a substitute for [[secure-code-review]] in your development process, for monitoring via a [[siem]], or for patching discipline. Organisations that treat an annual VAPT as their entire security programme are the ones who discover, during an [[incident-response]] engagement, that the report was eleven months old.

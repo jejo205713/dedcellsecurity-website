@@ -15,7 +15,7 @@ export const site = {
         ? `https://${process.env.VERCEL_URL}`
         : 'http://localhost:3000'),
   description:
-    'Offensive security and penetration testing for startups — VAPT, web, API, cloud and mobile assessments.',
+    'Offensive security and penetration testing for startups - VAPT, web, API, cloud and mobile assessments.',
   locale: 'en_IN',
 } as const;
 

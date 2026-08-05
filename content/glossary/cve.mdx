@@ -1,0 +1,51 @@
+---
+title: What is a CVE?
+definition: >-
+  A CVE (Common Vulnerabilities and Exposures) is a unique public identifier assigned to a specific known security vulnerability, so that everyone referring to it means exactly the same flaw.
+category: vulnerability-management
+relatedTerms:
+  - cvss
+  - vulnerability-assessment
+  - zero-day
+  - supply-chain-attack
+metaTitle: What is a CVE?
+metaDescription: >-
+  CVE explained - what an identifier does and does not tell you, how it relates to CVSS, and why most real findings never get one.
+publishedDate: 2026-08-05
+draft: false
+---
+
+A CVE identifier looks like `CVE-2024-3094`: the prefix, the year it was assigned, and a sequence number. Its entire job is to be an unambiguous name.
+
+Before CVEs, two vendors could describe the same flaw differently and nobody could tell whether they meant one problem or two. That is the whole problem the scheme solves - and it solves it well.
+
+## What a CVE tells you
+
+That a specific flaw in specific software versions has been publicly catalogued. The record includes affected versions, a description, references, and usually a [[cvss]] score.
+
+## What it does not tell you
+
+**Whether you are affected.** You may not run the vulnerable configuration, or the component may not be reachable.
+
+**Whether it is being exploited.** Most CVEs never are. A separate catalogue of known-exploited vulnerabilities is far better guidance for what to patch first than severity alone.
+
+**How severe it is *for you*.** See [[cvss]] on the difference between severity and risk.
+
+## The volume problem
+
+Tens of thousands of CVEs are published annually and the number keeps rising. No team can act on all of them. Prioritisation is the entire discipline:
+
+1. Is the affected component actually in our estate - do we have an accurate inventory?
+2. Is it reachable from where an attacker starts?
+3. Is there public exploit code, and is it being used?
+4. What does exploitation actually get them?
+
+Most organisations fail at step one. You cannot patch what you do not know you run, which is why a software bill of materials matters more than any scanner. Related: [[supply-chain-attack]].
+
+## Most findings never get a CVE
+
+Worth being clear about, because it causes confusion when reading assessment reports. CVEs are for vulnerabilities in *distributed software* - a library, an operating system, a product other people also run.
+
+The [[broken-access-control]] flaw in your own application does not get one. Nor does a business logic flaw, nor a cloud misconfiguration. These are specific to your deployment, so there is nobody else to notify.
+
+That means a report full of CVEs is describing your patching, and a report with none may still contain your worst problem. Both matter; they answer different questions. See [[vulnerability-assessment]] and [[zero-day]].

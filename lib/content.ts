@@ -37,7 +37,7 @@ type BaseDoc = {
 
 export type GlossaryDoc = BaseDoc & {
   type: 'glossary';
-  /** One-sentence plain-English answer — the featured-snippet target. */
+  /** One-sentence plain-English answer - the featured-snippet target. */
   definition: string;
   relatedTerms: string[];
 };
@@ -110,7 +110,7 @@ function readingMinutes(body: string): number {
  * H1s are read too, because pasted articles routinely carry their own `# Title`.
  * They are treated as H2 to match what the renderer does with them
  * (lib/mdx/remark-normalize-paste.ts), and a leading H1 that merely repeats the
- * page title is skipped — the renderer drops that one entirely.
+ * page title is skipped - the renderer drops that one entirely.
  */
 function extractHeadings(body: string, title: string): Heading[] {
   const withoutCode = body.replace(/^```[\s\S]*?^```/gm, '');
@@ -148,7 +148,7 @@ function parseDoc(type: ContentType, slug: string, file: string): Doc | null {
 
   const category = str(data.category);
   if (category && !isCategorySlug(category)) {
-    console.warn(`[content] ${file}: unknown category "${category}" — not in lib/taxonomy.ts`);
+    console.warn(`[content] ${file}: unknown category "${category}" - not in lib/taxonomy.ts`);
   }
 
   const base: BaseDoc = {
@@ -227,7 +227,7 @@ export function getBlogPost(slug: string): BlogDoc | undefined {
   return getBlogPosts().find((d) => d.slug === slug);
 }
 
-/** Every glossary slug that exists — drives the [[term]] link resolver. */
+/** Every glossary slug that exists - drives the [[term]] link resolver. */
 export function glossarySlugs(): Set<string> {
   return new Set(getGlossaryTerms().map((t) => t.slug));
 }
@@ -263,7 +263,7 @@ export function getRelatedTerms(doc: Doc, limit = 6): GlossaryDoc[] {
   return picked.slice(0, limit);
 }
 
-/** Group glossary terms by first letter, for the A–Z hub. */
+/** Group glossary terms by first letter, for the A - Z hub. */
 export function groupByLetter(terms: GlossaryDoc[]): Array<[string, GlossaryDoc[]]> {
   const groups = new Map<string, GlossaryDoc[]>();
   for (const t of terms) {

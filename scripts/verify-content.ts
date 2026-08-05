@@ -60,7 +60,7 @@ function checkUploads() {
     const ext = path.extname(name).toLowerCase();
 
     if (BANNED_IMAGE_EXT.has(ext)) {
-      fail(rel, `${ext} is not a safe image format — it can carry script. Re-export as PNG, JPG or WebP.`);
+      fail(rel, `${ext} is not a safe image format - it can carry script. Re-export as PNG, JPG or WebP.`);
       continue;
     }
     if (!SAFE_FILENAME.test(name)) {
@@ -69,7 +69,7 @@ function checkUploads() {
     }
     const sizeMb = fs.statSync(file).size / 1_000_000;
     if (sizeMb > 1) {
-      warn(rel, `${sizeMb.toFixed(1)}MB — every upload is committed to git forever. Compress below 500KB.`);
+      warn(rel, `${sizeMb.toFixed(1)}MB - every upload is committed to git forever. Compress below 500KB.`);
     }
     console.log(`  ✓ ${rel}`);
   }
@@ -114,7 +114,7 @@ function checkCollection(type: 'glossary' | 'blog') {
       if (typeof value !== 'string' || !value.trim()) continue;
       const problem = looksLikeMarkdown(value);
       if (problem) {
-        fail(where, `"${field}" ${problem}. It must be a plain sentence — it is what Google displays.`);
+        fail(where, `"${field}" ${problem}. It must be a plain sentence - it is what Google displays.`);
       }
     }
 
@@ -125,7 +125,7 @@ function checkCollection(type: 'glossary' | 'blog') {
         const onDisk = path.join(ROOT, 'public', src);
         if (!fs.existsSync(onDisk)) fail(where, `image not found on disk: ${src}`);
       } else if (/^https?:/i.test(src)) {
-        warn(where, `image is hot-linked to ${new URL(src).host} — it will break when that host does. Re-upload it.`);
+        warn(where, `image is hot-linked to ${new URL(src).host} - it will break when that host does. Re-upload it.`);
       }
       if (!alt.trim()) warn(where, `image ${path.basename(src)} has no alt text.`);
     }
@@ -134,7 +134,7 @@ function checkCollection(type: 'glossary' | 'blog') {
     const links = new Set([...content.matchAll(/\[\[([a-z0-9][a-z0-9-]*)\]\]/g)].map((m) => m[1]));
     const internal = [...content.matchAll(/\]\((\/[^)\s]*)/g)].length;
     if (links.size + internal === 0 && data.draft !== true) {
-      warn(where, 'no links to other pages on the site. Aim for 3–8 — this is the highest-leverage SEO action available.');
+      warn(where, 'no links to other pages on the site. Aim for 3-8 - this is the highest-leverage SEO action available.');
     }
 
     const words = content.trim().split(/\s+/).filter(Boolean).length;
@@ -142,7 +142,7 @@ function checkCollection(type: 'glossary' | 'blog') {
       warn(where, `${words} words. Below 300 the page is thin and drags down the pages linking to it.`);
     }
 
-    console.log(`  ✓ ${slug}${data.draft ? ' (draft)' : ''} — ${words} words, ${links.size + internal} internal links`);
+    console.log(`  ✓ ${slug}${data.draft ? ' (draft)' : ''} - ${words} words, ${links.size + internal} internal links`);
   }
 }
 

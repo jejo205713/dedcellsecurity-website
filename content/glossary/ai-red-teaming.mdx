@@ -1,0 +1,49 @@
+---
+title: What is AI Red Teaming?
+definition: >-
+  AI red teaming is adversarial testing of an AI system - deliberately attempting to make a model produce harmful output, leak data, or misuse its tools, in order to find failures before real users do.
+category: red-team
+relatedTerms:
+  - prompt-injection
+  - llm-security
+  - red-teaming
+  - model-poisoning
+metaTitle: What is AI Red Teaming?
+metaDescription: >-
+  AI red teaming explained - how it differs from traditional red teaming and from evals, what a test covers, and why results are probabilistic.
+publishedDate: 2026-08-05
+draft: false
+---
+
+AI red teaming is adversarial testing aimed at a model and the application around it. The goal is to make the system do something it should not: emit harmful content, reveal data it was given in confidence, or misuse a tool it can call.
+
+## How it differs from ordinary red teaming
+
+Conventional [[red-teaming]] targets a system with deterministic behaviour. An exploit either works or it does not, and it works the same way twice.
+
+Models are probabilistic. The same prompt can succeed on one attempt and fail the next. That has real consequences for how you test and report:
+
+- A single successful bypass is a finding, not a fluke. If it worked once, it can work again.
+- A single failure proves nothing. "We tried and it refused" is not evidence of safety.
+- Findings need attempt counts and success rates, not just pass/fail.
+- Fixes must be verified statistically. A guardrail that blocks 90% of attempts is not a control if the attacker can retry.
+
+## What a test covers
+
+**The model layer.** Jailbreaks, refusal bypasses, role-play and hypothetical framings, encoding and multilingual evasion, many-shot conditioning.
+
+**The application layer.** This is usually where the real findings are: [[prompt-injection]] through documents and web content the system ingests, and whether injected instructions reach tools.
+
+**The tool layer.** What can the model actually invoke? Are calls authorised as the end user or as a privileged service account? Can it be induced to make outbound requests - which becomes [[ssrf]] with extra steps?
+
+**Data boundaries.** Can one tenant's context be surfaced to another? Does retrieval respect per-user permissions, or does the vector store return anything semantically similar regardless of who is asking?
+
+**Denial of wallet.** Can an unauthenticated caller drive inference cost without limit?
+
+## Red teaming is not evals
+
+Evals measure typical-case quality against a benchmark. Red teaming searches for worst-case behaviour under adversarial pressure. Both are necessary; a strong eval score says nothing about how the system behaves when someone is actively trying to break it.
+
+## The honest limitation
+
+You cannot enumerate the input space of natural language. AI red teaming reduces risk and finds specific broken things - it does not produce a guarantee. Any report that reads as one is overselling. The durable controls are architectural, and they live in [[llm-security]]: constrain the tools, authorise as the user, distrust the output.

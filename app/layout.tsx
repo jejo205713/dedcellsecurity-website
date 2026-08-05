@@ -15,7 +15,7 @@ const display = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Offensive Security for Startups`,
+    default: `${site.name} - Offensive Security for Startups`,
     template: `%s | ${site.name}`,
   },
   description: site.description,

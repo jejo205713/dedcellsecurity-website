@@ -4,7 +4,7 @@ import { AlertTriangle, ArrowRight, BadgeCheck, Banknote, Clock, Cloud, Globe, P
 /**
  * Ported from the `home` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
- * mechanical JSX conversion; what is new is the metadata below — this route
+ * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
 export const metadata: Metadata = {
