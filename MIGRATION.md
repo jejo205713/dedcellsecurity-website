@@ -52,14 +52,16 @@ Set in the Vercel project **before** promoting:
 |---|---|---|
 | `APPS_SCRIPT_URL` | *(already set — carry it over)* | contact form target |
 | `NEXT_PUBLIC_SITE_URL` | `https://dedcellsecurity.in` | canonical URLs |
-| `NEXT_PUBLIC_GITHUB_REPO` | `jejo205713/dedcellsecurity-website` | enables the CMS |
-| `KEYSTATIC_GITHUB_CLIENT_ID` | from the GitHub App setup | CMS login |
-| `KEYSTATIC_GITHUB_CLIENT_SECRET` | from the GitHub App setup | CMS login |
-| `KEYSTATIC_SECRET` | random 32+ chars | CMS session signing |
-| `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` | from the GitHub App setup | CMS login |
+| `ADMIN_USERNAME` | your choice | the single publisher account |
+| `ADMIN_PASSWORD_HASH` | from `npm run auth:hash` | never the plaintext |
+| `AUTH_SECRET` | from `npm run auth:hash` | signs session cookies |
+| `NEXT_PUBLIC_GITHUB_REPO` | `jejo205713/dedcellsecurity-website` | commit target |
+| `GITHUB_TOKEN` | fine-grained PAT, Contents: read+write | how the CMS publishes |
 
-Without the four `KEYSTATIC_*` values, `/keystatic` returns **404 by design** —
-see `lib/keystatic-storage.ts`. An unauthenticated CMS is worse than no CMS.
+Without the account variables *or* without `GITHUB_TOKEN`, `/keystatic` returns
+**404 by design** — see `lib/keystatic-storage.ts` and `middleware.ts`. An
+unauthenticated CMS is worse than no CMS, and a CMS whose save button silently
+does nothing is worse than a missing one.
 
 ## Verify before promoting
 
@@ -73,7 +75,8 @@ Then on the preview URL:
 - [ ] `view-source:` on `/about` shows `<link rel="canonical" href="https://dedcellsecurity.in/about">` — not `/`
 - [ ] Contact form submits and the row lands in the Google Sheet
 - [ ] `/sitemap.xml` lists all 13 URLs with the production domain
-- [ ] `/keystatic` loads and prompts for GitHub sign-in
+- [ ] `/keystatic` redirects to `/admin/login`; signing in with the account reaches the CMS
+- [ ] Saving an entry produces a commit in the repo and a new deploy
 - [ ] Navbar goes black past 40px of scroll and its text stays legible
 - [ ] Client logos render on the home page
 

@@ -1,60 +1,74 @@
+import { authConfigured, authDisabledReason } from './auth-config';
+
 /**
- * Decides how the CMS stores content, and — more importantly — whether the CMS
- * is allowed to be served at all.
+ * Decides how the CMS stores content, and whether the CMS may be served at all.
  *
- * Why this file exists: Keystatic's local-storage mode has **no authentication**.
- * Its API route hands every request straight to the filesystem handler with no
- * auth, no origin check and no environment check (see
- * node_modules/@keystatic/core/dist/keystatic-core-api-generic.node.js:305).
- * That is correct for `next dev` on your laptop and catastrophic anywhere else:
- * a deployed local-mode CMS is an open door to every draft.
+ * Two independent gates, both fail-closed:
  *
- * So the rule is absolute: **outside `next dev`, the admin only exists when
- * GitHub storage is fully configured.** Misconfiguration produces a 404, never
- * an unauthenticated CMS.
+ *   1. **Authentication** (lib/auth-config.ts) — is there an account to sign in
+ *      as? Enforced by middleware.ts on every /keystatic and /api/keystatic
+ *      request. This is the gate that matters: Keystatic's own API has *no*
+ *      authentication in local-storage mode (see
+ *      node_modules/@keystatic/core/dist/keystatic-core-api-generic.node.js:305
+ *      — it hands requests straight to the filesystem), so without our
+ *      middleware, knowing the URL equals having write access.
+ *
+ *   2. **Storage** — is there somewhere writes can actually go? A serverless
+ *      filesystem is read-only, so local storage in production is a CMS whose
+ *      save button silently does nothing.
+ *
+ * If either gate is shut outside `next dev`, /keystatic 404s.
  */
 
 const repo = process.env.NEXT_PUBLIC_GITHUB_REPO;
 
-/** Only `next dev` may use unauthenticated local storage. */
+/** Only `next dev` may use unauthenticated local storage, on a developer's own machine. */
 const isDev = process.env.NODE_ENV === 'development';
-
-/** GitHub App credentials Keystatic needs to run the OAuth login. */
-const githubSecrets = [
-  process.env.KEYSTATIC_GITHUB_CLIENT_ID,
-  process.env.KEYSTATIC_GITHUB_CLIENT_SECRET,
-  process.env.KEYSTATIC_SECRET,
-];
 
 export const isGithubRepo = (v: string | undefined): v is `${string}/${string}` =>
   typeof v === 'string' && /^[\w.-]+\/[\w.-]+$/.test(v);
 
-/** True once every GitHub value is present and well-formed. */
-export const githubConfigured = isGithubRepo(repo) && githubSecrets.every(Boolean);
-
-export const storage = isGithubRepo(repo)
-  ? ({ kind: 'github', repo } as const)
-  : ({ kind: 'local' } as const);
-
 /**
- * Whether `/keystatic` and `/api/keystatic` should respond.
+ * Always `local`.
  *
- * dev              → yes, local files, no login (localhost only)
- * GitHub configured→ yes, GitHub OAuth login
- * anything else    → no. 404.
+ * Keystatic's `github` mode would authenticate each editor through GitHub
+ * OAuth, requiring every publisher to have a GitHub account — the opposite of
+ * the single-preset-account requirement. In `local` mode the UI reads content
+ * from the deployed bundle, and app/api/keystatic/[[...params]]/route.ts
+ * intercepts writes and commits them with a server-held token instead.
  */
-export const adminEnabled = isDev || githubConfigured;
+export const storage = { kind: 'local' } as const;
 
 /**
- * One-line explanation for the server log when the admin is switched off, so a
- * missing env var is a five-second diagnosis instead of a mystery 404.
+ * Publishing needs a repo and a token with write access to it. The token stays
+ * server-side; see lib/github-commit.ts.
  */
+export const publishConfigured = isGithubRepo(repo) && Boolean(process.env.GITHUB_TOKEN);
+
+/** Whether a save can actually persist in this environment. */
+export const storageWritable = isDev || publishConfigured;
+
+/**
+ * Whether /keystatic and /api/keystatic should respond.
+ *
+ * dev                     -> yes, local files, no login (localhost only)
+ * auth + writable storage -> yes, behind the sign-in page
+ * anything else           -> no. 404.
+ */
+export const adminEnabled = isDev || (authConfigured && storageWritable);
+
+/** One-line explanation for the server log, so a missing env var is not a mystery. */
 export function adminDisabledReason(): string | null {
   if (adminEnabled) return null;
-  if (!isGithubRepo(repo)) {
-    return 'NEXT_PUBLIC_GITHUB_REPO is unset or malformed (expected "owner/repo").';
+  const reasons: string[] = [];
+  const auth = authDisabledReason();
+  if (auth) reasons.push(`no publisher account (${auth})`);
+  if (!storageWritable) {
+    if (!isGithubRepo(repo)) {
+      reasons.push('NEXT_PUBLIC_GITHUB_REPO is unset or malformed (expected "owner/repo")');
+    } else {
+      reasons.push('GITHUB_TOKEN is not set, so the CMS cannot publish');
+    }
   }
-  const names = ['KEYSTATIC_GITHUB_CLIENT_ID', 'KEYSTATIC_GITHUB_CLIENT_SECRET', 'KEYSTATIC_SECRET'];
-  const missing = names.filter((_, i) => !githubSecrets[i]);
-  return `Missing GitHub App credentials: ${missing.join(', ')}.`;
+  return reasons.join('; ') + '.';
 }

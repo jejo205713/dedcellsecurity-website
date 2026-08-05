@@ -2,7 +2,7 @@
   "name": "dedcell-security-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Dedcell Security — marketing site + SEO content platform (Next.js 15 App Router). Migrated from the single-file static site in ../dedcell-security/public/index.html",
+  "description": "Dedcell Security \u2014 marketing site + SEO content platform (Next.js 15 App Router). Migrated from the single-file static site in ../dedcell-security/public/index.html",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +10,8 @@
     "lint": "next lint",
     "verify:cms": "tsx scripts/verify-cms-contract.ts",
     "verify:content": "tsx scripts/verify-content.ts",
-    "check": "tsc --noEmit && npm run verify:cms && npm run verify:content && next build"
+    "check": "tsc --noEmit && npm run verify:cms && npm run verify:content && next build",
+    "auth:hash": "tsx scripts/hash-password.ts"
   },
   "dependencies": {
     "@keystatic/core": "^0.6.4",

@@ -134,13 +134,13 @@ never as markup typed into a content field.
 `lib/mdx/remark-normalize-paste.ts` handles the Blogger/Medium paste artefacts
 (duplicate H1, stray hard breaks, empty paragraphs) at render time.
 
-### Why /keystatic 404s in production
+### Why /keystatic 404s when misconfigured
 
 Keystatic's local-storage API handler has **no authentication** — it hands every
-request straight to the filesystem. `lib/keystatic-storage.ts` therefore refuses to
-serve `/keystatic` or `/api/keystatic` outside `next dev` unless GitHub storage is
-fully configured. A missing env var produces a 404, never an open CMS. The reason
-is logged to the server console.
+request straight to the filesystem. `middleware.ts` is what stands in front of it.
+`lib/keystatic-storage.ts` additionally refuses to serve the CMS at all unless
+both an account and a publish token are configured. A missing env var produces a
+404, never an open CMS. The reason is logged to the server console.
 
 Content lives in `content/glossary/*.mdx` and `content/blog/*.mdx`. The site reads those
 files through `lib/content.ts` (gray-matter), and Keystatic reads and writes the same
@@ -150,25 +150,73 @@ files through its own parser. `npm run verify:cms` exists to catch the two drift
 Categories are defined once in `lib/taxonomy.ts` and feed both the CMS dropdown and the
 site. Never hard-code a category anywhere else.
 
-### Switching the CMS from local files to GitHub
+### Publisher access
 
-Right now `keystatic.config.ts` uses local storage: the CMS writes to your disk. That only
-works on a developer's machine. For the editor to publish from the deployed site, it needs
-GitHub storage:
+There is **one** publisher account. No registration, no password reset, no user
+list — each of those is an attack surface, and none of them earns its place for
+a single editor.
 
-1. Push this project to a GitHub repository.
-2. Set `NEXT_PUBLIC_GITHUB_REPO=jejo205713/dedcellsecurity-website` in the Vercel
-   project's environment variables.
-3. Deploy, open `/keystatic` on the deployed URL, and follow the on-screen setup — it
-   creates a GitHub App and gives you the four values to add to Vercel:
-   `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`,
-   and `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`.
-4. Redeploy. Editors now sign in with GitHub, and only people you grant repository access
-   can publish.
+Create the credentials:
 
-Until step 2 is done, the deployed `/keystatic` returns 404 by design — an
-unauthenticated CMS is worse than no CMS.
+```bash
+ npm run auth:hash -- 'a-long-generated-passphrase'
+```
 
-Publishing access is then just repository access: add a writer as a collaborator to
-grant it, remove them to revoke it. There are no passwords in our infrastructure and
-no login code of ours to get wrong, which is the entire point.
+(Note the leading space — it keeps the password out of your shell history.)
+
+That prints three values. Set all of them in Vercel, on **Production and
+Preview**:
+
+| Variable | What it is |
+|---|---|
+| `ADMIN_USERNAME` | the one username |
+| `ADMIN_PASSWORD_HASH` | PBKDF2-SHA256, 600,000 iterations, random salt |
+| `AUTH_SECRET` | signs session cookies |
+
+The plaintext password is never stored anywhere. To change it, re-run the
+command and update `ADMIN_PASSWORD_HASH`. To force everyone out immediately,
+rotate `AUTH_SECRET` — every existing session dies at once.
+
+How the gate works:
+
+- `middleware.ts` intercepts every `/keystatic` and `/api/keystatic` request.
+  Unauthenticated page loads redirect to `/admin/login`; API calls get a 401.
+- Sign-in is rate limited to 5 attempts per IP and 30 globally per 15 minutes.
+  The global limit matters because there is only one account to guess at, so a
+  distributed attempt would slip past a per-IP limit alone.
+- Wrong username and wrong password return the identical message, and the
+  password hash is computed either way, so the endpoint cannot be used to
+  discover the username.
+- The session cookie is `HttpOnly`, `Secure` and `SameSite=Lax`, so a script
+  injected into the page cannot read it.
+- If the account is not configured, `/keystatic` returns **404**. It never falls
+  back to an unauthenticated CMS.
+
+In `next dev` the login is skipped — the CMS writes to your own disk and
+requiring production credentials locally would mean spreading them around.
+
+### How publishing reaches the site
+
+Editors do **not** need GitHub accounts. Keystatic's own GitHub mode would give
+every editor a separate OAuth login, which is the opposite of what we want, so:
+
+1. The CMS reads content files from the deployed build.
+2. On save, `app/api/keystatic/[[...params]]/route.ts` intercepts the write and
+   commits the changed files to the repository using `GITHUB_TOKEN`, a
+   **server-side** token the browser never sees.
+3. The push triggers a Vercel deploy, and the page is live about a minute later.
+
+Set these two as well:
+
+| Variable | Value |
+|---|---|
+| `NEXT_PUBLIC_GITHUB_REPO` | `jejo205713/dedcellsecurity-website` |
+| `GITHUB_TOKEN` | fine-grained PAT, **Contents: read and write**, that repo only |
+
+Give the token the narrowest scope that works — Contents on one repository. It
+can commit to your site, so treat it like a deploy key.
+
+Every write is re-validated server-side against an allow-list: only
+`content/glossary/`, `content/blog/` and `public/images/{glossary,blog}/` are
+writable. The token could otherwise be used to rewrite application code.
+
