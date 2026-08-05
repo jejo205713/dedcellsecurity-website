@@ -65,6 +65,10 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Next 16 writes AGENTS.md and CLAUDE.md into the project root on dev start.
+  // We manage our own docs (PUBLISHING.md, MIGRATION.md, DESIGN_SPEC.md); files
+  // that reappear on every `next dev` would land in the repo unreviewed.
+  agentRules: false,
   trailingSlash: false,
   // Don't advertise the framework version to scanners.
   poweredByHeader: false,
