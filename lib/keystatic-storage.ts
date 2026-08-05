@@ -51,11 +51,18 @@ export const storageWritable = isDev || publishConfigured;
 /**
  * Whether /keystatic and /api/keystatic should respond.
  *
- * dev                     -> yes, local files, no login (localhost only)
+ * An account is required in **every** environment, including `next dev`. There
+ * is no local exemption: signing in at /admin/login is the only way in, so the
+ * auth path is the one that actually gets exercised day to day rather than only
+ * in production, where a regression would be found the hard way.
+ *
  * auth + writable storage -> yes, behind the sign-in page
  * anything else           -> no. 404.
+ *
+ * Storage still differs by environment — dev writes to local disk, production
+ * commits to git — but that is orthogonal to who is allowed in.
  */
-export const adminEnabled = isDev || (authConfigured && storageWritable);
+export const adminEnabled = authConfigured && storageWritable;
 
 /** One-line explanation for the server log, so a missing env var is not a mystery. */
 export function adminDisabledReason(): string | null {

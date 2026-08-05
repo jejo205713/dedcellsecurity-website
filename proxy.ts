@@ -29,12 +29,11 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // In `next dev` the CMS writes to local disk on the developer's own machine.
-  // Requiring a login there would mean every developer needs the production
-  // credentials on hand; the protection that matters is that dev is not exposed.
-  if (process.env.NODE_ENV === 'development') {
-    return NextResponse.next();
-  }
+  // No environment exemption, deliberately. An earlier version skipped this gate
+  // in `next dev` so developers would not need credentials locally — but that
+  // means the auth path is never the path anyone actually exercises, and a
+  // regression in it would only surface in production. Signing in at
+  // /admin/login is now the single way into the CMS, everywhere.
 
   // No account configured => the admin is not deployed. Do not hint that it exists.
   if (!authConfigured) {

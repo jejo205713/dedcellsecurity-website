@@ -192,8 +192,15 @@ How the gate works:
 - If the account is not configured, `/keystatic` returns **404**. It never falls
   back to an unauthenticated CMS.
 
-In `next dev` the login is skipped — the CMS writes to your own disk and
-requiring production credentials locally would mean spreading them around.
+**There is no local exemption.** Signing in at `/admin/login` is the only way
+into the CMS in every environment, `next dev` included. That means developers
+need an account configured locally (`.env.local`), and it means the auth path is
+exercised every day rather than only in production, where a regression would be
+found the hard way.
+
+Without `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH` and `AUTH_SECRET` in
+`.env.local`, `/keystatic` returns 404 locally too. Run `npm run auth:hash` and
+paste the three values in.
 
 ### How publishing reaches the site
 
