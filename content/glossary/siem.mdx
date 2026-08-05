@@ -1,0 +1,43 @@
+---
+title: What is SIEM?
+definition: SIEM (Security Information and Event Management) is software that collects log data from across your systems, correlates it in one place, and raises alerts when the combined picture looks like an attack.
+category: soc-operations
+relatedTerms:
+  - edr
+metaTitle: What is SIEM? SIEM Explained for Startups
+metaDescription: SIEM explained in plain English — what it collects, how correlation works, what it costs to run, and whether a startup actually needs one yet.
+publishedDate: 2026-08-03
+draft: false
+---
+
+## What a SIEM actually does
+
+A SIEM does three things in order. It **collects** logs from sources that would
+otherwise never talk to each other — firewalls, servers, cloud audit trails,
+identity providers. It **normalises** them into a common shape, so a failed login
+from Windows and a failed login from Okta become the same kind of event. Then it
+**correlates**, which is the only part that matters: applying rules across those
+normalised events to spot patterns no single log line reveals.
+
+The correlation step is the whole product. A failed login is noise. Forty failed
+logins across thirty accounts from one IP, followed by one success, is an attack.
+Only a system holding all the logs at once can see the difference.
+
+## What it costs you
+
+SIEM pricing is driven by ingest volume, and log volume grows faster than anyone
+plans for. Two things follow from that:
+
+- Sending everything is how organisations end up with a bill they can't justify.
+  Decide what you would actually investigate before you decide what to ingest.
+- An unstaffed SIEM is worse than none. It generates alerts nobody reads and
+  creates a documented record that you were told about the incident.
+
+## When a startup needs one
+
+Not at ten people. At that size, cloud-native logging plus an [[edr]] agent covers
+more ground per rupee. The case for a SIEM appears when you have compliance
+obligations that require log retention and review, more than one identity system,
+or somebody whose actual job is to look at the alerts.
+
+If nobody owns the alert queue, buy the person before you buy the SIEM.

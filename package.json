@@ -1,0 +1,46 @@
+{
+  "name": "dedcell-security-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dedcell Security — marketing site + SEO content platform (Next.js 15 App Router). Migrated from the single-file static site in ../dedcell-security/public/index.html",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "verify:cms": "tsx scripts/verify-cms-contract.ts",
+    "verify:content": "tsx scripts/verify-content.ts",
+    "check": "tsc --noEmit && npm run verify:cms && npm run verify:content && next build"
+  },
+  "dependencies": {
+    "@keystatic/core": "^0.6.4",
+    "@keystatic/next": "^5.0.4",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/hast": "^3.0.4",
+    "@types/mdast": "^4.0.4",
+    "github-slugger": "^2.0.0",
+    "gray-matter": "^4.0.3",
+    "hast-util-to-jsx-runtime": "^2.3.6",
+    "lucide-react": "^0.469.0",
+    "mdast-util-to-string": "^4.0.0",
+    "next": "^15.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.5",
+    "typescript": "^5.7.2"
+  }
+}
