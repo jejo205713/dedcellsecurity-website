@@ -1,0 +1,41 @@
+---
+title: What is EDR?
+definition: EDR (Endpoint Detection and Response) is an agent installed on laptops and servers that records process, file and network activity, flags malicious behaviour, and lets a responder isolate or roll back the machine remotely.
+category: soc-operations
+relatedTerms:
+  - siem
+metaTitle: What is EDR? Endpoint Detection and Response Explained
+metaDescription: EDR explained in plain English — how it differs from antivirus, what the response half actually buys you, and how it compares to a SIEM.
+publishedDate: 2026-08-03
+draft: false
+---
+
+## EDR versus antivirus
+
+Traditional antivirus asks one question: does this file match something known-bad?
+EDR asks a different one: does this *behaviour* look like an attack, whatever the
+file is? A signed, legitimate binary like `certutil.exe` downloading a payload will
+sail past signature matching and trip an EDR behavioural rule.
+
+That shift matters because most intrusions we see in real engagements do not
+involve novel malware. They involve legitimate tools used the way an attacker
+would use them.
+
+## The "response" half
+
+The detection half gets the marketing; the response half is what you buy it for.
+A responder with EDR can isolate a host from the network in seconds while leaving
+their own remote access intact, pull the process tree that led to execution, and
+in some products roll back changes. Without it, containment means someone
+physically walking to a desk.
+
+## EDR or SIEM first?
+
+For a startup, EDR first — nearly always. It covers the endpoints where compromise
+actually starts, it needs far less tuning to produce useful alerts, and it does not
+require a person to sit and watch it to deliver value. A [[siem]] earns its place
+later, when you have several log sources worth correlating and someone to do the
+correlating.
+
+They are complementary, not competing: EDR sees deeply into endpoints, a SIEM sees
+broadly across everything else.
