@@ -5,6 +5,9 @@ import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
 /**
  * The authorization gate for the CMS.
  *
+ * Named `proxy` because Next.js 16 renamed the middleware convention; the
+ * behaviour is identical to the old middleware.ts.
+ *
  * Every request to /keystatic and /api/keystatic passes through here before it
  * reaches any handler. This matters more than it might look: Keystatic's own
  * API has **no authentication of its own** in local-storage mode — it hands
@@ -20,7 +23,7 @@ import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
 
 const PROTECTED = ['/keystatic', '/api/keystatic'];
 
-export async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     return NextResponse.next();
