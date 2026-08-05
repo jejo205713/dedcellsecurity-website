@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getClientIp } from '@/lib/client-ip';
 import {
   ADMIN_PASSWORD_HASH,
   ADMIN_USERNAME,
@@ -79,12 +80,6 @@ function clearFailures(ip: string) {
   perIp.delete(ip);
 }
 
-function getIp(request: Request): string {
-  const xff = request.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
-  return request.headers.get('x-real-ip') ?? 'unknown';
-}
-
 /* --------------------------------------------------------------- */
 
 export async function POST(request: Request) {
@@ -107,7 +102,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const ip = getIp(request);
+  const ip = getClientIp(request);
   const limit = throttled(ip);
   if (limit.blocked) {
     return NextResponse.json(
@@ -135,6 +130,8 @@ export async function POST(request: Request) {
   clearFailures(ip);
 
   const response = NextResponse.json({ success: true });
+  // Carries a Set-Cookie; make sure no cache anywhere retains it.
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
   response.cookies.set(SESSION_COOKIE, await createSessionToken(username, AUTH_SECRET!), {
     httpOnly: true, // unreadable by JS, so XSS cannot lift the session
     secure: process.env.NODE_ENV === 'production',

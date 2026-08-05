@@ -209,7 +209,10 @@ export default function HomePage() {
                       </section>
 
                       {/* Methodology / Horizontal Scroll */}
-                      <section className="border-t border-black/10 bg-black overflow-hidden" id="process-section">
+                      {/* No overflow-hidden here: it would become the scrollport for the
+                          sticky pin inside HorizontalScroll and stop it sticking. The
+                          clipping happens on the sticky element itself instead. */}
+                      <section className="border-t border-black/10 bg-black" id="process-section">
                           <div className="pt-24 px-6 max-w-7xl mx-auto">
                               <span className="eyebrow eyebrow-invert block mb-4">Our Process</span>
                               <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-8">

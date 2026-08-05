@@ -13,6 +13,8 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST() {
   const response = NextResponse.json({ success: true });
+  // Carries a Set-Cookie; make sure no cache anywhere retains it.
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
   response.cookies.set(SESSION_COOKIE, '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

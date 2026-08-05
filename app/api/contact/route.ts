@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getClientIp } from '@/lib/client-ip';
 
 /**
  * Contact form proxy. Ported from dedcell-security/api/contact.js with the
@@ -29,12 +30,6 @@ const MAX_TRACKED_IPS = 20_000; // memory guard for the in-memory store
  * swap this Map for Vercel KV / Upstash Redis.
  */
 const hits = new Map<string, number[]>();
-
-function getIp(request: Request): string {
-  const xff = request.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
-  return request.headers.get('x-real-ip') ?? 'unknown';
-}
 
 function rateLimit(ip: string): { ok: true } | { ok: false; retryAfter: number } {
   const now = Date.now();
@@ -86,7 +81,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const limit = rateLimit(getIp(request));
+  const limit = rateLimit(getClientIp(request));
   if (!limit.ok) {
     return NextResponse.json(
       { success: false, error: 'Too many requests. Please try again in a few minutes.' },
