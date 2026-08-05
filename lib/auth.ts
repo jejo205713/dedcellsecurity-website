@@ -63,7 +63,16 @@ export function timingSafeEqual(a: string, b: string): boolean {
 /* Password hashing                                                    */
 /* ------------------------------------------------------------------ */
 
-/** Stored form: `pbkdf2$<iterations>$<salt-b64url>$<hash-b64url>` */
+/**
+ * Stored form: `pbkdf2.<iterations>.<salt-b64url>.<hash-b64url>`
+ *
+ * Dot-separated, not the conventional `$`-separated PHC string. `.env` parsers
+ * run dotenv-expand over values, so `$600000` inside a hash is read as a shell
+ * variable and silently expands to nothing — the account then looks
+ * unconfigured and /keystatic 404s with no useful error. `.` is outside the
+ * base64url alphabet, so it separates unambiguously and survives env files,
+ * shells and CI secret stores untouched.
+ */
 export async function hashPassword(
   password: string,
   salt?: Uint8Array,
@@ -78,11 +87,11 @@ export async function hashPassword(
     key,
     256,
   );
-  return `pbkdf2$${iterations}$${toBase64Url(saltBytes)}$${toBase64Url(bits)}`;
+  return `pbkdf2.${iterations}.${toBase64Url(saltBytes)}.${toBase64Url(bits)}`;
 }
 
 export async function verifyPassword(password: string, stored: string): Promise<boolean> {
-  const parts = stored.split('$');
+  const parts = stored.split('.');
   if (parts.length !== 4 || parts[0] !== 'pbkdf2') return false;
 
   const iterations = Number(parts[1]);

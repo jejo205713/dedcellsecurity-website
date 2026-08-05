@@ -170,7 +170,7 @@ Preview**:
 | Variable | What it is |
 |---|---|
 | `ADMIN_USERNAME` | the one username |
-| `ADMIN_PASSWORD_HASH` | PBKDF2-SHA256, 600,000 iterations, random salt |
+| `ADMIN_PASSWORD_HASH` | PBKDF2-SHA256, 600,000 iterations, random salt. Dot-separated, so it is safe to paste into `.env` files — a `$`-separated hash gets eaten by dotenv variable expansion |
 | `AUTH_SECRET` | signs session cookies |
 
 The plaintext password is never stored anywhere. To change it, re-run the
