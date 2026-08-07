@@ -219,6 +219,21 @@ export function getBlogPosts(): BlogDoc[] {
   );
 }
 
+/**
+ * Every blog post on disk, drafts included and uncached.
+ *
+ * For the admin listing only. Site routes must keep using `getBlogPosts()`,
+ * which applies the draft filter - a draft reaching a public route is the exact
+ * failure the flag exists to prevent. Uncached because the admin is the one
+ * place that must not serve a list it built before the last edit.
+ */
+export function getBlogPostsForAdmin(): BlogDoc[] {
+  return listEntryFiles('blog')
+    .map(({ slug, file }) => parseDoc('blog', slug, file))
+    .filter((d): d is BlogDoc => d !== null)
+    .sort((a, b) => (b.publishedDate ?? '').localeCompare(a.publishedDate ?? ''));
+}
+
 export function getGlossaryTerm(slug: string): GlossaryDoc | undefined {
   return getGlossaryTerms().find((d) => d.slug === slug);
 }

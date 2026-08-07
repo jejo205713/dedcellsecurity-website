@@ -21,11 +21,22 @@ import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
  * (see lib/auth.ts).
  */
 
-const PROTECTED = ['/keystatic', '/api/keystatic'];
+const PROTECTED = ['/keystatic', '/api/keystatic', '/admin', '/api/admin/posts'];
+
+/**
+ * The sign-in page and the endpoints it calls sit under /admin, so they have to
+ * be exempt or there is no way to obtain a session in the first place. Logout is
+ * exempt for the same reason in reverse: it must work even from an expired one.
+ */
+const PUBLIC = ['/admin/login', '/api/admin/login', '/api/admin/logout'];
 
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (!PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+
+  const matches = (list: string[]) =>
+    list.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+
+  if (matches(PUBLIC) || !matches(PROTECTED)) {
     return NextResponse.next();
   }
 
@@ -63,5 +74,11 @@ export default async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/keystatic/:path*', '/api/keystatic/:path*'],
+  matcher: [
+    '/keystatic/:path*',
+    '/api/keystatic/:path*',
+    '/admin',
+    '/admin/:path*',
+    '/api/admin/:path*',
+  ],
 };

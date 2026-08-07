@@ -73,13 +73,18 @@ const nextConfig = {
   // Don't advertise the framework version to scanners.
   poweredByHeader: false,
   /**
-   * The Keystatic UI reads content files at *runtime* in local-storage mode.
-   * Next's file tracing only sees files imported by code, so without this the
-   * deployed function has no content/ directory and the CMS opens empty.
+   * The Keystatic UI reads content files at *runtime* in local-storage mode, and
+   * so do the admin routes, which glob content/blog to build the post list and
+   * read a post's frontmatter before rewriting its draft flag. Next's file
+   * tracing only sees files reached through imports, so without these entries
+   * the deployed functions have no content/ directory: the CMS opens empty and
+   * the post manager shows nothing to manage.
    */
   outputFileTracingIncludes: {
     '/api/keystatic/[[...params]]': ['./content/**/*', './public/images/**/*'],
     '/keystatic/[[...params]]': ['./content/**/*'],
+    '/admin': ['./content/blog/**/*'],
+    '/api/admin/posts': ['./content/blog/**/*'],
   },
   images: {
     formats: ['image/avif', 'image/webp'],

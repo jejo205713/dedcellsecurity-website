@@ -9,7 +9,12 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-const FALLBACK = '/keystatic';
+/**
+ * The post manager, not the CMS. It is the shorter path to the things editors
+ * do most often - publish, revert to draft, delete - and it links straight into
+ * Keystatic for the actual writing.
+ */
+const FALLBACK = '/admin';
 
 /**
  * Reduce `?next=` to a path on this site, or discard it.

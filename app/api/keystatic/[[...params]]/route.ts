@@ -7,6 +7,7 @@ import {
   githubCommitConfig,
   type FileChange,
 } from '@/lib/github-commit';
+import { applyChangesToTree, isTreeEntryArray } from '@/lib/keystatic-tree';
 
 /**
  * Backs the Keystatic UI.
@@ -43,6 +44,23 @@ function notFound() {
 
 /** True when writes must go to git because the filesystem is read-only. */
 const commitInsteadOfWrite = process.env.NODE_ENV === 'production';
+
+/**
+ * The current content tree as Keystatic's own `GET /api/keystatic/tree` reports
+ * it, read straight off the deployed bundle.
+ *
+ * Called in-process rather than over HTTP - the handler derives its route
+ * params from the URL string, so a hand-built Request is enough and no network
+ * hop, cookie or auth round-trip is involved.
+ */
+async function readBaseTree(request: Request): Promise<unknown> {
+  const treeRequest = new Request(new URL('/api/keystatic/tree', request.url), {
+    headers: { 'no-cors': '1' },
+  });
+  const response = await keystatic.GET(treeRequest);
+  if (!response.ok) throw new Error(`tree read failed: ${response.status}`);
+  return response.json();
+}
 
 async function handlePost(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -101,12 +119,30 @@ async function handlePost(request: Request): Promise<Response> {
     changes.push({ type: 'delete', path: entry.path });
   }
 
-  if (changes.length === 0) return Response.json({ success: true, committed: false });
+  /**
+   * The response body must be the resulting file tree, not a status object - the
+   * Keystatic client feeds it straight into `entries.map(...)`. See
+   * lib/keystatic-tree.ts. Read the base tree *before* committing so a failure
+   * here fails cleanly, with nothing yet pushed.
+   */
+  let baseTree: unknown;
+  try {
+    baseTree = await readBaseTree(request);
+  } catch (err) {
+    console.error('[keystatic] could not read the current content tree:', err);
+    return Response.json({ error: 'Could not read the current content.' }, { status: 500 });
+  }
+  if (!isTreeEntryArray(baseTree)) {
+    console.error('[keystatic] content tree had an unexpected shape - refusing to publish.');
+    return Response.json({ error: 'Could not read the current content.' }, { status: 500 });
+  }
+
+  if (changes.length === 0) return Response.json(baseTree);
 
   try {
     const commit = await commitChanges(cfg, changes, describeChanges(changes));
     console.log(`[keystatic] published ${changes.length} file(s) as ${commit.sha.slice(0, 8)}`);
-    return Response.json({ success: true, committed: true, sha: commit.sha });
+    return Response.json(applyChangesToTree(baseTree, changes));
   } catch (err) {
     console.error('[keystatic] publish failed:', err);
     // Never echo the GitHub error - it can contain the repo path and token hints.
