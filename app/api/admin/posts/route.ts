@@ -4,17 +4,23 @@ import { NextResponse } from 'next/server';
 import { AUTH_SECRET, authConfigured } from '@/lib/auth-config';
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
 import { adminEnabled } from '@/lib/keystatic-storage';
-import { blogFile, isValidSlug, setDraftFlag } from '@/lib/blog-admin';
+import {
+  entryFile,
+  isCollection,
+  isValidSlug,
+  setDraftFlag,
+  type Collection,
+} from '@/lib/content-admin';
 import { commitChanges, githubCommitConfig, type FileChange } from '@/lib/github-commit';
 
 /**
- * Publish, unpublish and delete for existing blog posts.
+ * Publish, unpublish and delete for existing blog posts and glossary terms.
  *
  * These three actions exist in the Keystatic editor too - `draft` is a checkbox
  * and there is a "Delete entry" item in the entry menu - but both are two or
- * three screens deep, and an editor who wants to pull a live post down should
+ * three screens deep, and an editor who wants to pull a live page down should
  * not have to go hunting through a form to do it. This endpoint backs the flat
- * list at /admin.
+ * lists at /admin.
  *
  * Writes take the same route as the CMS: git commit in production (the
  * serverless filesystem is read-only), plain file writes under `next dev`. See
@@ -36,9 +42,9 @@ async function authorized(): Promise<boolean> {
   return (await verifySessionToken(token, AUTH_SECRET!)) !== null;
 }
 
-function commitMessage(action: Action, slug: string): string {
+function commitMessage(action: Action, collection: Collection, slug: string): string {
   const verb = action === 'delete' ? 'Delete' : action === 'publish' ? 'Publish' : 'Unpublish';
-  return `${verb} blog/${slug}\n\nPublished from the Dedcell Security CMS.`;
+  return `${verb} ${collection}/${slug}\n\nPublished from the Dedcell Security CMS.`;
 }
 
 export async function POST(request: Request) {
@@ -63,18 +69,24 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
-  const { slug, action } = body;
+  const { slug, action, collection } = body;
 
   if (!isValidSlug(slug)) {
-    return NextResponse.json({ error: 'Unknown post.' }, { status: 400 });
+    return NextResponse.json({ error: 'Unknown entry.' }, { status: 400 });
   }
   if (typeof action !== 'string' || !ACTIONS.includes(action as Action)) {
     return NextResponse.json({ error: 'Unknown action.' }, { status: 400 });
   }
+  // Defaults to blog so an older client - or a stale tab open across the deploy
+  // that adds this field - keeps working rather than failing on every button.
+  const target = collection === undefined ? 'blog' : collection;
+  if (!isCollection(target)) {
+    return NextResponse.json({ error: 'Unknown collection.' }, { status: 400 });
+  }
 
-  const file = blogFile(slug);
+  const file = entryFile(target, slug);
   if (!file) {
-    return NextResponse.json({ error: 'That post no longer exists.' }, { status: 404 });
+    return NextResponse.json({ error: 'That entry no longer exists.' }, { status: 404 });
   }
 
   let change: FileChange;
@@ -88,7 +100,7 @@ export async function POST(request: Request) {
     } catch (err) {
       console.error(`[admin] could not rewrite frontmatter for ${file.repoPath}:`, err);
       return NextResponse.json(
-        { error: 'That post has no readable frontmatter. Edit it in the CMS instead.' },
+        { error: 'That entry has no readable frontmatter. Edit it in the CMS instead.' },
         { status: 422 },
       );
     }
@@ -112,11 +124,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const commit = await commitChanges(cfg, [change], commitMessage(action as Action, slug));
-    console.log(`[admin] ${action} blog/${slug} as ${commit.sha.slice(0, 8)}`);
+    const commit = await commitChanges(
+      cfg,
+      [change],
+      commitMessage(action as Action, target, slug),
+    );
+    console.log(`[admin] ${action} ${target}/${slug} as ${commit.sha.slice(0, 8)}`);
     return NextResponse.json({ success: true, committed: true, sha: commit.sha });
   } catch (err) {
-    console.error(`[admin] ${action} failed for blog/${slug}:`, err);
+    console.error(`[admin] ${action} failed for ${target}/${slug}:`, err);
     // Never echo the GitHub error - it can carry the repo path and token hints.
     return NextResponse.json(
       { error: 'Publishing failed. Nothing was changed.' },

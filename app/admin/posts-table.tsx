@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
 /**
- * The blog list at /admin, with the two controls that were previously only
- * reachable from inside the Keystatic entry editor: revert a live post to draft,
- * and delete one outright.
+ * The blog and glossary lists at /admin, with the two controls that were
+ * previously only reachable from inside the Keystatic entry editor: revert a
+ * live entry to draft, and delete one outright.
  *
  * The one thing this component must not do is lie about the result. A change is
  * committed to git, and the site only reflects it once Vercel finishes the
@@ -14,6 +14,8 @@ import { Loader2 } from 'lucide-react';
  * and keeps saying it, rather than flipping its badge and implying the live site
  * has already changed.
  */
+
+export type AdminCollection = 'blog' | 'glossary';
 
 export type AdminPost = {
   slug: string;
@@ -40,18 +42,41 @@ const BUTTON =
   'font-mono text-[11px] uppercase tracking-widest px-3 py-2 rounded-lg border transition-colors ' +
   'disabled:opacity-40 disabled:cursor-not-allowed';
 
-export function PostsTable({ posts }: { posts: AdminPost[] }) {
+/**
+ * Deleting a glossary term reaches further than deleting a post, and the editor
+ * should be told before they click, not after. Other terms point at it through
+ * `relatedTerms` and inline [[term]] links. Nothing errors - lib/content.ts
+ * filters slugs it cannot resolve, and glossarySlugs() simply stops linking -
+ * but those links vanish sitewide and give no sign that they have.
+ */
+function deleteWarning(collection: AdminCollection, title: string): string {
+  const shared =
+    `Delete "${title}" permanently?\n\n` +
+    'The file is removed from the repository. If it is live, its URL will start ' +
+    'returning 404 to anyone who has linked to it. To take it off the site ' +
+    'without breaking the URL, revert it to draft instead.';
+
+  if (collection === 'blog') return shared;
+
+  return (
+    shared +
+    '\n\nThis is a glossary term: other pages link to it with [[term]] and list ' +
+    'it under Related terms. Those links will quietly disappear.'
+  );
+}
+
+export function PostsTable({
+  posts,
+  collection,
+}: {
+  posts: AdminPost[];
+  collection: AdminCollection;
+}) {
   const [state, setState] = useState<Record<string, RowState>>({});
 
   async function run(post: AdminPost, action: Action) {
     if (action === 'delete') {
-      const ok = window.confirm(
-        `Delete "${post.title}" permanently?\n\n` +
-          'The file is removed from the repository. If the post is live, its URL ' +
-          'will start returning 404 to anyone who has linked to it. To take it ' +
-          'off the site without breaking the URL, revert it to draft instead.',
-      );
-      if (!ok) return;
+      if (!window.confirm(deleteWarning(collection, post.title))) return;
     }
 
     setState((s) => ({ ...s, [post.slug]: { kind: 'busy' } }));
@@ -59,7 +84,7 @@ export function PostsTable({ posts }: { posts: AdminPost[] }) {
       const response = await fetch('/api/admin/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug: post.slug, action }),
+        body: JSON.stringify({ slug: post.slug, action, collection }),
       });
       const result = (await response.json().catch(() => ({}))) as {
         success?: boolean;
@@ -85,7 +110,7 @@ export function PostsTable({ posts }: { posts: AdminPost[] }) {
   if (posts.length === 0) {
     return (
       <p className="mt-8 text-sm text-gray-500">
-        No posts yet. Write the first one in the CMS.
+        No {collection === 'blog' ? 'posts' : 'terms'} yet. Write the first one in the CMS.
       </p>
     );
   }
@@ -117,14 +142,14 @@ export function PostsTable({ posts }: { posts: AdminPost[] }) {
                   </h2>
                 </div>
                 <p className="mt-2 font-mono text-[11px] text-gray-500">
-                  /blog/{post.slug}
+                  /{collection}/{post.slug}
                   {post.publishedDate ? ` · ${post.publishedDate}` : ''}
                 </p>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
                 <a
-                  href={`/keystatic/collection/blog/item/${encodeURIComponent(post.slug)}`}
+                  href={`/keystatic/collection/${collection}/item/${encodeURIComponent(post.slug)}`}
                   className={`${BUTTON} border-black/15 text-black hover:bg-black/[0.04]`}
                 >
                   Edit

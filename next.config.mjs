@@ -83,8 +83,8 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/api/keystatic/[[...params]]': ['./content/**/*', './public/images/**/*'],
     '/keystatic/[[...params]]': ['./content/**/*'],
-    '/admin': ['./content/blog/**/*'],
-    '/api/admin/posts': ['./content/blog/**/*'],
+    '/admin': ['./content/blog/**/*', './content/glossary/**/*'],
+    '/api/admin/posts': ['./content/blog/**/*', './content/glossary/**/*'],
   },
   images: {
     formats: ['image/avif', 'image/webp'],

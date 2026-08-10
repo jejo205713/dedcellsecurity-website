@@ -234,6 +234,19 @@ export function getBlogPostsForAdmin(): BlogDoc[] {
     .sort((a, b) => (b.publishedDate ?? '').localeCompare(a.publishedDate ?? ''));
 }
 
+/**
+ * The glossary equivalent, with the same draft-included, uncached rules.
+ *
+ * Sorted by title rather than date: the glossary is a reference A-Z, and an
+ * editor looking for one term scans for its name, not for when it was written.
+ */
+export function getGlossaryTermsForAdmin(): GlossaryDoc[] {
+  return listEntryFiles('glossary')
+    .map(({ slug, file }) => parseDoc('glossary', slug, file))
+    .filter((d): d is GlossaryDoc => d !== null)
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
 export function getGlossaryTerm(slug: string): GlossaryDoc | undefined {
   return getGlossaryTerms().find((d) => d.slug === slug);
 }

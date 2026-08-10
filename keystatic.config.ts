@@ -1,6 +1,7 @@
 import { config, collection, fields } from '@keystatic/core';
 import { CATEGORY_OPTIONS } from './lib/taxonomy';
 import { storage } from './lib/keystatic-storage';
+import { transformImageFilename } from './lib/image-filename';
 
 /**
  * Keystatic is the authoring UI only. It reads and writes the same MDX files in
@@ -121,6 +122,9 @@ export default config({
             image: {
               directory: 'public/images/glossary',
               publicPath: '/images/glossary/',
+              // Without this, every pasted screenshot is called `image.png` and
+              // they overwrite each other on save. See lib/image-filename.ts.
+              transformFilename: transformImageFilename,
             },
           },
         }),
@@ -190,6 +194,9 @@ export default config({
             image: {
               directory: 'public/images/blog',
               publicPath: '/images/blog/',
+              // Without this, every pasted screenshot is called `image.png` and
+              // they overwrite each other on save. See lib/image-filename.ts.
+              transformFilename: transformImageFilename,
             },
           },
         }),
