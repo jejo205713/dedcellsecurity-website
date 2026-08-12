@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getClientIp } from '@/lib/client-ip';
+import { isValidEmail } from '@/lib/email';
 
 /**
  * Contact form proxy. Ported from dedcell-security/api/contact.js with the
@@ -56,11 +57,19 @@ function deFormula(value: string): string {
   return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
 }
 
-function clean(value: unknown, max: number): string {
-  return deFormula(String(value ?? '').trim().slice(0, max));
+/**
+ * Trim + length-cap, and strip control characters so nothing that could break
+ * out of a line (CR/LF -> mail header injection downstream) is ever forwarded.
+ * Deliberately does NOT sanitise for the spreadsheet - validation must see the
+ * value the user actually typed, not a mutated one. deFormula() is applied
+ * later, only on the way out to Apps Script.
+ */
+function clean(value: unknown, max: number, multiline = false): string {
+  // eslint-disable-next-line no-control-regex
+  let s = String(value ?? '').replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '');
+  if (!multiline) s = s.replace(/[\r\n]+/g, ' ');
+  return s.trim().slice(0, max);
 }
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
@@ -72,11 +81,20 @@ export async function POST(request: Request) {
   const email = clean(body.email, 150);
   const company = clean(body.company, 100);
   const phone = clean(body.phone, 40);
-  const message = clean(body.message, 5000);
+  const message = clean(body.message, 5000, true);
 
-  if (name.length < 2 || !EMAIL_RE.test(email) || message.length < 10) {
+  if (name.length < 2 || message.length < 10) {
     return NextResponse.json(
       { success: false, error: 'Please fill out all required fields correctly.' },
+      { status: 400 },
+    );
+  }
+
+  // Validated separately so the caller gets an actionable message instead of a
+  // generic "fill out the fields" for an address we rejected.
+  if (!isValidEmail(email)) {
+    return NextResponse.json(
+      { success: false, error: 'Please enter a valid email address.' },
       { status: 400 },
     );
   }
@@ -102,7 +120,15 @@ export async function POST(request: Request) {
     const upstream = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ name, email, company, phone, message }).toString(),
+      // deFormula only here: the Sheet is the only consumer that evaluates
+      // leading =, +, -, @ as a formula. Validation above saw the raw values.
+      body: new URLSearchParams({
+        name: deFormula(name),
+        email,
+        company: deFormula(company),
+        phone: deFormula(phone),
+        message: deFormula(message),
+      }).toString(),
     });
     if (!upstream.ok) throw new Error(`upstream ${upstream.status}`);
     return NextResponse.json({ success: true });

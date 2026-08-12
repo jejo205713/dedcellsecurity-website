@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowRight, Check, Info, Loader2 } from 'lucide-react';
+import { isValidEmail } from '@/lib/email';
 
 /**
  * Ported from the `contact` template + setupForm() in
@@ -34,10 +35,14 @@ export function ContactForm() {
 
     if (
       (payload.name ?? '').trim().length < 2 ||
-      !(payload.email ?? '').includes('@') ||
       (payload.message ?? '').trim().length < 10
     ) {
       setError('Please fill out all required fields correctly.');
+      return;
+    }
+
+    if (!isValidEmail(payload.email)) {
+      setError('Please enter a valid email address.');
       return;
     }
 

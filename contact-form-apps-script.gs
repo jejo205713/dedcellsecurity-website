@@ -31,12 +31,15 @@ function doPost(e) {
     }
 
     // Server-side validation. Direct-to-endpoint abusers get a silent success.
-    const name    = safe_(p.name, 100);
-    const email   = safe_(p.email, 150);
-    const company = safe_(p.company, 100);
-    const phone   = safe_(p.phone, 40);
-    const message = safe_(p.message, 5000);
-    if (name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || message.length < 10) {
+    // Note the order: validate the value the user typed, THEN sanitize it for
+    // the Sheet. Sanitizing first would make validation inspect a mutated
+    // string, and would let junk through on the strength of our own edits.
+    const name    = trim_(p.name, 100);
+    const email   = trim_(p.email, 150);
+    const company = trim_(p.company, 100);
+    const phone   = trim_(p.phone, 40);
+    const message = trim_(p.message, 5000);
+    if (name.length < 2 || !isValidEmail_(email) || message.length < 10) {
       return json({ success: true });
     }
 
@@ -47,13 +50,20 @@ function doPost(e) {
       sheet.appendRow(['Timestamp', 'Name', 'Email', 'Company', 'Phone', 'Message']);
     }
 
-    sheet.appendRow([new Date(), name, email, company, phone, message]);
+    sheet.appendRow([
+      new Date(),
+      deFormula_(name),
+      deFormula_(email),
+      deFormula_(company),
+      deFormula_(phone),
+      deFormula_(message)
+    ]);
 
     // Only email while under the daily quota; the row is already saved regardless.
     if (canEmail_()) {
       MailApp.sendEmail({
         to: NOTIFY_EMAIL,
-        replyTo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : NOTIFY_EMAIL,
+        replyTo: email, // already validated above
         subject: 'New Security Audit Request - dedcellsecurity.in',
         body:
           'New lead from dedcellsecurity.in\n\n' +
@@ -92,12 +102,38 @@ function canEmail_() {
   return true;
 }
 
-// Trim to a max length and neutralize spreadsheet formula / CSV injection:
-// a value the Sheet would treat as a formula gets a leading apostrophe.
-function safe_(v, max) {
-  let s = String(v == null ? '' : v).trim().slice(0, max);
-  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
-  return s;
+// Trim to a max length and strip control characters (CR/LF in a header field
+// is how mail-header injection starts). Newlines survive in the message body.
+function trim_(v, max) {
+  let s = String(v == null ? '' : v).replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '');
+  return s.trim().slice(0, max);
+}
+
+// Neutralize spreadsheet formula / CSV injection: a value the Sheet would
+// treat as a formula gets a leading apostrophe so it renders as literal text.
+function deFormula_(s) {
+  return /^[=+\-@\t\r]/.test(s) ? "'" + s : s;
+}
+
+// Strict email validation - mirrors lib/email.ts in the Next.js app.
+// The previous /^[^\s@]+@[^\s@]+\.[^\s@]+$/ accepted RFC-legal-but-hostile
+// quoted local parts such as  "><svg/onload=confirm(1)>"@x.y  which then
+// landed in the Sheet and in this notification email.
+function isValidEmail_(email) {
+  if (typeof email !== 'string') return false;
+  if (email.length === 0 || email.length > 254) return false;
+  if (/[\x00-\x1f\x7f]/.test(email)) return false;
+
+  const at = email.lastIndexOf('@');
+  if (at <= 0 || at === email.length - 1) return false;
+
+  const local  = email.slice(0, at);
+  const domain = email.slice(at + 1);
+  if (local.length > 64 || domain.length > 255) return false;
+
+  const LOCAL  = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*$/;
+  const DOMAIN = /^(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,24}$/;
+  return LOCAL.test(local) && DOMAIN.test(domain);
 }
 
 function json(obj) {
