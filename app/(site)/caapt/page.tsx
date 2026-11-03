@@ -122,6 +122,7 @@ const SECONDARY_BTN =
 const SECTION = 'py-20 md:py-24 border-t border-black/10';
 const CONTAINER = 'max-w-7xl mx-auto px-6';
 const TAG = 'font-mono text-[11px] border border-black/10 px-2 py-1 text-gray-500 rounded';
+const GRIEVANCE_EMAIL = 'contact@dedcellsecurity.in';
 
 export default function CaaptPage() {
   const contactHref = `mailto:${programme.contactEmail}?subject=${encodeURIComponent('CAAPT enquiry')}`;
@@ -775,6 +776,31 @@ export default function CaaptPage() {
               className="w-full sm:w-auto border border-white/20 text-white font-sans font-medium text-sm px-8 py-3.5 rounded-lg btn-press inline-flex items-center justify-center hover:border-white/50 hover:bg-white/5 transition-all"
             >
               Explore Curriculum
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Grievance redressal - sits directly above the site footer. */}
+      <section className="bg-white" aria-labelledby="grievance-title">
+        <div className="max-w-7xl mx-auto px-6 pt-16">
+          <div className="border border-black/10 rounded-lg bg-black/[0.02] p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="max-w-xl">
+              <h2 id="grievance-title" className="font-mono text-xs text-black uppercase tracking-widest mb-3">
+                Grievance Redressal
+              </h2>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Have a concern about the {programme.shortName} programme, your enrolment, fees or refunds?
+                Write to our grievance desk and we will respond within{' '}
+                <span className="text-black font-medium">48 hours (business days)</span>.
+              </p>
+            </div>
+            <a
+              href={`mailto:${GRIEVANCE_EMAIL}?subject=${encodeURIComponent(`${programme.shortName} grievance`)}`}
+              className="inline-flex items-center gap-2 self-start md:self-auto border border-black/10 rounded-lg px-5 py-3 font-mono text-xs text-black hover:border-black/30 transition-all break-all"
+            >
+              <Mail className="w-4 h-4 shrink-0" aria-hidden="true" />
+              {GRIEVANCE_EMAIL}
             </a>
           </div>
         </div>

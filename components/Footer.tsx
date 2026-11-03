@@ -20,6 +20,8 @@ const SERVICES = [
 
 const CERTIFICATIONS = ['CEH', 'OSCP', 'CISSP', 'ISO 27001'];
 
+const MSME_UDYAM_NUMBER = 'UDYAM-TN-03-0273969';
+
 export function Footer() {
   return (
     <footer className="border-t border-black/10 bg-white pt-20 pb-10">
@@ -117,16 +119,35 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border border-black/10 rounded-lg p-4 flex flex-wrap items-center gap-4 mb-10 bg-black/[0.02]">
-          <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">Certified:</span>
-          {CERTIFICATIONS.map((cert) => (
-            <span
-              key={cert}
-              className="font-mono text-xs text-white border border-black/20 rounded px-2 py-1 bg-black"
-            >
-              {cert}
-            </span>
-          ))}
+        <div className="border border-black/10 rounded-lg mb-10 bg-black/[0.02] flex flex-col md:flex-row md:items-stretch">
+          <div className="p-4 flex flex-wrap items-center gap-4 flex-1">
+            <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">Certified:</span>
+            {CERTIFICATIONS.map((cert) => (
+              <span
+                key={cert}
+                className="font-mono text-xs text-white border border-black/20 rounded px-2 py-1 bg-black"
+              >
+                {cert}
+              </span>
+            ))}
+          </div>
+
+          {/* Udyam (MSME) registration - Ministry of MSME, Government of India. */}
+          <div className="p-4 flex items-center gap-4 border-t md:border-t-0 md:border-l border-black/10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logos/msme.png"
+              alt="MSME - Micro, Small & Medium Enterprises, Government of India"
+              width={88}
+              height={42}
+              loading="lazy"
+              className="h-9 w-auto opacity-80"
+            />
+            <div className="font-mono text-xs leading-relaxed">
+              <p className="text-gray-500 uppercase tracking-widest">MSME Registered</p>
+              <p className="text-black break-all">{MSME_UDYAM_NUMBER}</p>
+            </div>
+          </div>
         </div>
 
         <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
