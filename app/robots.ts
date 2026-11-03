@@ -17,7 +17,7 @@ import { absoluteUrl, site } from '@/lib/site';
  *  - TRAINING CRAWLERS collect pages for future model training (GPTBot,
  *    ClaudeBot, CCBot, ...). They do not power live search, and a model trained
  *    on an old snapshot repeats stale facts - which is how assistants ended up
- *    misquoting the CAAPT scholarship. Allowing them is a business decision, so
+ *    misquoting the course scholarship. Allowing them is a business decision, so
  *    it is one switch below rather than a side effect of allowing everything.
  *
  * Google-Extended is the exception: besides training, Google documents that it

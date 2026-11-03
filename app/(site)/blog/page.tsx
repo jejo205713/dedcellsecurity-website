@@ -11,7 +11,7 @@ import { categoryName } from '@/lib/taxonomy';
 export const metadata: Metadata = pageMetadata({
   title: 'Cybersecurity Blog',
   description:
-    'Cybersecurity articles from Dedcell Security - penetration testing findings, vulnerability research, AI security and CAAPT training updates.',
+    'Cybersecurity articles from Dedcell Security - penetration testing findings, vulnerability research, AI security and A-PENT training updates.',
   path: '/blog',
 });
 

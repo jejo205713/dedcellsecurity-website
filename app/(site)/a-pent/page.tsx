@@ -32,9 +32,9 @@ import {
   UserCheck,
   Workflow,
 } from 'lucide-react';
-import { AccordionItem } from '@/components/caapt/AccordionItem';
-import { EnrolForm } from '@/components/caapt/EnrolForm';
-import { SectionHeading } from '@/components/caapt/SectionHeading';
+import { AccordionItem } from '@/components/a-pent/AccordionItem';
+import { EnrolForm } from '@/components/a-pent/EnrolForm';
+import { SectionHeading } from '@/components/a-pent/SectionHeading';
 import { JsonLd } from '@/components/JsonLd';
 import {
   audience,
@@ -55,14 +55,14 @@ import {
   scholarship,
   scholarshipStatement,
   structure,
-} from '@/lib/caapt';
+} from '@/lib/a-pent';
 import { pageMetadata } from '@/lib/metadata';
 import { breadcrumbSchema, courseSchema, faqSchema, webPageSchema } from '@/lib/schema';
 
-const TITLE = 'CAAPT - Certified Agentic AI Penetration Tester';
+const TITLE = 'A-PENT - Agentic Penetration Testing Professional';
 const DESCRIPTION = `Six-week online course in offensive security and agentic AI by Dedcell Security. Fee ${feeLabel}; scholarships of up to ${scholarship.maxPercent}% for eligible students.`;
 /** Longer description for structured data, where length is not truncated. */
-const COURSE_DESCRIPTION = `CAAPT (Certified Agentic AI Penetration Tester) is a six-week online training programme by Dedcell Security covering penetration testing, web application security, AI for cybersecurity and agentic AI, ending with the AutoSec AI penetration-testing copilot capstone. ${scholarshipStatement}`;
+const COURSE_DESCRIPTION = `A-PENT (Agentic Penetration Testing Professional) is a six-week online training programme by Dedcell Security covering penetration testing, web application security, AI for cybersecurity and agentic AI, ending with the AutoSec AI penetration-testing copilot capstone. ${scholarshipStatement}`;
 
 export const metadata: Metadata = pageMetadata({
   title: TITLE,
@@ -129,8 +129,8 @@ const CONTAINER = 'max-w-7xl mx-auto px-6';
 const TAG = 'font-mono text-[11px] border border-black/10 px-2 py-1 text-gray-500 rounded';
 const GRIEVANCE_EMAIL = 'contact@dedcellsecurity.in';
 
-export default function CaaptPage() {
-  const contactHref = `mailto:${programme.contactEmail}?subject=${encodeURIComponent('CAAPT enquiry')}`;
+export default function APentPage() {
+  const contactHref = `mailto:${programme.contactEmail}?subject=${encodeURIComponent('A-PENT enquiry')}`;
 
   return (
     <>
@@ -153,13 +153,13 @@ export default function CaaptPage() {
       <JsonLd
         data={breadcrumbSchema([
           { name: 'Home', href: '/' },
-          { name: 'CAAPT Training', href: programme.coursePath },
+          { name: 'A-PENT Training', href: programme.coursePath },
         ])}
       />
       <JsonLd data={faqSchema(faqs)} />
 
       {/* 1. Hero */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-24 overflow-hidden" aria-labelledby="caapt-title">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-24 overflow-hidden" aria-labelledby="a-pent-title">
         <div
           className="absolute inset-0 z-0"
           style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,0,0,0.04) 0%, transparent 70%)' }}
@@ -175,7 +175,7 @@ export default function CaaptPage() {
             <span>Next batch {programme.batchStart.label}</span>
           </p>
 
-          <h1 id="caapt-title" className="text-black tracking-tight">
+          <h1 id="a-pent-title" className="text-black tracking-tight">
             <span className="flex items-center justify-center gap-3 sm:gap-5 font-bold text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-none">
               <span className="shrink-0 inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl bg-black text-white">
                 <GraduationCap className="w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-14 lg:h-14" strokeWidth={1.75} aria-hidden="true" />
@@ -198,7 +198,7 @@ export default function CaaptPage() {
 
           <div className="mt-10 w-full flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#apply" className={PRIMARY_BTN}>
-              Apply for CAAPT <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              Apply for A-PENT <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </a>
             <a href="#curriculum" className={SECONDARY_BTN}>
               Explore Curriculum
@@ -212,7 +212,7 @@ export default function CaaptPage() {
                 <span className="w-3 h-3 rounded-full bg-white/80" aria-hidden="true" />
                 <span className="w-3 h-3 rounded-full bg-white/40" aria-hidden="true" />
                 <span className="w-3 h-3 rounded-full bg-white/20" aria-hidden="true" />
-                <span className="font-mono text-xs text-white/50 ml-2">caapt://programme</span>
+                <span className="font-mono text-xs text-white/50 ml-2">a-pent://programme</span>
               </div>
               <p className="inline-flex items-center gap-2 px-3 py-1.5 border border-white/20 rounded-full bg-white/10 text-white font-mono text-[11px] sm:text-xs">
                 <CalendarDays className="w-3.5 h-3.5" aria-hidden="true" />
@@ -249,7 +249,7 @@ export default function CaaptPage() {
             />
             <div className="mt-6 space-y-5 text-base md:text-lg text-gray-500 leading-relaxed">
               <p>
-                CAAPT combines traditional penetration testing foundations with modern AI and agentic
+                A-PENT combines traditional penetration testing foundations with modern AI and agentic
                 security development. You learn how attackers find and exploit weaknesses, then how to
                 automate that work responsibly with language models and AI agents.
               </p>
@@ -281,8 +281,8 @@ export default function CaaptPage() {
         <div className={CONTAINER}>
           <SectionHeading
             id="different-title"
-            eyebrow="Why CAAPT"
-            title="What Makes CAAPT"
+            eyebrow="Why A-PENT"
+            title="What Makes A-PENT"
             muted="Different?"
             className="mb-12 md:mb-16"
           />
@@ -514,7 +514,7 @@ export default function CaaptPage() {
           </ul>
           <p className="mt-6 font-mono text-xs text-gray-600 leading-relaxed max-w-3xl">
             Outcomes describe what the programme is designed to teach. Results depend on individual effort
-            and practice; CAAPT does not guarantee employment or professional-level mastery.
+            and practice; A-PENT does not guarantee employment or professional-level mastery.
           </p>
         </div>
       </section>
@@ -635,9 +635,9 @@ export default function CaaptPage() {
             <div>
               <h3 className="text-black font-bold text-base mb-1">About certification</h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                The CAAPT certificate is a programme completion certificate issued by Dedcell Security. CEH
-                v13 preparation material is included as study support only - CAAPT does not award the
-                EC-Council CEH certification, and does not include the CEH exam or an exam voucher. CAAPT is
+                The A-PENT certificate is a programme completion certificate issued by Dedcell Security. CEH
+                v13 preparation material is included as study support only - A-PENT does not award the
+                EC-Council CEH certification, and does not include the CEH exam or an exam voucher. A-PENT is
                 not affiliated with or endorsed by EC-Council.
               </p>
             </div>
@@ -662,7 +662,7 @@ export default function CaaptPage() {
                 applications, APIs, cloud and mobile.
               </p>
               <p>
-                CAAPT is designed to connect that practical offensive security knowledge with modern
+                A-PENT is designed to connect that practical offensive security knowledge with modern
                 AI-powered security development - so learners understand both how vulnerabilities are found
                 and how to automate that work responsibly.
               </p>
@@ -686,7 +686,7 @@ export default function CaaptPage() {
             id="apply-title"
             eyebrow="Pricing & Enrolment"
             title="Join the Next"
-            muted="CAAPT Batch."
+            muted="A-PENT Batch."
             intro={`Registrations close on ${programme.registrationDeadline.label}. Apply below and our team will get back to you with the next steps.`}
             className="mb-12 md:mb-16"
           />
@@ -716,7 +716,7 @@ export default function CaaptPage() {
                   ))}
                 </dl>
 
-                {/* Scholarship. Figures come from lib/caapt.ts - the same values feed
+                {/* Scholarship. Figures come from lib/a-pent.ts - the same values feed
                     the FAQ, the structured data and /llms.txt. */}
                 <div id="scholarship" className="mt-6 rounded-xl border border-white/10 bg-white/[0.06] p-4 scroll-mt-28">
                   <p className="font-mono text-[11px] uppercase tracking-widest text-white/55 mb-2">
@@ -741,7 +741,7 @@ export default function CaaptPage() {
                     Up to {scholarship.maxPercent}%, not an automatic discount. Applications are subject to
                     eligibility review and approval, and the amount awarded depends on each assessment.{' '}
                     <Link href={programme.guidePath} className="text-white underline underline-offset-2">
-                      Read the CAAPT scholarship guide
+                      Read the A-PENT scholarship guide
                     </Link>
                     .
                   </p>
@@ -818,7 +818,7 @@ export default function CaaptPage() {
               href="#apply"
               className="w-full sm:w-auto bg-white text-black font-sans font-semibold text-sm px-8 py-3.5 rounded-lg btn-press inline-flex items-center justify-center gap-2 hover:bg-white/85"
             >
-              Apply for CAAPT <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              Apply for A-PENT <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </a>
             <a
               href="#curriculum"

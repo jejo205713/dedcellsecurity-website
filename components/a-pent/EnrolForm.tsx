@@ -4,15 +4,15 @@ import { useState } from 'react';
 import { ArrowRight, Check, Info, Loader2 } from 'lucide-react';
 import { FIELD_CLASS, LABEL_CLASS } from '@/components/ContactForm';
 import { isValidEmail } from '@/lib/email';
-import { programme } from '@/lib/caapt';
+import { programme } from '@/lib/a-pent';
 
 /**
- * CAAPT application form: name, email and phone only.
+ * A-PENT application form: name, email and phone only.
  *
  * Posts to the existing /api/contact route rather than a new endpoint, so it
  * inherits the rate limiting, validation, formula-injection sanitising and the
  * Leads sheet + email notification. Applications are told apart from audit
- * enquiries by the `company` column ("CAAPT Application") and the message text.
+ * enquiries by the `company` column ("A-PENT Application") and the message text.
  *
  * Inputs are 16px below `sm`: iOS Safari zooms the page into any focused field
  * smaller than that.
@@ -62,8 +62,8 @@ export function EnrolForm() {
           name,
           email,
           phone,
-          company: 'CAAPT Application',
-          message: `CAAPT application for the batch starting ${programme.batchStart.label}. Please contact me about enrolment.`,
+          company: 'A-PENT Application',
+          message: `A-PENT application for the batch starting ${programme.batchStart.label}. Please contact me about enrolment.`,
           botcheck: data.get('botcheck') ?? '',
         }),
       });
@@ -93,7 +93,7 @@ export function EnrolForm() {
         </div>
         <h3 className="text-2xl font-bold text-black mb-3">Application Received.</h3>
         <p className="text-sm text-gray-500 mb-8 max-w-xs leading-relaxed">
-          Thank you for applying to CAAPT. Our team will get back to you with the next steps
+          Thank you for applying to A-PENT. Our team will get back to you with the next steps
           and payment details.
         </p>
         <button
@@ -127,12 +127,12 @@ export function EnrolForm() {
         />
 
         <div className="space-y-2">
-          <label htmlFor="caapt-name" className={LABEL_CLASS}>
+          <label htmlFor="a-pent-name" className={LABEL_CLASS}>
             Full Name *
           </label>
           <input
             type="text"
-            id="caapt-name"
+            id="a-pent-name"
             name="name"
             required
             autoComplete="name"
@@ -142,12 +142,12 @@ export function EnrolForm() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="caapt-email" className={LABEL_CLASS}>
+          <label htmlFor="a-pent-email" className={LABEL_CLASS}>
             Email *
           </label>
           <input
             type="email"
-            id="caapt-email"
+            id="a-pent-email"
             name="email"
             required
             autoComplete="email"
@@ -158,12 +158,12 @@ export function EnrolForm() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="caapt-phone" className={LABEL_CLASS}>
+          <label htmlFor="a-pent-phone" className={LABEL_CLASS}>
             Phone *
           </label>
           <input
             type="tel"
-            id="caapt-phone"
+            id="a-pent-phone"
             name="phone"
             required
             autoComplete="tel"
@@ -194,13 +194,13 @@ export function EnrolForm() {
             </>
           ) : (
             <>
-              Apply for CAAPT <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              Apply for A-PENT <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </>
           )}
         </button>
 
         <p className="text-center font-mono text-[11px] text-gray-600 leading-relaxed">
-          We only use these details to contact you about CAAPT.{' '}
+          We only use these details to contact you about A-PENT.{' '}
           <a href="/privacy" className="underline underline-offset-2 hover:text-black">
             Privacy policy
           </a>

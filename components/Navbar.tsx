@@ -28,7 +28,7 @@ import { usePathname } from 'next/navigation';
 
 const LINKS = [
   { href: '/services', label: 'Services' },
-  { href: '/caapt', label: 'Training' },
+  { href: '/a-pent', label: 'Training' },
   { href: '/blog', label: 'Blog' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/about', label: 'About' },

@@ -4,7 +4,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { pageMetadata } from '@/lib/metadata';
 import { websiteSchema } from '@/lib/schema';
 import { site } from '@/lib/site';
-import { curriculum, feeLabel, programme, scholarship } from '@/lib/caapt';
+import { curriculum, feeLabel, programme, scholarship } from '@/lib/a-pent';
 import { AlertTriangle, ArrowRight, BadgeCheck, Banknote, Clock, Cloud, Globe, GraduationCap, PowerOff, Rocket, Server, ShieldCheck, Sparkles, Target, Users, Webhook } from 'lucide-react';
 /**
  * Ported from the `home` template string in
@@ -216,7 +216,7 @@ export default function HomePage() {
                           </div>
                       </section>
 
-                      {/* CAAPT training promo */}
+                      {/* A-PENT training promo */}
                       <section className="py-24 border-t border-black/10">
                           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                               <div className="lg:col-span-6">
@@ -225,7 +225,7 @@ export default function HomePage() {
                                       <span className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-black text-white align-middle mr-3 -mt-1">
                                           <GraduationCap className="w-6 h-6 md:w-7 md:h-7" strokeWidth={1.75} aria-hidden="true" />
                                       </span>
-                                      CAAPT <span className="text-gray-500">Certified Agentic AI Penetration Tester</span>
+                                      A-PENT <span className="text-gray-500">Agentic Penetration Testing Professional</span>
                                   </h2>
                                   <p className="mt-6 text-base md:text-lg text-gray-500 leading-relaxed max-w-xl">
                                       A six-week online programme that takes you from offensive security fundamentals to building your own AI-powered penetration testing copilot.
@@ -235,10 +235,10 @@ export default function HomePage() {
                                       <a href={programme.guidePath} className="text-black underline underline-offset-4 decoration-black/30 hover:decoration-black">Read the guide</a>
                                   </p>
                                   <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                                      <a href="/caapt" className="w-full sm:w-auto bg-black text-white font-sans font-semibold text-sm px-8 py-3.5 rounded-lg btn-press flex items-center justify-center gap-2 hover:bg-gray-800">
-                                          Explore CAAPT <ArrowRight className="w-4 h-4" />
+                                      <a href="/a-pent" className="w-full sm:w-auto bg-black text-white font-sans font-semibold text-sm px-8 py-3.5 rounded-lg btn-press flex items-center justify-center gap-2 hover:bg-gray-800">
+                                          Explore A-PENT <ArrowRight className="w-4 h-4" />
                                       </a>
-                                      <a href="/caapt#apply" className="w-full sm:w-auto border border-black/20 bg-transparent text-black font-sans font-medium text-sm px-8 py-3.5 rounded-lg btn-press hover:border-black/50 hover:bg-black/5 transition-all flex items-center justify-center">
+                                      <a href="/a-pent#apply" className="w-full sm:w-auto border border-black/20 bg-transparent text-black font-sans font-medium text-sm px-8 py-3.5 rounded-lg btn-press hover:border-black/50 hover:bg-black/5 transition-all flex items-center justify-center">
                                           Apply Now
                                       </a>
                                   </div>

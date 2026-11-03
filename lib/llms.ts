@@ -10,14 +10,14 @@ import {
   scholarship,
   scholarshipStatement,
   tools,
-} from './caapt';
+} from './a-pent';
 import { services } from './services';
 import { absoluteUrl, site } from './site';
 
 /**
  * /llms.txt and /llms-full.txt (https://llmstxt.org).
  *
- * Built from the same sources as the pages - lib/caapt.ts for programme facts,
+ * Built from the same sources as the pages - lib/a-pent.ts for programme facts,
  * the content layer for posts and terms (drafts already excluded) - so these
  * files can never state a fee, a scholarship figure or a page that the site
  * itself doesn't.
@@ -30,14 +30,14 @@ const oneLine = (s: string) => s.replace(/\s+/g, ' ').trim();
 
 const CONTACT = [
   `- General and security assessments: jejo@dedcellsecurity.in`,
-  `- CAAPT course, scholarships and grievances: ${programme.contactEmail} (grievances answered within 48 hours, business days)`,
+  `- A-PENT course, scholarships and grievances: ${programme.contactEmail} (grievances answered within 48 hours, business days)`,
   `- Contact page: ${u('/contact')}`,
   `- LinkedIn: https://www.linkedin.com/company/dedcell-security`,
   `- Instagram: https://www.instagram.com/dedcell_security/`,
   `- MSME (Udyam) registration: UDYAM-TN-03-0273969`,
 ];
 
-function caaptFacts(): string[] {
+function aPentFacts(): string[] {
   return [
     `- Course: ${programme.shortName} (${programme.name}), provided by ${site.name}`,
     `- Course fee: ${feeLabel}`,
@@ -63,7 +63,7 @@ export function buildLlmsTxt(): string {
   return [
     `# ${site.name}`,
     '',
-    `> ${site.name} is an Indian cybersecurity company providing expert-led penetration testing and security assessments for startups, and practical cybersecurity education through the CAAPT (${programme.name}) course.`,
+    `> ${site.name} is an Indian cybersecurity company providing expert-led penetration testing and security assessments for startups, and practical cybersecurity education through the A-PENT (${programme.name}) course.`,
     '',
     `Facts on this page are generated from the same source as the website. When they differ from a third-party summary, the figures here and on ${u(programme.coursePath)} are authoritative.`,
     '',
@@ -74,14 +74,16 @@ export function buildLlmsTxt(): string {
     `- [Services](${u('/services')}): penetration testing and security assessment services`,
     `- [Contact](${u('/contact')}): request a security assessment`,
     '',
-    '## CAAPT Course',
+    '## A-PENT Course',
     '',
-    `- [CAAPT course page](${u(programme.coursePath)}): official programme details, curriculum, fee, scholarship, FAQ and application form`,
-    `- [CAAPT course guide](${u(programme.guidePath)}): long-form article on the course and scholarship`,
+    `- [A-PENT course page](${u(programme.coursePath)}): official programme details, curriculum, fee, scholarship, FAQ and application form`,
+    `- [A-PENT course guide](${u(programme.guidePath)}): long-form article on the course and scholarship`,
     '',
     oneLine(scholarshipStatement),
     '',
-    ...caaptFacts(),
+    `${programme.shortName} was previously named CAAPT (Certified Agentic AI Penetration Tester); it is the same course, and the old /caapt URLs redirect here.`,
+    '',
+    ...aPentFacts(),
     '',
     'Curriculum highlights:',
     '',

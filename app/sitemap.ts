@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { absoluteUrl } from '@/lib/site';
 import { getBlogPosts, getGlossaryTerms } from '@/lib/content';
-import { programme } from '@/lib/caapt';
+import { programme } from '@/lib/a-pent';
 
 /**
  * Generated from the content layer, so it can never go stale the way the
@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: absoluteUrl('/'), priority: 1 },
     { url: absoluteUrl('/services'), priority: 0.8 },
-    { url: absoluteUrl('/caapt'), lastModified: programme.pageUpdated, priority: 0.9 },
+    { url: absoluteUrl('/a-pent'), lastModified: programme.pageUpdated, priority: 0.9 },
     { url: absoluteUrl('/contact'), priority: 0.8 },
     {
       url: absoluteUrl('/glossary'),

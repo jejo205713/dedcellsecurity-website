@@ -19,7 +19,7 @@ type PageMetaInput = {
   /** Page title; the root template appends "| Dedcell Security" unless `absoluteTitle`. */
   title: string;
   description: string;
-  /** Path only, e.g. "/caapt". Becomes the canonical and og:url. */
+  /** Path only, e.g. "/a-pent". Becomes the canonical and og:url. */
   path: string;
   absoluteTitle?: boolean;
   type?: 'website' | 'article';

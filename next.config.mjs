@@ -99,6 +99,14 @@ const nextConfig = {
    */
   async redirects() {
     return [
+      /*
+       * CAAPT was renamed A-PENT (Agentic Penetration Testing Professional).
+       * The old URLs are indexed, shared and printed on the promo artwork
+       * (dedcellsecurity.in/caapt), so they redirect permanently rather than 404.
+       */
+      { source: '/caapt', destination: '/a-pent', permanent: true },
+      { source: '/blog/caapt', destination: '/blog/a-pent', permanent: true },
+      { source: '/images/blog/caapt/:file*', destination: '/images/blog/a-pent/:file*', permanent: true },
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.dedcellsecurity.in' }],

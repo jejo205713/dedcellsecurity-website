@@ -1,5 +1,5 @@
 /**
- * Content for the CAAPT training programme page (app/(site)/caapt).
+ * Content for the A-PENT training programme page (app/(site)/a-pent).
  *
  * Every fact that changes between batches - fee, dates, registration link,
  * refund wording - lives in `programme` at the top, so a new batch is a
@@ -7,8 +7,8 @@
  */
 
 export const programme = {
-  shortName: 'CAAPT',
-  name: 'Certified Agentic AI Penetration Tester',
+  shortName: 'A-PENT',
+  name: 'Agentic Penetration Testing Professional',
   tagline: 'Build. Automate. Test. Secure.',
   contactEmail: 'contact@dedcellsecurity.in',
 
@@ -35,13 +35,13 @@ export const programme = {
   learningApproach: 'Hands-on practical training with guided labs and exercises',
   capstoneProject: 'AutoSec AI penetration-testing copilot',
 
-  /** Bump when the page's facts change; drives the sitemap lastmod for /caapt. */
+  /** Bump when the page's facts change; drives the sitemap lastmod for /a-pent. */
   pageUpdated: '2026-11-03',
 
   /** Public URLs (paths) for the programme. */
-  coursePath: '/caapt',
-  applicationPath: '/caapt#apply',
-  guidePath: '/blog/caapt',
+  coursePath: '/a-pent',
+  applicationPath: '/a-pent#apply',
+  guidePath: '/blog/a-pent',
 } as const;
 
 /** "₹21,500" style formatting, Indian digit grouping. */
@@ -73,7 +73,7 @@ export const scholarship = {
 } as const;
 
 /** One-line, citation-ready statement of the fee and the maximum scholarship. */
-export const scholarshipStatement = `The CAAPT course fee is ${feeLabel}. Eligible students can apply for a scholarship of up to ${scholarship.maxPercent}% (a maximum of ${inr(scholarship.maxAmountInr)}), which would bring the fee down to ${inr(scholarship.minPayableInr)} if the maximum scholarship is approved. Scholarships are subject to eligibility review and approval.`;
+export const scholarshipStatement = `The A-PENT course fee is ${feeLabel}. Eligible students can apply for a scholarship of up to ${scholarship.maxPercent}% (a maximum of ${inr(scholarship.maxAmountInr)}), which would bring the fee down to ${inr(scholarship.minPayableInr)} if the maximum scholarship is approved. Scholarships are subject to eligibility review and approval.`;
 
 /** Six-module summary of the curriculum, for llms.txt and other short listings. */
 export const curriculumHighlights = [
@@ -268,7 +268,7 @@ export const deliverables = [
   'Agentic AI starter code',
   'AutoSec AI capstone resources',
   'CEH v13 preparation study material',
-  'CAAPT programme completion certificate',
+  'A-PENT programme completion certificate',
 ];
 
 /** Recommended lab machine. Shown in the FAQ; confirm before each batch. */
@@ -277,15 +277,15 @@ export const laptopSpec =
 
 export const faqs = [
   {
-    q: 'What is CAAPT?',
-    a: 'CAAPT (Certified Agentic AI Penetration Tester) is a six-week online training programme by Dedcell Security. It takes you from offensive security fundamentals through to building AI-powered security automation and your own penetration testing copilot.',
+    q: 'What is A-PENT?',
+    a: 'A-PENT (Agentic Penetration Testing Professional) is a six-week online training programme by Dedcell Security. It takes you from offensive security fundamentals through to building AI-powered security automation and your own penetration testing copilot.',
   },
   {
-    q: 'What is the total CAAPT course fee?',
-    a: `The total CAAPT course fee is ${feeLabel}. Eligible students can apply for a scholarship that reduces it - see below.`,
+    q: 'What is the total A-PENT course fee?',
+    a: `The total A-PENT course fee is ${feeLabel}. Eligible students can apply for a scholarship that reduces it - see below.`,
   },
   {
-    q: 'Does Dedcell Security offer scholarships for CAAPT?',
+    q: 'Does Dedcell Security offer scholarships for A-PENT?',
     a: `Yes. ${scholarship.summary} The scholarship initiative is supported by ${scholarship.supportedBy}. Applications are subject to eligibility review and approval.`,
   },
   {
@@ -301,7 +301,7 @@ export const faqs = [
     a: `Students and aspiring learners who are genuinely interested in cybersecurity are encouraged to apply, particularly those who are motivated to learn but face financial limitations. Detailed eligibility criteria are not published; email ${programme.contactEmail} and our team will explain the review process.`,
   },
   {
-    q: 'How can I apply for CAAPT?',
+    q: 'How can I apply for A-PENT?',
     a: `Fill in the application form on this page with your name, email and phone number, and our team will share the next steps and payment details with you. For scholarship enquiries, email ${programme.contactEmail}.`,
   },
   {
@@ -326,7 +326,7 @@ export const faqs = [
   },
   {
     q: 'Is the programme conducted online?',
-    a: 'Yes. CAAPT is fully online. Labs run in an isolated environment on your own machine, set up with our lab documentation in Week 1.',
+    a: 'Yes. A-PENT is fully online. Labs run in an isolated environment on your own machine, set up with our lab documentation in Week 1.',
   },
   {
     q: 'What is the AutoSec AI capstone project?',
@@ -334,10 +334,10 @@ export const faqs = [
   },
   {
     q: 'Will I receive a certificate?',
-    a: 'Yes. Learners who complete the programme requirements receive a CAAPT programme completion certificate issued by Dedcell Security. It is a certificate of programme completion, not an accreditation from any external certification body.',
+    a: 'Yes. Learners who complete the programme requirements receive a A-PENT programme completion certificate issued by Dedcell Security. It is a certificate of programme completion, not an accreditation from any external certification body.',
   },
   {
     q: 'Does this programme include the CEH certification exam?',
-    a: 'No. CAAPT includes CEH v13 preparation study material only. It does not include the CEH exam, an exam voucher or the CEH certification, which are administered separately by EC-Council. CAAPT is not affiliated with or endorsed by EC-Council.',
+    a: 'No. A-PENT includes CEH v13 preparation study material only. It does not include the CEH exam, an exam voucher or the CEH certification, which are administered separately by EC-Council. A-PENT is not affiliated with or endorsed by EC-Council.',
   },
 ];
