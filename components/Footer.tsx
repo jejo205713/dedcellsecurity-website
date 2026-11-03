@@ -89,6 +89,11 @@ export function Footer() {
             <h2 className="font-mono text-xs text-black uppercase tracking-widest mb-6">Resources</h2>
             <ul className="space-y-4 font-mono text-xs text-gray-500">
               <li>
+                <Link href="/caapt" className="hover:text-black transition-colors">
+                  CAAPT Training
+                </Link>
+              </li>
+              <li>
                 <Link href="/blog" className="hover:text-black transition-colors">
                   Blog
                 </Link>

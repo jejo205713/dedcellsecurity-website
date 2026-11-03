@@ -17,10 +17,10 @@ import { isValidEmail } from '@/lib/email';
  * The server re-checks everything (app/api/contact/route.ts).
  */
 
-const FIELD_CLASS =
+export const FIELD_CLASS =
   'w-full bg-inputBg border border-black/10 rounded-xl px-4 py-3 text-black text-sm ' +
   'transition-all focus:border-black/40 placeholder:text-gray-700';
-const LABEL_CLASS = 'font-mono text-[11px] text-gray-500 uppercase tracking-widest';
+export const LABEL_CLASS = 'font-mono text-[11px] text-gray-500 uppercase tracking-widest';
 
 type Status = 'idle' | 'sending' | 'sent';
 

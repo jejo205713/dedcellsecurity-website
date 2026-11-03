@@ -87,3 +87,45 @@ export function itemListSchema(
     })),
   };
 }
+
+export function courseSchema(course: {
+  name: string;
+  description: string;
+  path: string;
+  priceInr: number;
+  startDate: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    '@id': absoluteUrl(course.path),
+    name: course.name,
+    description: course.description,
+    url: absoluteUrl(course.path),
+    provider: organization,
+    offers: {
+      '@type': 'Offer',
+      category: 'Paid',
+      price: course.priceInr,
+      priceCurrency: 'INR',
+      url: absoluteUrl(course.path),
+    },
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'Online',
+      startDate: course.startDate,
+    },
+  };
+}
+
+export function faqSchema(items: Array<{ q: string; a: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+}

@@ -28,6 +28,7 @@ import { usePathname } from 'next/navigation';
 
 const LINKS = [
   { href: '/services', label: 'Services' },
+  { href: '/caapt', label: 'Training' },
   { href: '/blog', label: 'Blog' },
   { href: '/glossary', label: 'Glossary' },
   { href: '/about', label: 'About' },
@@ -84,7 +85,7 @@ export function Navbar() {
 
         <div
           id="nav-links"
-          className="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest"
+          className="hidden md:flex items-center gap-4 lg:gap-8 font-mono text-xs uppercase tracking-widest"
         >
           {LINKS.map((link) => (
             <Link
@@ -101,7 +102,7 @@ export function Navbar() {
         <Link
           href="/contact"
           id="nav-cta"
-          className="hidden md:inline-flex items-center justify-center bg-black text-white font-sans font-semibold text-sm px-5 py-2 rounded-lg btn-press hover:bg-gray-700"
+          className="hidden lg:inline-flex items-center justify-center bg-black text-white font-sans font-semibold text-sm px-5 py-2 rounded-lg btn-press hover:bg-gray-700"
         >
           Request Assessment
         </Link>

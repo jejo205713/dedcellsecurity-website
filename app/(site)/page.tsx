@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { HorizontalScroll } from '@/components/HorizontalScroll';
-import { AlertTriangle, ArrowRight, BadgeCheck, Banknote, Clock, Cloud, Globe, PowerOff, Rocket, Server, ShieldCheck, Sparkles, Target, Users, Webhook } from 'lucide-react';
+import { curriculum, programme } from '@/lib/caapt';
+import { AlertTriangle, ArrowRight, BadgeCheck, Banknote, Clock, Cloud, Globe, GraduationCap, PowerOff, Rocket, Server, ShieldCheck, Sparkles, Target, Users, Webhook } from 'lucide-react';
 /**
  * Ported from the `home` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
@@ -205,6 +206,41 @@ export default function HomePage() {
                                       <p className="text-sm text-gray-600 line-clamp-2">AWS, Azure, GCP review - IAM, storage, and architecture.</p>
                                   </a>
                               </div>
+                          </div>
+                      </section>
+
+                      {/* CAAPT training promo */}
+                      <section className="py-24 border-t border-black/10">
+                          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                              <div className="lg:col-span-6">
+                                  <span className="eyebrow block mb-4">Training · Next Batch {programme.batchStart.label}</span>
+                                  <h2 className="text-4xl md:text-5xl font-extrabold text-black tracking-tight text-balance">
+                                      <span className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-black text-white align-middle mr-3 -mt-1">
+                                          <GraduationCap className="w-6 h-6 md:w-7 md:h-7" strokeWidth={1.75} aria-hidden="true" />
+                                      </span>
+                                      CAAPT <span className="text-gray-500">Certified Agentic AI Penetration Tester</span>
+                                  </h2>
+                                  <p className="mt-6 text-base md:text-lg text-gray-500 leading-relaxed max-w-xl">
+                                      A six-week online programme that takes you from offensive security fundamentals to building your own AI-powered penetration testing copilot.
+                                  </p>
+                                  <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                                      <a href="/caapt" className="w-full sm:w-auto bg-black text-white font-sans font-semibold text-sm px-8 py-3.5 rounded-lg btn-press flex items-center justify-center gap-2 hover:bg-gray-800">
+                                          Explore CAAPT <ArrowRight className="w-4 h-4" />
+                                      </a>
+                                      <a href="/caapt#apply" className="w-full sm:w-auto border border-black/20 bg-transparent text-black font-sans font-medium text-sm px-8 py-3.5 rounded-lg btn-press hover:border-black/50 hover:bg-black/5 transition-all flex items-center justify-center">
+                                          Apply Now
+                                      </a>
+                                  </div>
+                              </div>
+
+                              <ol className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 hairline-grid rounded-xl overflow-hidden">
+                                  {curriculum.map((week) => (
+                                      <li key={week.number} className="bg-white p-5 sm:p-6">
+                                          <span className="font-mono text-xs text-gray-500 block mb-2">WEEK {week.number}</span>
+                                          <span className="text-black font-bold text-sm sm:text-base leading-snug">{week.title}</span>
+                                      </li>
+                                  ))}
+                              </ol>
                           </div>
                       </section>
 

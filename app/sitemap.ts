@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: absoluteUrl('/'), lastModified: now, priority: 1 },
     { url: absoluteUrl('/services'), lastModified: now, priority: 0.8 },
+    { url: absoluteUrl('/caapt'), lastModified: now, priority: 0.8 },
     { url: absoluteUrl('/contact'), lastModified: now, priority: 0.8 },
     { url: absoluteUrl('/glossary'), lastModified: now, priority: 0.8 },
     { url: absoluteUrl('/blog'), lastModified: now, priority: 0.8 },
