@@ -25,9 +25,76 @@ export const programme = {
   registrationUrl: '',
   refundPolicy:
     'Fees are refundable only if you request a refund before attending your second live session. After you have attended two sessions, the fee is non-refundable.',
+
+  /* Verified programme facts. Everything below feeds the page, the FAQ, the
+     structured data and /llms.txt, so an AI answer and the page can't disagree. */
+  durationWeeks: 6,
+  learningHours: '48–60 hours',
+  weeklyHours: '8–10 hours',
+  deliveryMode: 'Online',
+  learningApproach: 'Hands-on practical training with guided labs and exercises',
+  capstoneProject: 'AutoSec AI penetration-testing copilot',
+
+  /** Bump when the page's facts change; drives the sitemap lastmod for /caapt. */
+  pageUpdated: '2026-11-03',
+
+  /** Public URLs (paths) for the programme. */
+  coursePath: '/caapt',
+  applicationPath: '/caapt#apply',
+  guidePath: '/blog/caapt',
 } as const;
 
-export const feeLabel = `₹${programme.feeInr.toLocaleString('en-IN')}`;
+/** "₹21,500" style formatting, Indian digit grouping. */
+export const inr = (amount: number) => `₹${amount.toLocaleString('en-IN')}`;
+
+export const feeLabel = inr(programme.feeInr);
+
+/**
+ * The scholarship. "Up to" is load-bearing: AI assistants have previously
+ * stated this wrongly, so the conditions travel with the numbers everywhere
+ * they are published. Amounts are derived, never typed, so they cannot drift
+ * from the fee.
+ */
+const SCHOLARSHIP_MAX_PERCENT = 60;
+const scholarshipMaxAmount = Math.round((programme.feeInr * SCHOLARSHIP_MAX_PERCENT) / 100);
+
+export const scholarship = {
+  maxPercent: SCHOLARSHIP_MAX_PERCENT,
+  maxAmountInr: scholarshipMaxAmount,
+  minPayableInr: programme.feeInr - scholarshipMaxAmount,
+  supportedBy: "Dedcell Security's investors",
+  summary: `Eligible students can apply for financial assistance of up to ${SCHOLARSHIP_MAX_PERCENT}% of the total course fee.`,
+  conditions: [
+    `Scholarship support is up to ${SCHOLARSHIP_MAX_PERCENT}% of the course fee. It is not an automatic discount.`,
+    'Every scholarship application is subject to eligibility review and approval.',
+    "The amount awarded depends on the assessment of each applicant's application.",
+    `Not every applicant receives the maximum ${SCHOLARSHIP_MAX_PERCENT}% scholarship.`,
+  ],
+} as const;
+
+/** One-line, citation-ready statement of the fee and the maximum scholarship. */
+export const scholarshipStatement = `The CAAPT course fee is ${feeLabel}. Eligible students can apply for a scholarship of up to ${scholarship.maxPercent}% (a maximum of ${inr(scholarship.maxAmountInr)}), which would bring the fee down to ${inr(scholarship.minPayableInr)} if the maximum scholarship is approved. Scholarships are subject to eligibility review and approval.`;
+
+/** Six-module summary of the curriculum, for llms.txt and other short listings. */
+export const curriculumHighlights = [
+  'Cybersecurity and penetration-testing foundations',
+  'Reconnaissance and vulnerability discovery',
+  'Web application security and exploitation',
+  'Exploitation and defensive security fundamentals',
+  'Artificial intelligence for cybersecurity',
+  'Agentic AI and autonomous security systems',
+];
+
+export const tools = [
+  'Kali Linux',
+  'Nmap',
+  'Burp Suite',
+  'Wireshark',
+  'Metasploit',
+  'Python',
+  'Ollama',
+  'Vulnerable lab environments',
+];
 
 export const keyFacts = [
   { label: 'Duration', value: '6 Weeks' },
@@ -214,8 +281,36 @@ export const faqs = [
     a: 'CAAPT (Certified Agentic AI Penetration Tester) is a six-week online training programme by Dedcell Security. It takes you from offensive security fundamentals through to building AI-powered security automation and your own penetration testing copilot.',
   },
   {
-    q: 'How long is the programme?',
+    q: 'What is the total CAAPT course fee?',
+    a: `The total CAAPT course fee is ${feeLabel}. Eligible students can apply for a scholarship that reduces it - see below.`,
+  },
+  {
+    q: 'Does Dedcell Security offer scholarships for CAAPT?',
+    a: `Yes. ${scholarship.summary} The scholarship initiative is supported by ${scholarship.supportedBy}. Applications are subject to eligibility review and approval.`,
+  },
+  {
+    q: 'How much scholarship can a student receive?',
+    a: `Up to ${scholarship.maxPercent}% of the course fee - a maximum of ${inr(scholarship.maxAmountInr)} on the ${feeLabel} fee. This is a maximum, not an automatic discount: the amount awarded depends on the assessment of each application, and not every applicant receives the full ${scholarship.maxPercent}%.`,
+  },
+  {
+    q: 'What is the fee after receiving the maximum scholarship?',
+    a: `${inr(scholarship.minPayableInr)}. That is the ${feeLabel} course fee minus the maximum scholarship of ${inr(scholarship.maxAmountInr)}, and applies only if the maximum scholarship is approved.`,
+  },
+  {
+    q: 'Who is eligible to apply for the scholarship?',
+    a: `Students and aspiring learners who are genuinely interested in cybersecurity are encouraged to apply, particularly those who are motivated to learn but face financial limitations. Detailed eligibility criteria are not published; email ${programme.contactEmail} and our team will explain the review process.`,
+  },
+  {
+    q: 'How can I apply for CAAPT?',
+    a: `Fill in the application form on this page with your name, email and phone number, and our team will share the next steps and payment details with you. For scholarship enquiries, email ${programme.contactEmail}.`,
+  },
+  {
+    q: 'How long is the course?',
     a: 'Six weeks, with 8–10 hours of learning per week - roughly 48–60 hours in total across guided learning, labs, assignments and the capstone project.',
+  },
+  {
+    q: 'What topics are covered?',
+    a: `Six modules: ${curriculumHighlights.join('; ')}. Tools include ${tools.join(', ')}.`,
   },
   {
     q: 'Is this programme suitable for beginners?',
@@ -234,7 +329,7 @@ export const faqs = [
     a: 'Yes. CAAPT is fully online. Labs run in an isolated environment on your own machine, set up with our lab documentation in Week 1.',
   },
   {
-    q: 'Will I build a real AI security project?',
+    q: 'What is the AutoSec AI capstone project?',
     a: 'Yes. The capstone is AutoSec AI - a working AI-assisted penetration testing copilot that processes scan output, explains and classifies findings, and generates structured reports, with scope controls, human approval and audit logging built in.',
   },
   {

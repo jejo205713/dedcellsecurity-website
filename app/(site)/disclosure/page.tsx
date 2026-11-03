@@ -1,21 +1,17 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 /**
  * Ported from the `disclosure` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Responsible Disclosure Policy",
   description:
     "How to report a security vulnerability in Dedcell Security systems, what we commit to in return, and our safe-harbour terms.",
-  alternates: { canonical: "/disclosure" },
-  openGraph: {
-    title: "Responsible Disclosure Policy",
-    description: "How to report a security vulnerability in Dedcell Security systems, what we commit to in return, and our safe-harbour terms.",
-    url: "/disclosure",
-  },
-};
+  path: "/disclosure",
+});
 export default function DisclosurePage() {
   return (
     <>

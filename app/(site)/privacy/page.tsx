@@ -1,21 +1,17 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 /**
  * Ported from the `privacy` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description:
     "How Dedcell Security collects, uses and protects personal data submitted through this site and during client engagements.",
-  alternates: { canonical: "/privacy" },
-  openGraph: {
-    title: "Privacy Policy",
-    description: "How Dedcell Security collects, uses and protects personal data submitted through this site and during client engagements.",
-    url: "/privacy",
-  },
-};
+  path: "/privacy",
+});
 export default function PrivacyPage() {
   return (
     <>

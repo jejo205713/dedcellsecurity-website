@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 import { LeadCta } from '@/components/LeadCta';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { JsonLd } from '@/components/JsonLd';
 import { getGlossaryTerms, groupByLetter } from '@/lib/content';
-import { itemListSchema } from '@/lib/schema';
+import { definedTermSetSchema } from '@/lib/schema';
 import { categoryName } from '@/lib/taxonomy';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Cybersecurity Glossary',
   description:
     'Plain-English definitions of the security terms that come up in penetration testing, SOC operations, compliance and incident response.',
-  alternates: { canonical: '/glossary' },
-};
+  path: '/glossary',
+});
 
 export default function GlossaryHub() {
   const terms = getGlossaryTerms();
@@ -28,10 +29,7 @@ export default function GlossaryHub() {
         ]}
       />
       <JsonLd
-        data={itemListSchema(
-          terms.map((t) => ({ name: t.title, url: `/glossary/${t.slug}` })),
-          'Cybersecurity Glossary',
-        )}
+        data={definedTermSetSchema(terms)}
       />
 
       <header className="mt-8">

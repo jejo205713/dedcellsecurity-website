@@ -40,6 +40,7 @@ import {
   audience,
   capstoneSteps,
   curriculum,
+  curriculumHighlights,
   deliverables,
   faqs,
   feeLabel,
@@ -48,22 +49,26 @@ import {
   labs,
   outcomes,
   prerequisites,
+  inr,
   programme,
   progression,
+  scholarship,
+  scholarshipStatement,
   structure,
 } from '@/lib/caapt';
-import { courseSchema, faqSchema } from '@/lib/schema';
+import { pageMetadata } from '@/lib/metadata';
+import { breadcrumbSchema, courseSchema, faqSchema, webPageSchema } from '@/lib/schema';
 
 const TITLE = 'CAAPT - Certified Agentic AI Penetration Tester';
-const DESCRIPTION =
-  'Learn offensive security and agentic AI in six weeks. Build an AI-powered penetration testing copilot with CAAPT.';
+const DESCRIPTION = `Six-week online course in offensive security and agentic AI by Dedcell Security. Fee ${feeLabel}; scholarships of up to ${scholarship.maxPercent}% for eligible students.`;
+/** Longer description for structured data, where length is not truncated. */
+const COURSE_DESCRIPTION = `CAAPT (Certified Agentic AI Penetration Tester) is a six-week online training programme by Dedcell Security covering penetration testing, web application security, AI for cybersecurity and agentic AI, ending with the AutoSec AI penetration-testing copilot capstone. ${scholarshipStatement}`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: '/caapt' },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: '/caapt' },
-};
+  path: programme.coursePath,
+});
 
 const TOPIC_COUNT = curriculum.reduce((sum, week) => sum + week.topics.length, 0);
 
@@ -132,11 +137,24 @@ export default function CaaptPage() {
       <JsonLd
         data={courseSchema({
           name: `${programme.shortName} - ${programme.name}`,
-          description: DESCRIPTION,
-          path: '/caapt',
+          alternateName: programme.shortName,
+          description: COURSE_DESCRIPTION,
+          path: programme.coursePath,
           priceInr: programme.feeInr,
           startDate: programme.batchStart.iso,
+          durationWeeks: programme.durationWeeks,
+          hoursPerWeek: 10,
+          teaches: curriculumHighlights,
+          audience: [...audience],
+          financialAid: `${scholarship.summary} Supported by ${scholarship.supportedBy}; subject to eligibility review and approval, and not every applicant receives the maximum.`,
         })}
+      />
+      <JsonLd data={webPageSchema({ path: programme.coursePath, name: TITLE, description: DESCRIPTION, related: [programme.guidePath] })} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: 'Home', href: '/' },
+          { name: 'CAAPT Training', href: programme.coursePath },
+        ])}
       />
       <JsonLd data={faqSchema(faqs)} />
 
@@ -698,7 +716,38 @@ export default function CaaptPage() {
                   ))}
                 </dl>
 
-                <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.06] p-4">
+                {/* Scholarship. Figures come from lib/caapt.ts - the same values feed
+                    the FAQ, the structured data and /llms.txt. */}
+                <div id="scholarship" className="mt-6 rounded-xl border border-white/10 bg-white/[0.06] p-4 scroll-mt-28">
+                  <p className="font-mono text-[11px] uppercase tracking-widest text-white/55 mb-2">
+                    Scholarship · up to {scholarship.maxPercent}%
+                  </p>
+                  <p className="text-sm text-white/70 leading-relaxed">
+                    {scholarship.summary} Supported by {scholarship.supportedBy}.
+                  </p>
+                  <dl className="mt-4 divide-y divide-white/10 border-t border-white/10">
+                    {[
+                      ['Total course fee', feeLabel],
+                      [`Maximum scholarship (${scholarship.maxPercent}%)`, inr(scholarship.maxAmountInr)],
+                      ['Fee after maximum scholarship', inr(scholarship.minPayableInr)],
+                    ].map(([label, value]) => (
+                      <div key={label} className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3">
+                        <dt className="font-mono text-[11px] uppercase tracking-widest text-white/55">{label}</dt>
+                        <dd className="text-sm font-semibold text-white tabular-nums">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="mt-3 text-xs text-white/55 leading-relaxed">
+                    Up to {scholarship.maxPercent}%, not an automatic discount. Applications are subject to
+                    eligibility review and approval, and the amount awarded depends on each assessment.{' '}
+                    <Link href={programme.guidePath} className="text-white underline underline-offset-2">
+                      Read the CAAPT scholarship guide
+                    </Link>
+                    .
+                  </p>
+                </div>
+
+                <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.06] p-4">
                   <p className="font-mono text-[11px] uppercase tracking-widest text-white/55 mb-2">Refund policy</p>
                   <p className="text-sm text-white/70 leading-relaxed">{programme.refundPolicy}</p>
                 </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { site } from '@/lib/site';
+import { DEFAULT_SHARE_IMAGE } from '@/lib/metadata';
 import './globals.css';
 
 /**
@@ -24,8 +25,10 @@ export const metadata: Metadata = {
     siteName: site.name,
     locale: site.locale,
     url: site.url,
+    images: [DEFAULT_SHARE_IMAGE],
   },
-  twitter: { card: 'summary_large_image' },
+  // `summary`, not `summary_large_image`: the default image is a square logo.
+  twitter: { card: 'summary', images: [DEFAULT_SHARE_IMAGE.url] },
   // Matches the live site's favicon set (index.html:13-17).
   icons: {
     icon: [

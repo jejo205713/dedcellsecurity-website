@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 import { ContactForm } from '@/components/ContactForm';
 import { Check, Mail } from 'lucide-react';
 /**
@@ -7,17 +8,12 @@ import { Check, Mail } from 'lucide-react';
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Request a Security Assessment",
   description:
     "Book a free 30-minute security consultation. NDA signed before scoping, response within 4 business hours.",
-  alternates: { canonical: "/contact" },
-  openGraph: {
-    title: "Request a Security Assessment",
-    description: "Book a free 30-minute security consultation. NDA signed before scoping, response within 4 business hours.",
-    url: "/contact",
-  },
-};
+  path: "/contact",
+});
 export default function ContactPage() {
   return (
     <>

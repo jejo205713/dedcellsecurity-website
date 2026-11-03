@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 import { LeadCta } from '@/components/LeadCta';
 import { Check, Cloud, Code2, Globe, Minus, Network, Server, Smartphone, Webhook, Wrench } from 'lucide-react';
 /**
@@ -7,17 +8,12 @@ import { Check, Cloud, Code2, Globe, Minus, Network, Server, Smartphone, Webhook
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Penetration Testing Services",
   description:
     "Web app, API, network, cloud and mobile penetration testing for startups. Fixed-scope engagements, manual verification, complimentary retest.",
-  alternates: { canonical: "/services" },
-  openGraph: {
-    title: "Penetration Testing Services",
-    description: "Web app, API, network, cloud and mobile penetration testing for startups. Fixed-scope engagements, manual verification, complimentary retest.",
-    url: "/services",
-  },
-};
+  path: "/services",
+});
 export default function ServicesPage() {
   return (
     <>

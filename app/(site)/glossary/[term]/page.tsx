@@ -6,8 +6,10 @@ import { JsonLd } from '@/components/JsonLd';
 import { Mdx } from '@/components/Mdx';
 import { RelatedTerms } from '@/components/RelatedTerms';
 import { Toc } from '@/components/Toc';
-import { getGlossaryTerm, getGlossaryTerms, getRelatedTerms } from '@/lib/content';
-import { definedTermSchema } from '@/lib/schema';
+import { getGlossaryTerm, getGlossaryTerms, getPostsForTerm, getRelatedTerms } from '@/lib/content';
+import { pageMetadata } from '@/lib/metadata';
+import { RelatedPosts } from '@/components/RelatedPosts';
+import { definedTermSchema, webPageSchema } from '@/lib/schema';
 import { categoryName } from '@/lib/taxonomy';
 
 type Props = { params: Promise<{ term: string }> };
@@ -21,22 +23,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const term = getGlossaryTerm(slug);
   if (!term) return {};
 
-  return {
-    // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
-    // root layout appending "| Dedcell Security" and pushing it past 60 chars.
-    title: term.metaTitle ? { absolute: term.metaTitle } : term.title,
+  // An explicit metaTitle is the *whole* SEO title - `absoluteTitle` stops the
+  // root layout appending "| Dedcell Security" and pushing it past 60 chars.
+  return pageMetadata({
+    title: term.metaTitle || term.title,
+    absoluteTitle: Boolean(term.metaTitle),
     description: term.metaDescription || term.definition,
-    alternates: { canonical: `/glossary/${term.slug}` },
-    robots: term.draft ? { index: false, follow: false } : undefined,
-    openGraph: {
-      type: 'article',
-      // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
-    // root layout appending "| Dedcell Security" and pushing it past 60 chars.
-    title: term.metaTitle ? { absolute: term.metaTitle } : term.title,
-      description: term.metaDescription || term.definition,
-      url: `/glossary/${term.slug}`,
-    },
-  };
+    path: `/glossary/${term.slug}`,
+    type: 'article',
+    modifiedTime: term.updatedDate || term.publishedDate,
+    noindex: term.draft,
+  });
 }
 
 export default async function GlossaryTermPage({ params }: Props) {
@@ -45,6 +42,7 @@ export default async function GlossaryTermPage({ params }: Props) {
   if (!term) notFound();
 
   const related = getRelatedTerms(term);
+  const posts = getPostsForTerm(term.slug);
 
   return (
     <>
@@ -57,6 +55,17 @@ export default async function GlossaryTermPage({ params }: Props) {
         ]}
       />
       <JsonLd data={definedTermSchema(term)} />
+      <JsonLd
+        data={webPageSchema({
+          path: `/glossary/${term.slug}`,
+          name: term.metaTitle || term.title,
+          description: term.metaDescription || term.definition,
+          related: [
+            ...related.map((r) => `/glossary/${r.slug}`),
+            ...posts.map((p) => `/blog/${p.slug}`),
+          ],
+        })}
+      />
 
       <header className="mt-8">
         {term.category && <p className="eyebrow">{categoryName(term.category)}</p>}
@@ -86,6 +95,7 @@ export default async function GlossaryTermPage({ params }: Props) {
       </div>
 
       <RelatedTerms terms={related} />
+      <RelatedPosts posts={posts} />
     </article>
 
       <LeadCta

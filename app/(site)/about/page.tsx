@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 import { Award, Clock4, Lock, RefreshCw, Rocket, ShieldAlert } from 'lucide-react';
 /**
  * Ported from the `about` template string in
@@ -6,17 +7,12 @@ import { Award, Clock4, Lock, RefreshCw, Rocket, ShieldAlert } from 'lucide-reac
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About Us",
   description:
     "Founder-led offensive security for startups in India. Who we are, how we test, and why every finding is verified by hand before it reaches you.",
-  alternates: { canonical: "/about" },
-  openGraph: {
-    title: "About Us",
-    description: "Founder-led offensive security for startups in India. Who we are, how we test, and why every finding is verified by hand before it reaches you.",
-    url: "/about",
-  },
-};
+  path: "/about",
+});
 export default function AboutPage() {
   return (
     <>

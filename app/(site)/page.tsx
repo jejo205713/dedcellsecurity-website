@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { HorizontalScroll } from '@/components/HorizontalScroll';
-import { curriculum, programme } from '@/lib/caapt';
+import { JsonLd } from '@/components/JsonLd';
+import { pageMetadata } from '@/lib/metadata';
+import { websiteSchema } from '@/lib/schema';
+import { site } from '@/lib/site';
+import { curriculum, feeLabel, programme, scholarship } from '@/lib/caapt';
 import { AlertTriangle, ArrowRight, BadgeCheck, Banknote, Clock, Cloud, Globe, GraduationCap, PowerOff, Rocket, Server, ShieldCheck, Sparkles, Target, Users, Webhook } from 'lucide-react';
 /**
  * Ported from the `home` template string in
@@ -8,14 +12,17 @@ import { AlertTriangle, ArrowRight, BadgeCheck, Banknote, Clock, Cloud, Globe, G
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  title: `${site.name} - Offensive Security for Startups`,
+  absoluteTitle: true,
   description:
     "Expert-led offensive security for modern startups. Web, API, cloud and mobile penetration testing without the enterprise bloat.",
-  alternates: { canonical: '/' },
-};
+  path: '/',
+});
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={websiteSchema()} />
       {/* Hero Section */}
                       <section className="relative min-h-screen flex items-center justify-center pt-20 pb-12 overflow-hidden">
                           <div className="absolute inset-0 z-0" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,0,0,0.04) 0%, transparent 70%)" }}></div>
@@ -222,6 +229,10 @@ export default function HomePage() {
                                   </h2>
                                   <p className="mt-6 text-base md:text-lg text-gray-500 leading-relaxed max-w-xl">
                                       A six-week online programme that takes you from offensive security fundamentals to building your own AI-powered penetration testing copilot.
+                                  </p>
+                                  <p className="mt-4 font-mono text-xs uppercase tracking-widest text-gray-600">
+                                      Fee {feeLabel} · Scholarships up to {scholarship.maxPercent}% for eligible students ·{' '}
+                                      <a href={programme.guidePath} className="text-black underline underline-offset-4 decoration-black/30 hover:decoration-black">Read the guide</a>
                                   </p>
                                   <div className="mt-10 flex flex-col sm:flex-row gap-4">
                                       <a href="/caapt" className="w-full sm:w-auto bg-black text-white font-sans font-semibold text-sm px-8 py-3.5 rounded-lg btn-press flex items-center justify-center gap-2 hover:bg-gray-800">

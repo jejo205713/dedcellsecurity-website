@@ -92,6 +92,18 @@ function str(v: unknown, fallback = ''): string {
   return typeof v === 'string' ? v : fallback;
 }
 
+/**
+ * Frontmatter dates. YAML parses an unquoted `2026-11-03` into a Date object,
+ * not a string - and Keystatic writes them unquoted - so reading them with
+ * `str()` silently produced '' for every entry: no visible dates, no
+ * datePublished in the structured data, no sitemap lastmod, and a blog list
+ * that wasn't really sorted by date.
+ */
+function dateStr(v: unknown): string {
+  if (v instanceof Date && !Number.isNaN(v.getTime())) return v.toISOString().slice(0, 10);
+  return str(v);
+}
+
 function strArray(v: unknown): string[] {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
 }
@@ -157,8 +169,8 @@ function parseDoc(type: ContentType, slug: string, file: string): Doc | null {
     category,
     metaTitle: str(data.metaTitle) || undefined,
     metaDescription: str(data.metaDescription),
-    publishedDate: str(data.publishedDate),
-    updatedDate: str(data.updatedDate) || undefined,
+    publishedDate: dateStr(data.publishedDate),
+    updatedDate: dateStr(data.updatedDate) || undefined,
     draft: data.draft === true,
     body: content,
     readingMinutes: readingMinutes(content),
@@ -289,6 +301,22 @@ export function getRelatedTerms(doc: Doc, limit = 6): GlossaryDoc[] {
   }
 
   return picked.slice(0, limit);
+}
+
+/**
+ * Blog posts that cite a glossary term - either through `relatedTerms` or a
+ * `[[slug]]` link in the body. Gives every definition a path to the articles
+ * that put it in context, the reverse of the related-terms block on a post.
+ */
+export function getPostsForTerm(slug: string, limit = 4): BlogDoc[] {
+  const wikiLink = `[[${slug}]]`;
+  const pageLink = `/glossary/${slug})`;
+  return getBlogPosts()
+    .filter(
+      (p) =>
+        p.relatedTerms.includes(slug) || p.body.includes(wikiLink) || p.body.includes(pageLink),
+    )
+    .slice(0, limit);
 }
 
 /** Group glossary terms by first letter, for the A - Z hub. */

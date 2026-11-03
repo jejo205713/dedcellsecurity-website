@@ -92,6 +92,21 @@ const nextConfig = {
     // context, so it stays off even though Next disables it by default.
     dangerouslyAllowSVG: false,
   },
+  /**
+   * www.dedcellsecurity.in served a full duplicate of the site with a 200.
+   * Canonical tags soften that, but a permanent redirect removes it: one host,
+   * one set of URLs for every crawler to index and cite.
+   */
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.dedcellsecurity.in' }],
+        destination: 'https://dedcellsecurity.in/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

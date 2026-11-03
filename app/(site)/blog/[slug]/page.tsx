@@ -8,6 +8,7 @@ import { RelatedTerms } from '@/components/RelatedTerms';
 import { Toc } from '@/components/Toc';
 import { getBlogPost, getBlogPosts, getRelatedTerms } from '@/lib/content';
 import { blogPostingSchema } from '@/lib/schema';
+import { firstImage, pageMetadata, pngSize } from '@/lib/metadata';
 import { categoryName } from '@/lib/taxonomy';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -21,25 +22,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getBlogPost(slug);
   if (!post) return {};
 
-  return {
-    // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
-    // root layout appending "| Dedcell Security" and pushing it past 60 chars.
-    title: post.metaTitle ? { absolute: post.metaTitle } : post.title,
+  const image = firstImage(post.body);
+  // An explicit metaTitle is the *whole* SEO title - `absoluteTitle` stops the
+  // root layout appending "| Dedcell Security" and pushing it past 60 chars.
+  return pageMetadata({
+    title: post.metaTitle || post.title.trim(),
+    absoluteTitle: Boolean(post.metaTitle),
     description: post.metaDescription || post.summary,
-    alternates: { canonical: `/blog/${post.slug}` },
-    robots: post.draft ? { index: false, follow: false } : undefined,
-    openGraph: {
-      type: 'article',
-      // An explicit metaTitle is the *whole* SEO title - `absolute` stops the
-    // root layout appending "| Dedcell Security" and pushing it past 60 chars.
-    title: post.metaTitle ? { absolute: post.metaTitle } : post.title,
-      description: post.metaDescription || post.summary,
-      url: `/blog/${post.slug}`,
-      publishedTime: post.publishedDate || undefined,
-      modifiedTime: post.updatedDate || undefined,
-      authors: post.author ? [post.author] : undefined,
-    },
-  };
+    path: `/blog/${post.slug}`,
+    type: 'article',
+    image: image ? { url: image, ...pngSize(image), alt: post.title.trim() } : undefined,
+    publishedTime: post.publishedDate,
+    modifiedTime: post.updatedDate || post.publishedDate,
+    authors: post.author ? [post.author] : undefined,
+    noindex: post.draft,
+  });
 }
 
 export default async function BlogPostPage({ params }: Props) {

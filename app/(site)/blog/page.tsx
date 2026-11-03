@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 import { LeadCta } from '@/components/LeadCta';
 import Link from 'next/link';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { JsonLd } from '@/components/JsonLd';
 import { getBlogPosts } from '@/lib/content';
-import { itemListSchema } from '@/lib/schema';
+import { blogCollectionSchema } from '@/lib/schema';
 import { categoryName } from '@/lib/taxonomy';
 
-export const metadata: Metadata = {
-  title: 'Blog',
+export const metadata: Metadata = pageMetadata({
+  title: 'Cybersecurity Blog',
   description:
-    'Field notes from real engagements - findings, methodology, and what actually breaks in production.',
-  alternates: { canonical: '/blog' },
-};
+    'Cybersecurity articles from Dedcell Security - penetration testing findings, vulnerability research, AI security and CAAPT training updates.',
+  path: '/blog',
+});
 
 export default function BlogHub() {
   const posts = getBlogPosts();
@@ -27,10 +28,7 @@ export default function BlogHub() {
         ]}
       />
       <JsonLd
-        data={itemListSchema(
-          posts.map((p) => ({ name: p.title, url: `/blog/${p.slug}` })),
-          'Dedcell Security Blog',
-        )}
+        data={blogCollectionSchema(posts)}
       />
 
       <header className="mt-8">

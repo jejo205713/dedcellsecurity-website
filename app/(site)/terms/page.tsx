@@ -1,21 +1,17 @@
 import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/metadata';
 /**
  * Ported from the `terms` template string in
  * dedcell-security/public/index.html. Markup is unchanged apart from the
  * mechanical JSX conversion; what is new is the metadata below - this route
  * previously served the home page's title and canonical.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Terms of Service",
   description:
     "The terms governing use of the Dedcell Security website and our penetration testing engagements.",
-  alternates: { canonical: "/terms" },
-  openGraph: {
-    title: "Terms of Service",
-    description: "The terms governing use of the Dedcell Security website and our penetration testing engagements.",
-    url: "/terms",
-  },
-};
+  path: "/terms",
+});
 export default function TermsPage() {
   return (
     <>

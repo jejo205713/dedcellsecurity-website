@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { isCategorySlug } from '../lib/taxonomy';
+import { programme, scholarship } from '../lib/caapt';
 
 const ROOT = process.cwd();
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -146,9 +147,54 @@ function checkCollection(type: 'glossary' | 'blog') {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* CAAPT facts                                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Articles quote the CAAPT fee and scholarship in prose, which the page code
+ * can't reach. AI assistants have misquoted the scholarship before, so a
+ * figure in an article that disagrees with lib/caapt.ts fails the build
+ * instead of shipping a second, conflicting "official" number.
+ */
+function checkCaaptFacts() {
+  console.log('\nCAAPT fee and scholarship figures');
+  const allowedAmounts = new Set([programme.feeInr, scholarship.maxAmountInr, scholarship.minPayableInr]);
+  let checked = 0;
+
+  for (const type of ['blog', 'glossary'] as const) {
+    const dir = path.join(ROOT, 'content', type);
+    if (!fs.existsSync(dir)) continue;
+    for (const name of fs.readdirSync(dir).filter((n) => /\.mdx?$/.test(n))) {
+      const raw = fs.readFileSync(path.join(dir, name), 'utf8');
+      if (!/CAAPT/.test(raw)) continue;
+      checked++;
+      const where = `${type}/${name}`;
+
+      for (const m of raw.matchAll(/₹\s?([\d,]+)/g)) {
+        const amount = Number(m[1].replace(/,/g, ''));
+        if (!allowedAmounts.has(amount)) {
+          fail(where, `quotes ₹${m[1]}, which is not the CAAPT fee (₹${programme.feeInr}), maximum scholarship (₹${scholarship.maxAmountInr}) or fee after maximum scholarship (₹${scholarship.minPayableInr}). Update the article or lib/caapt.ts.`);
+        }
+      }
+      for (const m of raw.matchAll(/scholarship[^.\n]{0,120}?(\d{1,3})\s?%|(\d{1,3})\s?%[^.\n]{0,60}?scholarship/gi)) {
+        const pct = Number(m[1] ?? m[2]);
+        if (pct !== scholarship.maxPercent) {
+          fail(where, `states a ${pct}% scholarship; the published maximum is ${scholarship.maxPercent}%.`);
+        }
+      }
+      if (/free (course|of charge)|100\s?% scholarship|guaranteed scholarship/i.test(raw)) {
+        fail(where, 'claims the course is free or the scholarship is guaranteed - neither is true.');
+      }
+    }
+  }
+  console.log(`  ✓ ${checked} file(s) mentioning CAAPT checked`);
+}
+
 checkUploads();
 checkCollection('glossary');
 checkCollection('blog');
+checkCaaptFacts();
 
 console.log(
   `\n${errors} error(s), ${warnings} warning(s).${errors ? ' Fix the errors above before publishing.' : ''}`,
