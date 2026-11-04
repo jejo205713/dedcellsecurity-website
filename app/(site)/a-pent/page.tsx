@@ -737,6 +737,15 @@ export default function APentPage() {
                       </div>
                     ))}
                   </dl>
+                  <a
+                    href={programme.scholarshipFormUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 w-full bg-white text-black font-sans font-semibold text-sm px-6 py-3 rounded-lg btn-press inline-flex items-center justify-center gap-2 hover:bg-white/85"
+                  >
+                    Apply for the Scholarship · up to {scholarship.maxPercent}%
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </a>
                   <p className="mt-3 text-xs text-white/55 leading-relaxed">
                     Up to {scholarship.maxPercent}%, not an automatic discount. Applications are subject to
                     eligibility review and approval, and the amount awarded depends on each assessment.{' '}

@@ -52,6 +52,7 @@ function aPentFacts(): string[] {
     ...scholarship.conditions.map((c) => `- Condition: ${c}`),
     `- Course page: ${u(programme.coursePath)}`,
     `- Apply: ${u(programme.applicationPath)}`,
+    `- Scholarship application form (up to ${scholarship.maxPercent}%): ${programme.scholarshipFormUrl}`,
     `- Full course guide: ${u(programme.guidePath)}`,
   ];
 }

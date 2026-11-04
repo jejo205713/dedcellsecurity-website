@@ -23,6 +23,8 @@ export const programme = {
    * button beside the form.
    */
   registrationUrl: '',
+  /** Google Form for scholarship applications (up to 60% of the fee). */
+  scholarshipFormUrl: 'https://forms.gle/5q3w3B7SuMEYu3RG8',
   refundPolicy:
     'Fees are refundable only if you request a refund before attending your second live session. After you have attended two sessions, the fee is non-refundable.',
 
@@ -298,11 +300,11 @@ export const faqs = [
   },
   {
     q: 'Who is eligible to apply for the scholarship?',
-    a: `Students and aspiring learners who are genuinely interested in cybersecurity are encouraged to apply, particularly those who are motivated to learn but face financial limitations. Detailed eligibility criteria are not published; email ${programme.contactEmail} and our team will explain the review process.`,
+    a: `Students and aspiring learners who are genuinely interested in cybersecurity are encouraged to apply, particularly those who are motivated to learn but face financial limitations. Apply through the scholarship application form (${programme.scholarshipFormUrl}); every application is reviewed for eligibility before approval. For questions about the review, email ${programme.contactEmail}.`,
   },
   {
     q: 'How can I apply for A-PENT?',
-    a: `Fill in the application form on this page with your name, email and phone number, and our team will share the next steps and payment details with you. For scholarship enquiries, email ${programme.contactEmail}.`,
+    a: `Fill in the application form on this page with your name, email and phone number, and our team will share the next steps and payment details with you. To apply for a scholarship of up to ${scholarship.maxPercent}% of the fee, fill in the scholarship application form: ${programme.scholarshipFormUrl}.`,
   },
   {
     q: 'How long is the course?',
