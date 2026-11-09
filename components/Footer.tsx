@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SkillIndiaLogo } from '@/components/SkillIndiaLogo';
 
 /**
  * Ported from dedcell-security/public/index.html:280-341.
@@ -148,6 +149,8 @@ export function Footer() {
               <p className="text-black break-all">{MSME_UDYAM_NUMBER}</p>
             </div>
           </div>
+
+          <SkillIndiaLogo />
         </div>
 
         <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
