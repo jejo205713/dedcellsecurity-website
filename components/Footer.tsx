@@ -72,6 +72,18 @@ export function Footer() {
                   <path d="M10.4 3.6v.01" />
                 </svg>
               </a>
+              <a
+                href="https://www.youtube.com/@DedcellSecurity"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Dedcell Security on YouTube"
+                className="w-8 h-8 border border-black/10 flex items-center justify-center text-gray-600 hover:text-black hover:border-black/30 transition-all"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="1" y="2.5" width="12" height="9" rx="2.5" />
+                  <path d="M5.75 5.1v3.8L9 7z" />
+                </svg>
+              </a>
             </div>
           </div>
 

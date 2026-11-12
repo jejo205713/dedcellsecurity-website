@@ -49,6 +49,7 @@ export function organizationSchema() {
     sameAs: [
       'https://www.linkedin.com/company/dedcell-security',
       'https://www.instagram.com/dedcell_security/',
+      'https://www.youtube.com/@DedcellSecurity',
     ],
   };
 }

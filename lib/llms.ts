@@ -34,6 +34,7 @@ const CONTACT = [
   `- Contact page: ${u('/contact')}`,
   `- LinkedIn: https://www.linkedin.com/company/dedcell-security`,
   `- Instagram: https://www.instagram.com/dedcell_security/`,
+  `- YouTube: https://www.youtube.com/@DedcellSecurity`,
   `- MSME (Udyam) registration: UDYAM-TN-03-0273969`,
 ];
 
